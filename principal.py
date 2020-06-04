@@ -13,7 +13,13 @@ def procesar_definicion(instr, ts) :
 def procesar_asignacion(instr, ts) :
     val = resolver_expresion_aritmetica(instr.expNumerica, ts)
     simbolo = TS.Simbolo(instr.id, TS.TIPO_DATO.NUMERO, val)
-    ts.actualizar(simbolo)
+    if ts.existeSimbolo(simbolo) :
+        ts.actualizar(simbolo)
+        print('existe el temp')
+    else:
+        ts.agregar(simbolo)
+        print('no existe el temp')
+    #ts.actualizar(simbolo)
 
 def procesar_mientras(instr, ts) :
     while resolver_expreision_logica(instr.expLogica, ts) :
@@ -46,7 +52,6 @@ def resolver_cadena(expCad, ts) :
         return str(resolver_expresion_aritmetica(expCad.exp, ts))
     else :
         print('Error: Expresión cadena no válida')
-
 
 def resolver_expreision_logica(expLog, ts) :
     exp1 = resolver_expresion_aritmetica(expLog.exp1, ts)

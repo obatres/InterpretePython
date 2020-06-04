@@ -31,3 +31,9 @@ class TablaDeSimbolos() :
             print('Error: variable ', simbolo.id, ' no definida.')
         else :
             self.simbolos[simbolo.id] = simbolo
+
+    def existeSimbolo(self,simbolo):
+        if not simbolo.id in self.simbolos:
+            return False
+        else:
+            return True
