@@ -5,22 +5,26 @@ from instrucciones import *
 from graphviz import Digraph
 #-----------------------------------------------------------INICIA ANALISIS SEMANTICO
 def procesar_imprimir(instr, ts) :
-    print('> ', resolver_cadena(instr.cad, ts))
+    #print('> ', resolver_cadena(instr.cad, ts))
+    #print(type(instr))
+    print('>',resolver_registro(instr.exp,ts))
+
+
+def resolver_registro(exp,ts):
+    print(type(exp))
 
 def procesar_definicion(instr, ts) :
     simbolo = TS.Simbolo(instr.id, TS.TIPO_DATO.NUMERO, 0)      # inicializamos con 0 como valor por defecto
     ts.agregar(simbolo)
 
+#Asignacion de temporal en la TS
 def procesar_asignacion(instr, ts) :
     val = resolver_expresion_aritmetica(instr.expNumerica, ts)
-    simbolo = TS.Simbolo(instr.id, TS.TIPO_DATO.NUMERO, val)
+    simbolo = TS.Simbolo(instr.id, instr.expNumerica.tipo, val)
     if ts.existeSimbolo(simbolo) :
         ts.actualizar(simbolo)
-        print('existe el temp')
     else:
         ts.agregar(simbolo)
-        print('no existe el temp')
-    #ts.actualizar(simbolo)
 
 def procesar_mientras(instr, ts) :
     while resolver_expreision_logica(instr.expLogica, ts) :
@@ -42,15 +46,17 @@ def procesar_if_else(instr, ts) :
         ts_local = TS.TablaDeSimbolos(ts.simbolos)
         procesar_instrucciones(instr.instrIfFalso, ts_local)
 
-def resolver_cadena(expCad, ts) :
-    if isinstance(expCad, ExpresionConcatenar) :
-        exp1 = resolver_cadena(expCad.exp1, ts)
-        exp2 = resolver_cadena(expCad.exp2, ts)
+def resolver_cadena(exp, ts) :
+    if isinstance(exp, ExpresionConcatenar) :
+        exp1 = resolver_cadena(exp.exp1, ts)
+        exp2 = resolver_cadena(exp.exp2, ts)
         return exp1 + exp2
-    elif isinstance(expCad, ExpresionDobleComilla) :
-        return expCad.val
-    elif isinstance(expCad, ExpresionCadenaNumerico) :
-        return str(resolver_expresion_aritmetica(expCad.exp, ts))
+    elif isinstance(exp, ExpresionDobleComilla) :
+        return exp.val
+    elif isinstance(exp, ExpresionCadenaNumerico) :
+        return str(resolver_expresion_aritmetica(exp.exp, ts))
+    elif isinstance(exp,ExpresionIdentificador):
+        return str(ts.obtener(exp.id).valor)
     else :
         print('Error: Expresión cadena no válida')
 
@@ -64,9 +70,13 @@ def resolver_expreision_logica(expLog, ts) :
 
 def resolver_expresion_aritmetica(expNum, ts) :
     if isinstance(expNum, ExpresionBinaria) :
+        #VALIDAR TIPOS
         exp1 = resolver_expresion_aritmetica(expNum.exp1, ts)
         exp2 = resolver_expresion_aritmetica(expNum.exp2, ts)
-        if expNum.operador == OPERACION_ARITMETICA.MAS : return exp1 + exp2
+        if expNum.operador == OPERACION_ARITMETICA.MAS : 
+            expNum.val =exp1+exp2
+            expNum.tipo = TS.TIPO_DATO.INT
+            return expNum.val
         if expNum.operador == OPERACION_ARITMETICA.MENOS : return exp1 - exp2
         if expNum.operador == OPERACION_ARITMETICA.POR : return exp1 * exp2
         if expNum.operador == OPERACION_ARITMETICA.DIVIDIDO : return exp1 / exp2
@@ -94,8 +104,6 @@ def procesar_instrucciones(instrucciones, ts) :
 #-----------------------------------------------------------INICIA GRAFICACION DEL AST
 
 def dibujar_asignacion(instr,root,cont):
-    
-    #print(type(cont))
     cont=cont+1
     nodo = 'nodo'+ str(cont)
     dot.node(nodo,'Asignacion')
@@ -112,9 +120,11 @@ def DibujarAST(instrucciones):
     dot.node(root, 'AUGUS')
     for instr in instrucciones:
         if isinstance(instr,Asignacion) : cont = dibujar_asignacion(instr,root,cont)
-        else : print('esta instruccion no se puede graficar')
-    print(dot.source)
+        else : 
+            print('')
+    #print(dot.source)
 
+#-----------------------------------------------------------TERMINA GRAFICACION DEL AST
 f = open("./entrada.txt", "r")
 input = f.read()
 

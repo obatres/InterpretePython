@@ -7,8 +7,8 @@ class Imprimir(Instruccion) :
         La instrucción imprimir únicamente tiene como parámetro una cadena
     '''
 
-    def __init__(self,  cad) :
-        self.cad = cad
+    def __init__(self,  exp) :
+        self.exp = exp
 
 class Mientras(Instruccion) :
     '''

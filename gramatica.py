@@ -257,9 +257,9 @@ def p_EXITF(t):
 
 #Recibe: print($t1);
 def p_instruccion_imprimir(t) :
-    'imprimir_instr     : PRINT PARIZQ expresion_numerica PARDER PTCOMA'
-    #t[0] =Imprimir(t[3])
-    print(t[3])
+    'imprimir_instr     : PRINT PARIZQ expresion_log_relacional PARDER PTCOMA'
+    t[0] =Imprimir(t[3])
+    print('PASA POR IMPRIMIR',t[3])
 
 def p_instruccion_definicion(t) :
     'definicion_instr   : NUMERO TEMPORAL PTCOMA'
@@ -312,18 +312,18 @@ def p_expresion_agrupacion(t):
 def p_expresion_number(t):
     '''expresion_numerica : ENTERO
                         | DECIMAL'''
-    t[0] = ExpresionNumero(t[1])
+    t[0] = ExpresionNumero(t[1],TS.TIPO_DATO.INT)
     #print(t[1])
 
 def p_expresion_id(t):
     'expresion_numerica   : ID'
-    #t[0] = ExpresionIdentificador(t[1])
-
+    t[0] = ExpresionIdentificador(t[1])
+    print('PASA POR ID',t[1])
 # Recibe temporales $t2
 def p_expresion_tempo(t):
     'expresion_numerica : TEMPORAL'
-                       
-    print(t[1])
+    t[0] = t[1]                   
+    
 
 # recibe: punteros  &$t1  
 def p_expresion_puntero(t):
@@ -386,6 +386,7 @@ def p_error(t):
     print(t)
     print("Error sintáctico en '%s'" % t.value)
 
+import ts as TS
 import ply.yacc as yacc
 parser = yacc.yacc()
 

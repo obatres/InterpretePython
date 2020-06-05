@@ -1,7 +1,11 @@
 from enum import Enum
 
 class TIPO_DATO(Enum) :
-    NUMERO = 1
+    INT     = 1
+    FLOAT   = 2
+    CADENA  = 3
+    ARRAY   = 4
+
 
 class Simbolo() :
     'Esta clase representa un simbolo dentro de nuestra tabla de simbolos'

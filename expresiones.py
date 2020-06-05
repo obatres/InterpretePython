@@ -36,14 +36,14 @@ class ExpresionNegativo(ExpresionNumerica) :
     def __init__(self, exp) :
         self.exp = exp
 
-
 class ExpresionNumero(ExpresionNumerica) :
     '''
         Esta clase representa una expresión numérica entera o decimal.
     '''
 
-    def __init__(self, val = 0) :
+    def __init__(self, val = 0, tipo=0) : #AGREGAR TIPO A LA EXPRESION
         self.val = val
+        self.tipo = tipo
 
 class ExpresionIdentificador(ExpresionNumerica) :
     '''
