@@ -2,7 +2,8 @@ import gramatica as g
 import ts as TS
 from expresiones import *
 from instrucciones import *
-
+from graphviz import Digraph
+#-----------------------------------------------------------INICIA ANALISIS SEMANTICO
 def procesar_imprimir(instr, ts) :
     print('> ', resolver_cadena(instr.cad, ts))
 
@@ -88,6 +89,31 @@ def procesar_instrucciones(instrucciones, ts) :
         elif isinstance(instr, If) : procesar_if(instr, ts)
         elif isinstance(instr, IfElse) : procesar_if_else(instr, ts)
         else : print('Error: instrucción no válida')
+#-----------------------------------------------------------TERMINA ANALISIS SEMANTICO
+
+#-----------------------------------------------------------INICIA GRAFICACION DEL AST
+
+def dibujar_asignacion(instr,root,cont):
+    
+    #print(type(cont))
+    cont=cont+1
+    nodo = 'nodo'+ str(cont)
+    dot.node(nodo,'Asignacion')
+    dot.edge(root, nodo)
+    cont = cont +1
+    nodo1= 'nodo'+str(cont)
+    dot.node(nodo1,instr.id)
+    dot.edge(nodo,nodo1)
+    return cont
+
+def DibujarAST(instrucciones):
+    cont = 1
+    root = 'nodo'+ str(cont)
+    dot.node(root, 'AUGUS')
+    for instr in instrucciones:
+        if isinstance(instr,Asignacion) : cont = dibujar_asignacion(instr,root,cont)
+        else : print('esta instruccion no se puede graficar')
+    print(dot.source)
 
 f = open("./entrada.txt", "r")
 input = f.read()
@@ -95,4 +121,6 @@ input = f.read()
 instrucciones = g.parse(input)
 ts_global = TS.TablaDeSimbolos()
 
+dot = Digraph(comment='AUGUS')
+DibujarAST(instrucciones)
 procesar_instrucciones(instrucciones, ts_global)
