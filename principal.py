@@ -313,7 +313,28 @@ def resolver_expresion_aritmetica(expNum, ts) :
             print('error de tipos ',exp2,'y ',exp2,' no pueden operarse en un XOR, ambos deben ser INT')
 
     elif isinstance (expNum, ExpresionLogicaOR):
-        print('ES OR')
+        exp1 = resolver_expresion_aritmetica(expNum.exp1,ts)
+        exp2 = resolver_expresion_aritmetica(expNum.exp2,ts)
+        if expNum.exp1.tipo==TS.TIPO_DATO.INT and expNum.exp1.tipo==TS.TIPO_DATO.INT :
+            expNum.tipo = TS.TIPO_DATO.INT
+            if exp1==true:
+                if exp2==true:
+                    return true
+                elif exp2==false:
+                    return true
+                else:
+                    print("error de valor ",exp2," no puede ser comparado en un OR")          
+            elif exp1==false:
+                if exp2==true:
+                    return true
+                elif exp2==false:
+                    return false
+                else:
+                    print("error de valor ",exp2,", no puede ser comparado en un OR") 
+            else:
+                print("error de valor ",exp1," no puede ser comparado en un OR")       
+        else:
+            print('error de tipos ',exp2,'y ',exp2,' no pueden operarse en un OR, ambos deben ser INT')
     
     elif isinstance (expNum, ExpresionLogicaAND):   
         exp1 = resolver_expresion_aritmetica(expNum.exp1,ts)
