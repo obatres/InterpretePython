@@ -287,6 +287,14 @@ def resolver_expresion_aritmetica(expNum, ts) :
             print('Valor',temp,' no asociado a una condicion logica')
         expNum.tipo=TS.TIPO_DATO.INT
         return expNum.val
+   
+    elif isinstance (expNum, ExpresionLogicaXOR):
+        print('ES XOR')
+
+    elif isinstance (expNum, ExpresionLogicaOR):
+        print('ES OR')
+    elif isinstance (expNum, ExpresionLogicaAND):   
+        print('ES AND') 
     else:
         print(expNum)
 

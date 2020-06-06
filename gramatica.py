@@ -17,7 +17,8 @@ reservadas = {
     'array':'ARRAY',
     'while':'WHILE',
     'end':'END',
-    'abs':'ABS'
+    'abs':'ABS',
+    'xor':'XORLOG'
 }
 
 tokens  = [
@@ -46,7 +47,6 @@ tokens  = [
     'NOTLOG',
     'ANDLOG',
     'ORLOG',
-    'XORLOG',
     'NOTBIT',
     'ORBIT',
     'XORBIT',
@@ -82,7 +82,6 @@ t_DOSP      = r':'
 t_NOTLOG    = r'!'
 t_ANDLOG    = r'&&'
 t_ORLOG     = r'\|\|'
-t_XORLOG    = r'xor'
 t_NOTBIT    = r'~'
 t_ANDBIT    = r'&'
 t_ORBIT     = r'\|'
@@ -390,10 +389,13 @@ def p_expresion_log_relacional(t) :
                             | expresion_log_relacional ANDLOG expresion_log_relacional
                             | expresion_log_relacional ORLOG expresion_log_relacional
                             | expresion_log_relacional XORLOG expresion_log_relacional'''
-    #if t[2] == '>'    : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MAYOR_QUE)
+    if t[2] == '>'    : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MAYOR_QUE)
     #elif t[2] == '<'  : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MENOR_QUE)
     #elif t[2] == '==' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.IGUAL)
     #elif t[2] == '!=' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.DIFERENTE)
+    elif t[2] == 'xor' : t[0] = ExpresionLogicaXOR(t[1], t[3])
+    elif t[2] == '&&' : t[0] = ExpresionLogicaAND(t[1], t[3])
+    elif t[2] == '||' : t[0] = ExpresionLogicaOR(t[1], t[3])
     print('reconoce expresion logica relacional')
 
 #RECIBE !$t3

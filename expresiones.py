@@ -128,6 +128,32 @@ class ExpresionLogica() :
         self.exp1 = exp1
         self.exp2 = exp2
         self.operador = operador
+class ExpresionLogicaXOR():
+    '''
+        Esta clase representa la expresión lógica XOR
+    '''
+
+    def __init__(self, exp1, exp2) :
+        self.exp1 = exp1
+        self.exp2 = exp2
+
+class ExpresionLogicaAND():
+    '''
+        Esta clase representa la expresión lógica AND
+    '''
+
+    def __init__(self, exp1, exp2) :
+        self.exp1 = exp1
+        self.exp2 = exp2
+
+class ExpresionLogicaOR():
+    '''
+        Esta clase representa la expresión lógica OR
+    '''
+
+    def __init__(self, exp1, exp2) :
+        self.exp1 = exp1
+        self.exp2 = exp2
 
 class ExpresionLogicaNot ():
     '''
