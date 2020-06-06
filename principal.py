@@ -316,7 +316,28 @@ def resolver_expresion_aritmetica(expNum, ts) :
         print('ES OR')
     
     elif isinstance (expNum, ExpresionLogicaAND):   
-        print('ES AND') 
+        exp1 = resolver_expresion_aritmetica(expNum.exp1,ts)
+        exp2 = resolver_expresion_aritmetica(expNum.exp2,ts)
+        if expNum.exp1.tipo==TS.TIPO_DATO.INT and expNum.exp1.tipo==TS.TIPO_DATO.INT :
+            expNum.tipo = TS.TIPO_DATO.INT
+            if exp1==true:
+                if exp2==true:
+                    return true
+                elif exp2==false:
+                    return false
+                else:
+                    print("error de valor ",exp2," no puede ser comparado en un AND")          
+            elif exp1==false:
+                if exp2==true:
+                    return false
+                elif exp2==false:
+                    return true
+                else:
+                    print("error de valor ",exp2,", no puede ser comparado en un AND") 
+            else:
+                print("error de valor ",exp1,", no puede ser comparado en un AND")       
+        else:
+            print('error de tipos ',exp1,' y "=',exp2,' no pueden operarse en un AND, ambos deben ser INT')
     
     else:
         print(expNum)
