@@ -54,7 +54,10 @@ tokens  = [
     'DERBIT',
     'MAYORIG',
     'MENORIG',
-    'LABEL'
+    'LABEL',
+    'PTEMPORAL',
+    'CADE'
+    
 ] + list(reservadas.values())
 
 # Tokens
@@ -116,6 +119,11 @@ def t_TEMPORAL(t):
     t.value = str(t.value)
     return t
 
+def t_PTEMPORAL(t):
+    r'\&\$(t[0-9]+)'
+    t.value = str(t.value)
+    return t
+
 def t_PARAMETRO(t):
     r'\$[a][0-9]+'
     t.value = str(t.value)
@@ -155,6 +163,12 @@ def t_CADENA(t):
     r'\'.*?\''
     t.value = t.value[1:-1] # remuevo las comillas
     return t 
+
+def t_CADE(t):
+    r'\".*?\"'
+    t.value = t.value[1:-1] # remuevo las comillas
+    return t 
+
 
 def t_LABEL(t):
     r'[a-zA-Z]+'
@@ -243,7 +257,7 @@ def p_expresion_logica_ins(t):
 #Recibe: destruccion de variable unset($t1);
 def p_UNSETF(t):
     'UNSETF : UNSET PARIZQ expresion_numerica PARDER PTCOMA'
-    print(t[3])
+    t[0] = Unset(t[3])
 
 #RECIBE main:
 def p_INICIO(t):
@@ -259,7 +273,6 @@ def p_EXITF(t):
 def p_instruccion_imprimir(t) :
     'imprimir_instr     : PRINT PARIZQ expresion_log_relacional PARDER PTCOMA'
     t[0] =Imprimir(t[3])
-    print('PASA POR IMPRIMIR',t[3])
 
 def p_instruccion_definicion(t) :
     'definicion_instr   : NUMERO TEMPORAL PTCOMA'
@@ -299,6 +312,7 @@ def p_expresion_binaria(t):
     elif t[2] == '-': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.MENOS)
     elif t[2] == '*': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.POR)
     elif t[2] == '/': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.DIVIDIDO)
+    elif t[2] == '%': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.RESIDUO)
 
 def p_expresion_unaria(t):
     'expresion_numerica : MENOS expresion_numerica %prec UMENOS'
@@ -310,31 +324,38 @@ def p_expresion_agrupacion(t):
     t[0] = t[2]
 
 def p_expresion_number(t):
-    '''expresion_numerica : ENTERO
-                        | DECIMAL'''
+    '''expresion_numerica : ENTERO  '''
     t[0] = ExpresionNumero(t[1],TS.TIPO_DATO.INT)
     #print(t[1])
 
+def p_expresion_decimal(t):
+    'expresion_numerica : DECIMAL'
+    t[0] = ExpresionNumero(t[1],TS.TIPO_DATO.FLOAT)
+
 def p_expresion_id(t):
     'expresion_numerica   : ID'
-    t[0] = ExpresionIdentificador(t[1])
-    print('PASA POR ID',t[1])
+    t[0] = ExpresionNumero(t[1])
+
 # Recibe temporales $t2
 def p_expresion_tempo(t):
     'expresion_numerica : TEMPORAL'
-    t[0] = t[1]                   
+    t[0] = ExpresionTemporal(t[1])                   
     
 
 # recibe: punteros  &$t1  
 def p_expresion_puntero(t):
-    'expresion_numerica : ANDBIT expresion_numerica'
-    print(t[2])
+    'expresion_numerica : PTEMPORAL'
+    t[0] = ExpresionPunteroTemp(t[1])
 
 #recibe: cadena 'hola'
 def p_expresion_cadena(t) :
     'expresion_numerica     : CADENA'
-    #t[0] = ExpresionDobleComilla(t[1])
-    print(t[1])
+    t[0] = ExpresionNumero(t[1], TS.TIPO_DATO.CADENA)
+
+#recibe: cadena "hola"
+def p_expresion_cade(t) :
+    'expresion_numerica     : CADE'
+    t[0] = ExpresionNumero(t[1], TS.TIPO_DATO.CADENA)
 
 #recibe: read()
 def p_expresion_read(t):
@@ -344,9 +365,9 @@ def p_expresion_read(t):
 #recibe: conversiones TIPOCONVERSION $t1 
 def p_expresion_conversion(t):
     'expresion_numerica : TIPOCONVERSION expresion_numerica'
-    print("conversion: "+t[1])
+    t[0] = ExpresionConversion(t[1],t[2])
 
-#recibe: tipo de conversion (int) (float)
+#recibe: tipo de conversion (int) (float) (char)
 def p_expresion_tipoConversion(t):
     '''TIPOCONVERSION : PARIZQ INT PARDER
                     | PARIZQ FLOAT PARDER
@@ -356,8 +377,7 @@ def p_expresion_tipoConversion(t):
 #Recibe: valor absoluto
 def p_expresion_valorabs(t):
     'expresion_numerica : ABS PARIZQ expresion_numerica PARDER'
-    print(t[3])
-
+    t[0] =  ExpresionValorAbsoluto(t[3])
 
 #Recibe expresiones logicas y relacionales
 def p_expresion_log_relacional(t) :
@@ -369,13 +389,17 @@ def p_expresion_log_relacional(t) :
                             | expresion_numerica MENORIG expresion_numerica
                             | expresion_log_relacional ANDLOG expresion_log_relacional
                             | expresion_log_relacional ORLOG expresion_log_relacional
-                            | expresion_log_relacional XORLOG expresion_log_relacional
-                            | NOTLOG expresion_log_relacional'''
+                            | expresion_log_relacional XORLOG expresion_log_relacional'''
     #if t[2] == '>'    : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MAYOR_QUE)
     #elif t[2] == '<'  : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MENOR_QUE)
     #elif t[2] == '==' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.IGUAL)
     #elif t[2] == '!=' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.DIFERENTE)
     print('reconoce expresion logica relacional')
+
+#RECIBE !$t3
+def p_expresion_logica_not(t):
+    'expresion_log_relacional : NOTLOG expresion_log_relacional'
+    t[0] = ExpresionLogicaNot(t[2])
 
 #Sintetiza la expresion de expresion_log_relacional
 def p_expresion_expresionnumerica(t):
@@ -384,7 +408,7 @@ def p_expresion_expresionnumerica(t):
 
 def p_error(t):
     print(t)
-    print("Error sintáctico en '%s'" % t.value)
+    print("Error sintáctico en '%s'" % t.value,'> ',str(t.lineno))
 
 import ts as TS
 import ply.yacc as yacc

@@ -30,6 +30,17 @@ class TablaDeSimbolos() :
 
         return self.simbolos[id]
 
+    def obtenerPuntero(self,id):
+        cont =0
+        if not id in self.simbolos :
+            print('Error: variable ', id, ' no definida. Puntero no accesible')
+        else:
+            for i in self.simbolos:
+                if(str(i)==id):
+                    return cont
+                else:
+                    cont = cont +1
+
     def actualizar(self, simbolo) :
         if not simbolo.id in self.simbolos :
             print('Error: variable ', simbolo.id, ' no definida.')
@@ -37,7 +48,14 @@ class TablaDeSimbolos() :
             self.simbolos[simbolo.id] = simbolo
 
     def existeSimbolo(self,simbolo):
+
         if not simbolo.id in self.simbolos:
             return False
         else:
             return True
+
+    def eliminar(self,id):
+        if not id in self.simbolos :
+            print('Error: variable ', id, ' no definida.')
+        else:
+            del self.simbolos[id]

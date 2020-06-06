@@ -5,6 +5,7 @@ class OPERACION_ARITMETICA(Enum) :
     MENOS = 2
     POR = 3
     DIVIDIDO = 4
+    RESIDUO = 5
 
 class OPERACION_LOGICA(Enum) :
     MAYOR_QUE = 1
@@ -36,6 +37,23 @@ class ExpresionNegativo(ExpresionNumerica) :
     def __init__(self, exp) :
         self.exp = exp
 
+class ExpresionPunteroTemp(ExpresionNumerica):
+    '''
+        Esta clase representa el puntero un temporal.
+    '''
+
+    def __init__(self, id = "") :
+        self.id = id
+
+class ExpresionConversion (ExpresionNumerica):
+    '''
+        Esta clase representa la conversion de tipo de un valor.
+    '''
+
+    def __init__(self, tipo , exp) :
+        self.tipo = tipo 
+        self.exp = exp
+
 class ExpresionNumero(ExpresionNumerica) :
     '''
         Esta clase representa una expresión numérica entera o decimal.
@@ -48,6 +66,21 @@ class ExpresionNumero(ExpresionNumerica) :
 class ExpresionIdentificador(ExpresionNumerica) :
     '''
         Esta clase representa un identificador.
+    '''
+
+    def __init__(self, id = "") :
+        self.id = id
+
+class ExpresionValorAbsoluto(ExpresionNumerica):
+    '''
+        Esta clase representa una expresión que recibe un valor numerico y devuelve su valor absoluto
+    '''
+    def __init__(self, exp) :
+        self.exp = exp
+
+class ExpresionTemporal(ExpresionNumerica) :
+    '''
+        Esta clase representa un temporal.
     '''
 
     def __init__(self, id = "") :
@@ -95,3 +128,13 @@ class ExpresionLogica() :
         self.exp1 = exp1
         self.exp2 = exp2
         self.operador = operador
+
+class ExpresionLogicaNot ():
+    '''
+        Esta clase representa la expresión lógica.
+        Esta clase recibe el operando NOT y el operador
+    '''
+
+    def __init__(self, exp) :
+        self.exp = exp
+

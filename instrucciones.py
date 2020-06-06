@@ -63,3 +63,12 @@ class IfElse(Instruccion) :
         self.expLogica = expLogica
         self.instrIfVerdadero = instrIfVerdadero
         self.instrIfFalso = instrIfFalso
+
+class Unset(Instruccion):
+    '''
+        Esta clase representa la instrucción unset.
+        La instrucción unset únicamente tiene como parámetro un registro
+    '''
+
+    def __init__(self,  exp) :
+        self.exp = exp    
