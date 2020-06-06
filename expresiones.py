@@ -42,7 +42,15 @@ class ExpresionBitNot (ExpresionNumerica):
     '''
     def __init__(self, exp) :
         self.exp = exp
-        
+
+class ExpresionBitAnd (ExpresionNumerica):
+    '''
+        Esta clase representa la Expresión logica bit a bit de AND 
+    '''
+    def __init__(self, exp1, exp2):
+        self.exp1 = exp1
+        self.exp2 = exp2
+
 class ExpresionPunteroTemp(ExpresionNumerica):
     '''
         Esta clase representa el puntero un temporal.
