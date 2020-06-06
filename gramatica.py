@@ -305,13 +305,16 @@ def p_expresion_binaria(t):
                         | expresion_numerica ORBIT expresion_numerica
                         | expresion_numerica XORBIT expresion_numerica
                         | expresion_numerica IZQBIT expresion_numerica
-                        | expresion_numerica DERBIT expresion_numerica
-                        | NOTBIT expresion_numerica'''
+                        | expresion_numerica DERBIT expresion_numerica'''
     if t[2] == '+'  : t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.MAS)
     elif t[2] == '-': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.MENOS)
     elif t[2] == '*': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.POR)
     elif t[2] == '/': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.DIVIDIDO)
     elif t[2] == '%': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.RESIDUO)
+
+def p_expresion_bit_not(t):
+    'expresion_numerica : NOTBIT expresion_numerica'
+    t[0] = ExpresionBitNot(t[2])
 
 def p_expresion_unaria(t):
     'expresion_numerica : MENOS expresion_numerica %prec UMENOS'
@@ -396,7 +399,7 @@ def p_expresion_log_relacional(t) :
     elif t[2] == 'xor' : t[0] = ExpresionLogicaXOR(t[1], t[3])
     elif t[2] == '&&' : t[0] = ExpresionLogicaAND(t[1], t[3])
     elif t[2] == '||' : t[0] = ExpresionLogicaOR(t[1], t[3])
-    print('reconoce expresion logica relacional')
+
 
 #RECIBE !$t3
 def p_expresion_logica_not(t):

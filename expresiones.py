@@ -36,7 +36,13 @@ class ExpresionNegativo(ExpresionNumerica) :
     '''
     def __init__(self, exp) :
         self.exp = exp
-
+class ExpresionBitNot (ExpresionNumerica):
+    '''
+        Esta clase representa la Expresión logica bit a bit de NOT 
+    '''
+    def __init__(self, exp) :
+        self.exp = exp
+        
 class ExpresionPunteroTemp(ExpresionNumerica):
     '''
         Esta clase representa el puntero un temporal.

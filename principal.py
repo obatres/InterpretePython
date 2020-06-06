@@ -360,6 +360,8 @@ def resolver_expresion_aritmetica(expNum, ts) :
         else:
             print('error de tipos ',exp1,' y "=',exp2,' no pueden operarse en un AND, ambos deben ser INT')
     
+    elif isinstance (expNum, ExpresionBitNot):
+        print('ES NOT')
     else:
         print(expNum)
 
