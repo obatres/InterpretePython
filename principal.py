@@ -365,6 +365,9 @@ def resolver_expresion_aritmetica(expNum, ts) :
     
     elif isinstance (expNum, ExpresionBitAnd):
         print('ES AND')
+
+    elif isinstance (expNum, ExpresionBitOr):
+        print('ES OR')    
     else:
         print(expNum)
 

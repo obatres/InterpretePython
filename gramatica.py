@@ -312,6 +312,7 @@ def p_expresion_binaria(t):
     elif t[2] == '/': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.DIVIDIDO)
     elif t[2] == '%': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.RESIDUO)
     elif t[2] == '&': t[0] = ExpresionBitAnd(t[1], t[3])
+    elif t[2] == '|': t[0] = ExpresionBitOr(t[1], t[3])
 
 def p_expresion_bit_not(t):
     'expresion_numerica : NOTBIT expresion_numerica'
