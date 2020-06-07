@@ -398,9 +398,11 @@ def p_expresion_log_relacional(t) :
                             | expresion_log_relacional ORLOG expresion_log_relacional
                             | expresion_log_relacional XORLOG expresion_log_relacional'''
     if t[2] == '>'    : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MAYOR_QUE)
-    #elif t[2] == '<'  : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MENOR_QUE)
-    #elif t[2] == '==' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.IGUAL)
-    #elif t[2] == '!=' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.DIFERENTE)
+    elif t[2] == '<'  : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MENOR_QUE)
+    elif t[2] == '==' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.IGUAL)
+    elif t[2] == '!=' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.DIFERENTE)
+    elif t[2] == '>=' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MAYORQUE)
+    elif t[2] == '<=' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MENORQUE)
     elif t[2] == 'xor' : t[0] = ExpresionLogicaXOR(t[1], t[3])
     elif t[2] == '&&' : t[0] = ExpresionLogicaAND(t[1], t[3])
     elif t[2] == '||' : t[0] = ExpresionLogicaOR(t[1], t[3])

@@ -82,12 +82,27 @@ def resolver_expreision_logica(expLog, ts) :
             if expLog.operador == OPERACION_LOGICA.MAYOR_QUE : 
                 if exp1 > exp2: return true
                 else:           return false 
-            if expLog.operador == OPERACION_LOGICA.MENOR_QUE : return exp1 < exp2
+            if expLog.operador == OPERACION_LOGICA.MENOR_QUE :
+                if exp1 < exp2: return true
+                else:           return false 
             if expLog.operador == OPERACION_LOGICA.IGUAL : return exp1 == exp2
             if expLog.operador == OPERACION_LOGICA.DIFERENTE : return exp1 != exp2
+            if expLog.operador == OPERACION_LOGICA.MAYORQUE : return exp1 >= exp2
+            if expLog.operador == OPERACION_LOGICA.MENORQUE : return exp1 <= exp2
         else:
             print('error de tipos ',exp1,'y ',exp2,' no pueden ser operados en una operacion relacional, \n se espera que ambos tengan el mismo tipo')
-
+    elif expLog.exp1.tipo == TS.TIPO_DATO.CADENA:
+        if expLog.exp2.tipo == TS.TIPO_DATO.CADENA:
+            expLog.tipo = TS.TIPO_DATO.INT
+            if expLog.operador == OPERACION_LOGICA.MAYOR_QUE : 
+                if exp1 > exp2: return true
+                else:           return false 
+            if expLog.operador == OPERACION_LOGICA.MENOR_QUE :
+                if exp1 < exp2: return true
+                else:           return false                 
+        else:
+            print('error de tipos ',exp1,'y ',exp2,' no pueden ser operados en una operacion relacional, \n se espera que ambos tengan el mismo tipo')
+    
 
 def resolver_expresion_aritmetica(expNum, ts) :
     if isinstance(expNum, ExpresionBinaria) :

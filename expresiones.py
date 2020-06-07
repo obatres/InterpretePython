@@ -12,6 +12,8 @@ class OPERACION_LOGICA(Enum) :
     MENOR_QUE = 2
     IGUAL = 3
     DIFERENTE = 4
+    MAYORQUE = 5
+    MENORQUE = 6
 
 class ExpresionNumerica:
     '''
