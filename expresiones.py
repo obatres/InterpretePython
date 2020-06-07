@@ -58,7 +58,15 @@ class ExpresionBitOr (ExpresionNumerica):
     def __init__(self, exp1, exp2):
         self.exp1 = exp1
         self.exp2 = exp2
-        
+
+class ExpresionBitXor (ExpresionNumerica):
+    '''
+        Esta clase representa la Expresión logica bit a bit de XOR 
+    '''
+    def __init__(self, exp1, exp2):
+        self.exp1 = exp1
+        self.exp2 = exp2        
+
 class ExpresionPunteroTemp(ExpresionNumerica):
     '''
         Esta clase representa el puntero un temporal.
