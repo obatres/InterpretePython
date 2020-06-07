@@ -372,6 +372,8 @@ def resolver_expresion_aritmetica(expNum, ts) :
     elif isinstance (expNum, ExpresionBitXor):
         print('ES XOR')    
 
+    elif isinstance (expNum, ExpresionBitIzq):
+        print('ES CORRIEMIENTO A LA IZQUI')  
     else:
         print(expNum)
 
