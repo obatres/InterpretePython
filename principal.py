@@ -408,15 +408,37 @@ def resolver_expresion_aritmetica(expNum, ts) :
                 expNum.tipo = TS.TIPO_DATO.INT
                 return t1 ^ t2
             else:
-                print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un AND bit a bit se espera que ambos sean INT o FLOAT')
+                print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un XOR bit a bit se espera que ambos sean INT o FLOAT')
         else:
-            print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un AND bit a bit se espera que ambos sean INT o FLOAT')
+            print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un XOR bit a bit se espera que ambos sean INT o FLOAT')
 
     elif isinstance (expNum, ExpresionBitIzq):
-        print('ES CORRIEMIENTO A LA IZQUI')  
+        exp1 = resolver_expresion_aritmetica(expNum.exp1,ts)
+        exp2 = resolver_expresion_aritmetica(expNum.exp2,ts)
+        if expNum.exp1.tipo == TS.TIPO_DATO.INT or expNum.exp1.tipo == TS.TIPO_DATO.FLOAT: 
+            t1 = int(Decimal(exp1))     
+            if expNum.exp2.tipo == TS.TIPO_DATO.INT or expNum.exp2.tipo == TS.TIPO_DATO.FLOAT: 
+                t2 = int(Decimal(exp2))
+                expNum.tipo = TS.TIPO_DATO.INT
+                return t1 << t2
+            else:
+                print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un CORR IZQ bit a bit se espera que ambos sean INT o FLOAT')
+        else:
+            print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un CORR IZQ bit a bit se espera que ambos sean INT o FLOAT')
 
     elif isinstance (expNum, ExpresionBitDer):
-        print('ES CORRIEMIENTO A LA DER')  
+        exp1 = resolver_expresion_aritmetica(expNum.exp1,ts)
+        exp2 = resolver_expresion_aritmetica(expNum.exp2,ts)
+        if expNum.exp1.tipo == TS.TIPO_DATO.INT or expNum.exp1.tipo == TS.TIPO_DATO.FLOAT: 
+            t1 = int(Decimal(exp1))     
+            if expNum.exp2.tipo == TS.TIPO_DATO.INT or expNum.exp2.tipo == TS.TIPO_DATO.FLOAT: 
+                t2 = int(Decimal(exp2))
+                expNum.tipo = TS.TIPO_DATO.INT
+                return t1 >> t2
+            else:
+                print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un CORR DER bit a bit se espera que ambos sean INT o FLOAT')
+        else:
+            print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un CORR DER bit a bit se espera que ambos sean INT o FLOAT')
     else:
         print(expNum)
 
