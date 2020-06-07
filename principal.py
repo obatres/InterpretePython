@@ -94,7 +94,9 @@ def resolver_expreision_logica(expLog, ts) :
             if expLog.operador == OPERACION_LOGICA.MAYORQUE : 
                 if exp1 >= exp2: return true
                 else:            return false 
-            if expLog.operador == OPERACION_LOGICA.MENORQUE : return exp1 <= exp2
+            if expLog.operador == OPERACION_LOGICA.MENORQUE : 
+                if exp1 <= exp2: return true
+                else:            return false 
         else:
             print('error de tipos ',exp1,'y ',exp2,' no pueden ser operados en una operacion relacional, \n se espera que ambos tengan el mismo tipo')
     elif expLog.exp1.tipo == TS.TIPO_DATO.CADENA:
@@ -114,10 +116,12 @@ def resolver_expreision_logica(expLog, ts) :
                 else:            return false        
             if expLog.operador == OPERACION_LOGICA.MAYORQUE : 
                 if exp1 >= exp2: return true
-                else:            return false                                                       
+                else:            return false  
+            if expLog.operador == OPERACION_LOGICA.MENORQUE : 
+                if exp1 <= exp2: return true
+                else:            return false                                                                      
         else:
             print('error de tipos ',exp1,'y ',exp2,' no pueden ser operados en una operacion relacional, \n se espera que ambos tengan el mismo tipo')
-    
 
 def resolver_expresion_aritmetica(expNum, ts) :
     if isinstance(expNum, ExpresionBinaria) :
