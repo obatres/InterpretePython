@@ -385,10 +385,32 @@ def resolver_expresion_aritmetica(expNum, ts) :
             print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un AND bit a bit se espera que ambos sean INT o FLOAT')
 
     elif isinstance (expNum, ExpresionBitOr):
-        print('ES OR')    
+        exp1 = resolver_expresion_aritmetica(expNum.exp1,ts)
+        exp2 = resolver_expresion_aritmetica(expNum.exp2,ts)
+        if expNum.exp1.tipo == TS.TIPO_DATO.INT or expNum.exp1.tipo == TS.TIPO_DATO.FLOAT: 
+            t1 = int(Decimal(exp1))     
+            if expNum.exp2.tipo == TS.TIPO_DATO.INT or expNum.exp2.tipo == TS.TIPO_DATO.FLOAT: 
+                t2 = int(Decimal(exp2))
+                expNum.tipo = TS.TIPO_DATO.INT
+                return t1 | t2
+            else:
+                print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un OR bit a bit se espera que ambos sean INT o FLOAT')
+        else:
+            print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un OR bit a bit se espera que ambos sean INT o FLOAT')
 
     elif isinstance (expNum, ExpresionBitXor):
-        print('ES XOR')    
+        exp1 = resolver_expresion_aritmetica(expNum.exp1,ts)
+        exp2 = resolver_expresion_aritmetica(expNum.exp2,ts)
+        if expNum.exp1.tipo == TS.TIPO_DATO.INT or expNum.exp1.tipo == TS.TIPO_DATO.FLOAT: 
+            t1 = int(Decimal(exp1))     
+            if expNum.exp2.tipo == TS.TIPO_DATO.INT or expNum.exp2.tipo == TS.TIPO_DATO.FLOAT: 
+                t2 = int(Decimal(exp2))
+                expNum.tipo = TS.TIPO_DATO.INT
+                return t1 ^ t2
+            else:
+                print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un AND bit a bit se espera que ambos sean INT o FLOAT')
+        else:
+            print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un AND bit a bit se espera que ambos sean INT o FLOAT')
 
     elif isinstance (expNum, ExpresionBitIzq):
         print('ES CORRIEMIENTO A LA IZQUI')  
