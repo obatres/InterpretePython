@@ -76,10 +76,18 @@ def resolver_cadena(exp, ts) :
 def resolver_expreision_logica(expLog, ts) :
     exp1 = resolver_expresion_aritmetica(expLog.exp1, ts)
     exp2 = resolver_expresion_aritmetica(expLog.exp2, ts)
-    if expLog.operador == OPERACION_LOGICA.MAYOR_QUE : return exp1 > exp2
-    if expLog.operador == OPERACION_LOGICA.MENOR_QUE : return exp1 < exp2
-    if expLog.operador == OPERACION_LOGICA.IGUAL : return exp1 == exp2
-    if expLog.operador == OPERACION_LOGICA.DIFERENTE : return exp1 != exp2
+    if expLog.exp1.tipo == TS.TIPO_DATO.INT or expLog.exp1.tipo == TS.TIPO_DATO.FLOAT:
+        if expLog.exp2.tipo == TS.TIPO_DATO.INT or expLog.exp2.tipo == TS.TIPO_DATO.FLOAT:
+            expLog.tipo = TS.TIPO_DATO.INT
+            if expLog.operador == OPERACION_LOGICA.MAYOR_QUE : 
+                if exp1 > exp2: return true
+                else:           return false 
+            if expLog.operador == OPERACION_LOGICA.MENOR_QUE : return exp1 < exp2
+            if expLog.operador == OPERACION_LOGICA.IGUAL : return exp1 == exp2
+            if expLog.operador == OPERACION_LOGICA.DIFERENTE : return exp1 != exp2
+        else:
+            print('error de tipos ',exp1,'y ',exp2,' no pueden ser operados en una operacion relacional, \n se espera que ambos tengan el mismo tipo')
+
 
 def resolver_expresion_aritmetica(expNum, ts) :
     if isinstance(expNum, ExpresionBinaria) :
@@ -439,6 +447,9 @@ def resolver_expresion_aritmetica(expNum, ts) :
                 print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un CORR DER bit a bit se espera que ambos sean INT o FLOAT')
         else:
             print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un CORR DER bit a bit se espera que ambos sean INT o FLOAT')
+    
+    elif isinstance (expNum,ExpresionLogica):
+        return resolver_expreision_logica(expNum,ts)
     else:
         print(expNum)
 
