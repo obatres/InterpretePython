@@ -315,6 +315,7 @@ def p_expresion_binaria(t):
     elif t[2] == '|': t[0] = ExpresionBitOr(t[1], t[3])
     elif t[2] == '^': t[0] = ExpresionBitXor(t[1], t[3])
     elif t[2] == '<<': t[0] = ExpresionBitIzq(t[1], t[3])
+    elif t[2] == '>>': t[0] = ExpresionBitDer(t[1], t[3])
 
 def p_expresion_bit_not(t):
     'expresion_numerica : NOTBIT expresion_numerica'
