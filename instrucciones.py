@@ -72,3 +72,12 @@ class Unset(Instruccion):
 
     def __init__(self,  exp) :
         self.exp = exp    
+
+class ErrorSin(Instruccion):
+    '''
+        Esta clase representa la instrucción error sintactico.
+        La instrucción unset únicamente tiene como parámetro un registro
+    '''
+    '''
+    def __init__(self,  exp) :
+        self.exp = exp  '''    

@@ -11,9 +11,12 @@ false = 0
 #-----------------------------------------------------------INICIA ANALISIS SEMANTICO
 def procesar_imprimir(instr, ts) :
     try:
-        salida = resolver_registro(instr.exp,ts)
-        print('>', salida)
-        return  str(salida) + '\n'
+        #if not ts.obtener(instr.exp.id).tipo == td.ARRAY:
+            salida = resolver_registro(instr.exp,ts)
+            print('>', salida)
+            return  str(salida) + '\n'
+        #else:
+            #print('Error, no se puede imprimir un arreglo')
     except:
         print('error de impresion, valor o variabe no encontrados: ',instr.exp.id)
         pass
@@ -484,6 +487,12 @@ def resolver_expresion_aritmetica(expNum, ts) :
     
     elif isinstance (expNum,ExpresionLogica):
         return resolver_expreision_logica(expNum,ts)
+    
+    elif isinstance (expNum, InicioArray):
+        expNum.tipo = TS.TIPO_DATO.ARRAY
+        expNum.val = {}
+        return expNum.val
+    
     else:
         print(expNum)
 
@@ -506,7 +515,7 @@ def procesar_instrucciones(instrucciones, ts) :
         elif isinstance(instr, If) : procesar_if(instr, ts)
         elif isinstance(instr, IfElse) : procesar_if_else(instr, ts)
         elif isinstance(instr, Unset) : procesar_unset(instr,ts)
-        else : print('Error: instrucción no válida')
+        else : print('Error: instrucción no válida', instr)
 #-----------------------------------------------------------TERMINA ANALISIS SEMANTICO
 
 #-----------------------------------------------------------INICIA GRAFICACION DEL AST
@@ -543,7 +552,15 @@ ts_global = TS.TablaDeSimbolos()
 
 
 dot = Digraph(comment='AUGUS')
-DibujarAST(instrucciones)
-procesar_instrucciones(instrucciones, ts_global)
+try:
+    DibujarAST(instrucciones)
+except :
+    pass
+
+try:
+    procesar_instrucciones(instrucciones, ts_global)
+except :
+    pass
+
 
 

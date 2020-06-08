@@ -56,7 +56,9 @@ tokens  = [
     'MENORIG',
     'LABEL',
     'PTEMPORAL',
-    'CADE'
+    'CADE',
+    'CORIZQ',
+    'CORDER' 
     
 ] + list(reservadas.values())
 
@@ -88,6 +90,8 @@ t_ORBIT     = r'\|'
 t_XORBIT    = r'\^'
 t_IZQBIT    = r'<<'
 t_DERBIT    = r'>>'
+t_CORIZQ    = r'\['
+t_CORDER    = r'\]'
 
 
 def t_DECIMAL(t):
@@ -245,9 +249,14 @@ def p_instruccion(t) :
                         | if_else_instr
                         | INICIO
                         | UNSETF
-                        | EXITF'''
+                        | EXITF
+                        | ASIGNAARREGLO'''
     t[0] = t[1]
 
+
+def p_asigna_arreglo(t):
+    'ASIGNAARREGLO : TEMPORAL ACCESO IGUAL expresion_log_relacional PTCOMA'  
+    print('accede a un arreglo')  
 #Recibe OPERACIONES LOGICAS
 def p_expresion_logica_ins(t):
     'instruccion : expresion_log_relacional'
@@ -348,7 +357,6 @@ def p_expresion_tempo(t):
     'expresion_numerica : TEMPORAL'
     t[0] = ExpresionTemporal(t[1])                   
     
-
 # recibe: punteros  &$t1  
 def p_expresion_puntero(t):
     'expresion_numerica : PTEMPORAL'
@@ -368,6 +376,24 @@ def p_expresion_cade(t) :
 def p_expresion_read(t):
     'expresion_numerica : READ PARIZQ PARDER'
     print(t[1]) 
+
+def p_inicializacion_array(t):
+    'expresion_numerica : ARRAY PARIZQ PARDER'
+    t[0]= InicioArray()
+
+def p_acceso_array_expresion(t):
+    'expresion_numerica : TEMPORAL ACCESO'
+    print('ACCESO DE ARRAY',t[2])
+
+def p_acceso_lista_array(t):
+    'ACCESO : ACCESO CORIZQ expresion_numerica CORDER'
+    t[1].append(t[3])
+    t[0] = t[1]
+
+def p_acceso_array(t):
+    'ACCESO : CORIZQ expresion_numerica CORDER '
+    t[0] = [t[2]]
+
 
 #recibe: conversiones TIPOCONVERSION $t1 
 def p_expresion_conversion(t):
@@ -419,8 +445,19 @@ def p_expresion_expresionnumerica(t):
     t[0]=t[1]
 
 def p_error(t):
-    print(t)
-    print("Error sintáctico en '%s'" % t.value,'> ',str(t.lineno))
+     # Read ahead looking for a terminating ";"
+     while True:
+         tok = parser.token()             # Get the next token
+         if not tok or tok.type == 'PTCOMA': break
+     parser.errok()
+ 
+     # Return SEMI to the parser as the next lookahead token
+     return tok 
+    #print(t)
+    #print("Error sintáctico en '%s'" % t.value,'> ',str(t.lineno))
+  
+
+   
 
 import ts as TS
 import ply.yacc as yacc

@@ -118,6 +118,10 @@ class ExpresionIdentificador(ExpresionNumerica) :
     def __init__(self, id = "") :
         self.id = id
 
+class InicioArray(ExpresionNumerica):
+    '''
+        Esta clase representa la inicializacion de un array.
+    '''
 class ExpresionValorAbsoluto(ExpresionNumerica):
     '''
         Esta clase representa una expresión que recibe un valor numerico y devuelve su valor absoluto
