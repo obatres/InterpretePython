@@ -125,7 +125,15 @@ class ExpresionPila(ExpresionNumerica):
 
     def __init__(self, id = "") :
         self.id = id   
-         
+
+class ExpresionPunteroPila(ExpresionNumerica):
+    '''
+        Esta clase representa el puntero de pila.
+    '''
+
+    def __init__(self, id = "") :
+        self.id = id  
+
 class InicioArray(ExpresionNumerica):
     '''
         Esta clase representa la inicializacion de un array.

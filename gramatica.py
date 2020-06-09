@@ -59,7 +59,8 @@ tokens  = [
     'CADE',
     'CORIZQ',
     'CORDER',
-    'PILAPOS'
+    'PILAPOS',
+    'PILAPUNTERO'
     
 ] + list(reservadas.values())
 
@@ -252,9 +253,18 @@ def p_instruccion(t) :
                         | UNSETF
                         | EXITF
                         | ASIGNAARREGLO
-                        | INICIAPILA'''
+                        | INICIAPILA
+                        | ASIGNAPUNTERO
+                        | ASIGNAPILA'''
     t[0] = t[1]
 
+def p_acceso_a_pila(t):
+    'ASIGNAPILA : PILAPOS CORIZQ PILAPUNTERO CORDER IGUAL expresion_log_relacional PTCOMA'
+    t[0]=AsignaValorPila(t[1],t[6],t[3])
+
+def p_asigna_puntero(t):
+    'ASIGNAPUNTERO : PILAPUNTERO IGUAL expresion_log_relacional PTCOMA'
+    t[0] = AsignaPunteroPila(t[1],t[3])
 def p_inicia_pila(t):
     'INICIAPILA : PILAPOS IGUAL ARRAY PARIZQ PARDER PTCOMA'
     t[0] = IniciaPila(t[1])
@@ -360,6 +370,11 @@ def p_expresion_id(t):
 def p_expresion_pila(t):
     'expresion_numerica   : PILAPOS'
     t[0] = ExpresionPila(t[1])
+
+def p_puntero_pila(t):
+    'expresion_numerica : PILAPUNTERO'
+    t[0] = ExpresionPunteroPila(t[1])
+
 # Recibe temporales $t2
 def p_expresion_tempo(t):
     'expresion_numerica : TEMPORAL'

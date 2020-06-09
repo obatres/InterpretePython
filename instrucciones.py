@@ -88,3 +88,20 @@ class IniciaPila (Instruccion):
     '''
     def __init__(self,  id) :
         self.id = id  
+
+class AsignaPunteroPila(Instruccion):
+    '''
+        Asigna puntero de  una pila
+    '''
+    def __init__(self,  id, exp) :
+        self.id = id 
+        self.exp = exp 
+
+class AsignaValorPila(Instruccion):
+    '''
+        Asigna un valor a una posicion de  una pila
+    '''
+    def __init__(self,  id, exp, puntero) :
+        self.id = id 
+        self.exp = exp
+        self.puntero = puntero 

@@ -1,4 +1,13 @@
 
 $s0 = array();
+$sp = 4;
+$sp =$sp+1;
+$s0[$sp]=2;
+$sp =$sp+1;
+$s0[$sp]=3;
+$sp =$sp+1;
+$s0[$sp]='sad';
+
 print($s0);
+print($sp);
 

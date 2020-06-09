@@ -498,6 +498,10 @@ def resolver_expresion_aritmetica(expNum, ts) :
         expNum.tipo = ts.obtener(expNum.id).tipo
         return expNum.val
    
+    elif isinstance (expNum,ExpresionPunteroPila):
+        expNum.val = ts.obtener(expNum.id).valor
+        expNum.tipo = td.INT
+        return expNum.val
     else:
         print(expNum)
 
@@ -516,6 +520,31 @@ def procesar_inicioPila(instr,ts):
     else:
         ts.agregar(pila)
 
+def procesar_asignacion_punteropila(instr,ts):
+    valor=resolver_expresion_aritmetica(instr.exp,ts)
+    punteropila = TS.Simbolo(instr.id,td.INT,valor)
+    if ts.existeSimbolo(punteropila):
+        ts.actualizar(punteropila)
+    else:
+        ts.agregar(punteropila)
+
+def procesar_asignacion_pila (instr,ts):
+    try:
+        pila = ts.obtener(instr.id).valor
+        pos = ts.obtener(instr.puntero).valor
+        valor = resolver_expresion_aritmetica(instr.exp,ts)
+        pila.insert(pos,valor)
+
+        nuevapila = TS.Simbolo(instr.id,td.PILA,pila)
+
+        if ts.existeSimbolo(nuevapila):
+            ts.actualizar(nuevapila)
+        else:
+            print('error pila',instr.id,'no existe')
+    except :
+        print('error en asignacion de valor a la pila')
+
+
 def procesar_instrucciones(instrucciones, ts) :
     ## lista de instrucciones recolectadas
     for instr in instrucciones :
@@ -527,6 +556,8 @@ def procesar_instrucciones(instrucciones, ts) :
         elif isinstance(instr, IfElse) : procesar_if_else(instr, ts)
         elif isinstance(instr, Unset) : procesar_unset(instr,ts)
         elif isinstance(instr,IniciaPila): procesar_inicioPila(instr,ts)
+        elif isinstance(instr,AsignaPunteroPila): procesar_asignacion_punteropila(instr,ts)
+        elif isinstance(instr,AsignaValorPila): procesar_asignacion_pila(instr,ts)
         else : print('Error: instrucción no válida', instr)
 #-----------------------------------------------------------TERMINA ANALISIS SEMANTICO
 
