@@ -105,3 +105,11 @@ class AsignaValorPila(Instruccion):
         self.id = id 
         self.exp = exp
         self.puntero = puntero 
+
+class AsignacionExtra(Instruccion):
+    '''
+        Asigna un valor a un registro parametro, ra y retorno
+    '''
+    def __init__(self,  id, exp) :
+        self.id = id 
+        self.exp = exp

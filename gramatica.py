@@ -60,7 +60,12 @@ tokens  = [
     'CORIZQ',
     'CORDER',
     'PILAPOS',
-    'PILAPUNTERO'
+    'PILAPUNTERO',
+    'PARAMETRO',
+    'VALORDEVUELTO',
+    'DIRRETORNO'
+
+    
     
 ] + list(reservadas.values())
 
@@ -255,9 +260,20 @@ def p_instruccion(t) :
                         | ASIGNAARREGLO
                         | INICIAPILA
                         | ASIGNAPUNTERO
-                        | ASIGNAPILA'''
+                        | ASIGNAPILA
+                        | ASIGNACIONEXTRA'''
     t[0] = t[1]
 
+
+def p_asigna_para_valorRet_ra(t):
+    'ASIGNACIONEXTRA :  VALORESPARAM IGUAL expresion_log_relacional PTCOMA'
+    t[0] = AsignacionExtra(t[1],t[3])
+def p_valoresSimp (t):
+    '''VALORESPARAM :  PARAMETRO
+                    | VALORDEVUELTO
+                    | DIRRETORNO'''
+    t[0]=t[1]
+                          
 def p_acceso_a_pila(t):
     'ASIGNAPILA : PILAPOS CORIZQ PILAPUNTERO CORDER IGUAL expresion_log_relacional PTCOMA'
     t[0]=AsignaValorPila(t[1],t[6],t[3])
@@ -285,7 +301,7 @@ def p_UNSETF(t):
 #RECIBE main:
 def p_INICIO(t):
     'INICIO : MAIN DOSP'
-    print(t[1])
+    print('es main',t[1])
 
 #Recibe: exit;
 def p_EXITF(t):

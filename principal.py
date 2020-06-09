@@ -39,7 +39,7 @@ def procesar_asignacion(instr, ts) :
         else:
             ts.agregar(simbolo)
     except :
-        print('No se puede realizar la asignacion')
+        print('No se puede realizar la asignacionde',instr.id)
         pass
         
 def procesar_mientras(instr, ts) :
@@ -556,7 +556,17 @@ def procesar_asignacion_pila (instr,ts):
     except :
         print('error en asignacion de valor a la pila')
 
-
+def procesar_asignacion_extra (instr,ts):
+    try:
+        val = resolver_expresion_aritmetica(instr.exp, ts)
+        simbolo = TS.Simbolo(instr.id, instr.exp.tipo, val)
+        if ts.existeSimbolo(simbolo) :
+            ts.actualizar(simbolo)
+        else:
+            ts.agregar(simbolo)
+    except :
+        print('No se puede realizar la asignacion de',instr.id)
+        pass
 def procesar_instrucciones(instrucciones, ts) :
     ## lista de instrucciones recolectadas
     for instr in instrucciones :
@@ -570,6 +580,7 @@ def procesar_instrucciones(instrucciones, ts) :
         elif isinstance(instr,IniciaPila): procesar_inicioPila(instr,ts)
         elif isinstance(instr,AsignaPunteroPila): procesar_asignacion_punteropila(instr,ts)
         elif isinstance(instr,AsignaValorPila): procesar_asignacion_pila(instr,ts)
+        elif isinstance(instr, AsignacionExtra): procesar_asignacion_extra(instr,ts)
         else : print('Error: instrucción no válida', instr)
 #-----------------------------------------------------------TERMINA ANALISIS SEMANTICO
 
