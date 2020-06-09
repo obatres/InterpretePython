@@ -375,6 +375,10 @@ def p_puntero_pila(t):
     'expresion_numerica : PILAPUNTERO'
     t[0] = ExpresionPunteroPila(t[1])
 
+def p_pop_pila(t):
+    'expresion_numerica : PILAPOS CORIZQ PILAPUNTERO CORDER'
+    t[0] = Expresion_Pop_pila(t[1],t[3])
+
 # Recibe temporales $t2
 def p_expresion_tempo(t):
     'expresion_numerica : TEMPORAL'

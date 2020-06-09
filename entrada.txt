@@ -7,7 +7,9 @@ $sp =$sp+1;
 $s0[$sp]=3;
 $sp =$sp+1;
 $s0[$sp]='sad';
-
+$sp=0;
+$t1 = $s0[$sp];
+print($t1);
 print($s0);
 print($sp);
 

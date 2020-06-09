@@ -502,6 +502,18 @@ def resolver_expresion_aritmetica(expNum, ts) :
         expNum.val = ts.obtener(expNum.id).valor
         expNum.tipo = td.INT
         return expNum.val
+
+    elif isinstance(expNum,Expresion_Pop_pila):
+        pila = ts.obtener(expNum.idPila).valor
+        puntero = ts.obtener(expNum.puntero).valor
+        
+        expNum.val = pila[puntero]
+
+        if isinstance(expNum.val,int): expNum.tipo = td.INT
+        elif isinstance (expNum.val,str): expNum.tipo = td.CADENA
+        elif isinstance(expNum.val,float): expNum.tipo = td.FLOAT
+        return expNum.val
+
     else:
         print(expNum)
 
@@ -606,4 +618,9 @@ except :
     pass
 
 
+class objetopila():
+
+    def __init__(self, valor, tipo):
+        self.valor = valor
+        self.tipo = tipo
 
