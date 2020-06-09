@@ -58,7 +58,8 @@ tokens  = [
     'PTEMPORAL',
     'CADE',
     'CORIZQ',
-    'CORDER' 
+    'CORDER',
+    'PILAPOS'
     
 ] + list(reservadas.values())
 
@@ -250,9 +251,13 @@ def p_instruccion(t) :
                         | INICIO
                         | UNSETF
                         | EXITF
-                        | ASIGNAARREGLO'''
+                        | ASIGNAARREGLO
+                        | INICIAPILA'''
     t[0] = t[1]
 
+def p_inicia_pila(t):
+    'INICIAPILA : PILAPOS IGUAL ARRAY PARIZQ PARDER PTCOMA'
+    t[0] = IniciaPila(t[1])
 
 def p_asigna_arreglo(t):
     'ASIGNAARREGLO : TEMPORAL ACCESO IGUAL expresion_log_relacional PTCOMA'  
@@ -352,6 +357,9 @@ def p_expresion_id(t):
     'expresion_numerica   : ID'
     t[0] = ExpresionNumero(t[1])
 
+def p_expresion_pila(t):
+    'expresion_numerica   : PILAPOS'
+    t[0] = ExpresionPila(t[1])
 # Recibe temporales $t2
 def p_expresion_tempo(t):
     'expresion_numerica : TEMPORAL'

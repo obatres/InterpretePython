@@ -81,3 +81,10 @@ class ErrorSin(Instruccion):
     '''
     def __init__(self,  exp) :
         self.exp = exp  '''    
+
+class IniciaPila (Instruccion):
+    '''
+        Inicia una pila
+    '''
+    def __init__(self,  id) :
+        self.id = id  

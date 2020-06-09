@@ -5,6 +5,7 @@ class TIPO_DATO(Enum) :
     FLOAT   = 2
     CADENA  = 3
     ARRAY   = 4
+    PILA    = 5
 
 
 class Simbolo() :

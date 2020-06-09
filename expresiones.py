@@ -118,6 +118,14 @@ class ExpresionIdentificador(ExpresionNumerica) :
     def __init__(self, id = "") :
         self.id = id
 
+class ExpresionPila(ExpresionNumerica):
+    '''
+        Esta clase representa un identificador de pila.
+    '''
+
+    def __init__(self, id = "") :
+        self.id = id   
+         
 class InicioArray(ExpresionNumerica):
     '''
         Esta clase representa la inicializacion de un array.

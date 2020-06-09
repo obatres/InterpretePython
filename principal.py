@@ -493,6 +493,11 @@ def resolver_expresion_aritmetica(expNum, ts) :
         expNum.val = {}
         return expNum.val
     
+    elif isinstance(expNum,ExpresionPila):
+        expNum.val = ts.obtener(expNum.id).valor
+        expNum.tipo = ts.obtener(expNum.id).tipo
+        return expNum.val
+   
     else:
         print(expNum)
 
@@ -504,6 +509,12 @@ def procesar_unset(exp, ts):
     else:
         print('El valor ',exp.exp,'no puede ser ejecutado por unset(), se esperaba un registro')
 
+def procesar_inicioPila(instr,ts):
+    pila = TS.Simbolo(instr.id,td.PILA,[])
+    if ts.existeSimbolo(pila):
+        print('La pila ya existe')
+    else:
+        ts.agregar(pila)
 
 def procesar_instrucciones(instrucciones, ts) :
     ## lista de instrucciones recolectadas
@@ -515,6 +526,7 @@ def procesar_instrucciones(instrucciones, ts) :
         elif isinstance(instr, If) : procesar_if(instr, ts)
         elif isinstance(instr, IfElse) : procesar_if_else(instr, ts)
         elif isinstance(instr, Unset) : procesar_unset(instr,ts)
+        elif isinstance(instr,IniciaPila): procesar_inicioPila(instr,ts)
         else : print('Error: instrucción no válida', instr)
 #-----------------------------------------------------------TERMINA ANALISIS SEMANTICO
 

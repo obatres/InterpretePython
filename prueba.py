@@ -1,30 +1,33 @@
 t={}
-l1=[0]
-t.setdefault(0,l1)
-l2=[1]
-t.setdefault(1,l2)
-print(t.get(1))
-l3 = 'carla'
-t.setdefault('nombre',l3)
+l=[4,5,'nombre','orlando']
+exp =5
+exp2=6
+cont = 0
 
-#$t1['nombre'][4]='o'
+def llenar(dicc,cont,exp):
+    if cont>=(len(l)-1):
+        ind = l[cont]
+        if dicc.get(ind):
+            print('existe ultimo')
+            u={ind:exp}
+            dicc.update(u)
+            cont=0
+        else:
+            dicc[ind]=exp
+            print('no existe el ultimo')
+            cont =0
+        print(ind,dicc)
+        return dicc   
+    else:
+        ind = l[cont]
+        cont = cont +1
+        if not dicc.get(ind):
+            print(ind,dicc)
+            dicc.setdefault(ind,llenar({},cont,exp))
 
-clave='nombre'
-posicion=4
-
-listatemp = t.get('nombre')
-
-try:
-    print(listatemp[4])
-except :
-    print(' no se puede acceder a la memoria')
+ 
 
 
-
-print(listatemp)
-'''p=['tercera posicion']
-j=[p]
-t.setdefault(2,j)'''
-
-print(t)
-#print(t.get(2)[0][0][0])
+r= llenar(t,cont,exp)
+#r=llenar(r,cont,exp2)
+print('Este es r',r)

@@ -1,6 +1,4 @@
 
-$t1 = array();
-
-
-print($t1);
+$s0 = array();
+print($s0);
 
