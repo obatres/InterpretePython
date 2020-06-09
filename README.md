@@ -1,4 +1,4 @@
-# InterpreteSencilloPLY
+# Interprete AUGUS
 
 ## Información General
 Proyecto de compiladores 2 vacaciones junio 2020
