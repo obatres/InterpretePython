@@ -146,4 +146,8 @@ class Goto(Instruccion):
     def __init__(self,id) :
         self.id = id 
 
-
+class Exit():
+    '''
+        Nodo de tipo Exit
+   
+    '''

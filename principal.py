@@ -601,7 +601,6 @@ def Llamada_goto(instr,ts,listasiguientes):
   
     siguientes = []
     i = 0
-    
     for ins in listasiguientes:
         if isinstance(ins,Label):
             if ins.id == instr.id:
@@ -610,6 +609,7 @@ def Llamada_goto(instr,ts,listasiguientes):
                 return
         i = i+1
     return
+
 def ejecutar_expresiones_label(listainstrucciones,ts,listaglobal):
         for instr in listainstrucciones :
             if isinstance(instr, Imprimir) : procesar_imprimir(instr, ts)
@@ -626,7 +626,10 @@ def ejecutar_expresiones_label(listainstrucciones,ts,listaglobal):
             elif isinstance(instr, Main): print('')
             elif isinstance(instr,Asigna_arreglo): procesar_asignacion_arreglo(instr,ts)
             elif isinstance(instr,Label): procesa_Label(instr,ts)
-            elif isinstance(instr,Goto): Llamada_goto(instr,ts, listaglobal)
+            elif isinstance(instr,Exit): print('Finaliza el programa')
+            elif isinstance(instr,Goto):
+                Llamada_goto(instr,ts, listaglobal)
+                return
             else : print('Error: instrucción no válida', instr)
 
 def procesar_instrucciones(instrucciones, ts) :
@@ -647,7 +650,11 @@ def procesar_instrucciones(instrucciones, ts) :
             elif isinstance(instr, Main): print('')
             elif isinstance(instr,Asigna_arreglo): procesar_asignacion_arreglo(instr,ts)
             elif isinstance(instr,Label): procesa_Label(instr,ts)
-            elif isinstance(instr,Goto): Llamada_goto(instr,ts, instrucciones)
+            elif isinstance(instr,Exit): print('Finaliza el programa')
+            elif isinstance(instr,Goto): 
+                Llamada_goto(instr,ts, instrucciones)
+                return
+            
             else : print('Error: instrucción no válida', instr)
     else:
         print('Error la etiqueta main no esta al inicio del programa o no existe')
