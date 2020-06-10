@@ -593,7 +593,43 @@ def procesar_asignacion_arreglo (instr,ts):
             else:
                 diccionario=diccionario.get(indice)
 
+def procesa_Label(instr,ts):
+    print(instr.id)
+
+def Llamada_goto(instr,ts,listasiguientes):
+
+    print('GOTO: ',instr.id)
+    siguientes = []
+    i = 0
     
+    for ins in listasiguientes:
+        if isinstance(ins,Label):
+            if ins.id == instr.id:
+                siguientes = listasiguientes[i+1:]
+                ejecutar_expresiones_label(siguientes,ts,listasiguientes)
+                break
+    
+    i = i+1
+    return
+def ejecutar_expresiones_label(listainstrucciones,ts,listaglobal):
+        for instr in listainstrucciones :
+            if isinstance(instr, Imprimir) : procesar_imprimir(instr, ts)
+            elif isinstance(instr, Definicion) : procesar_definicion(instr, ts)
+            elif isinstance(instr, Asignacion) : procesar_asignacion(instr, ts)
+            elif isinstance(instr, Mientras) : procesar_mientras(instr, ts)
+            elif isinstance(instr, If) : procesar_if(instr, ts)
+            elif isinstance(instr, IfElse) : procesar_if_else(instr, ts)
+            elif isinstance(instr, Unset) : procesar_unset(instr,ts)
+            elif isinstance(instr,IniciaPila): procesar_inicioPila(instr,ts)
+            elif isinstance(instr,AsignaPunteroPila): procesar_asignacion_punteropila(instr,ts)
+            elif isinstance(instr,AsignaValorPila): procesar_asignacion_pila(instr,ts)
+            elif isinstance(instr, AsignacionExtra): procesar_asignacion_extra(instr,ts)
+            elif isinstance(instr, Main): print('')
+            elif isinstance(instr,Asigna_arreglo): procesar_asignacion_arreglo(instr,ts)
+            elif isinstance(instr,Label): procesa_Label(instr,ts)
+            elif isinstance(instr,Goto): Llamada_goto(instr,ts, listaglobal)
+            else : print('Error: instrucción no válida', instr)
+
 def procesar_instrucciones(instrucciones, ts) :
     ## lista de instrucciones recolectadas
     if isinstance(instrucciones[0],Main):
@@ -611,6 +647,8 @@ def procesar_instrucciones(instrucciones, ts) :
             elif isinstance(instr, AsignacionExtra): procesar_asignacion_extra(instr,ts)
             elif isinstance(instr, Main): print('')
             elif isinstance(instr,Asigna_arreglo): procesar_asignacion_arreglo(instr,ts)
+            elif isinstance(instr,Label): procesa_Label(instr,ts)
+            elif isinstance(instr,Goto): Llamada_goto(instr,ts, instrucciones)
             else : print('Error: instrucción no válida', instr)
     else:
         print('Error la etiqueta main no esta al inicio del programa o no existe')

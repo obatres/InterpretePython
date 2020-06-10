@@ -1,4 +1,12 @@
 main:
-    $t1=array();
-    $t1['as'][1][2][5]="Hola mundo";
+    #$t1=array();
+    #$t1['as'][1][2][5]="Hola mundo";
+    $t1=5;
     print($t1);
+    #goto label2;
+label1:
+    $t1 = 'Estoy en label 1';
+    print($t1);
+label2:
+    $t2 = "Estoy en label 2";
+    print($t2);

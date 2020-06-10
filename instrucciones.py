@@ -130,3 +130,20 @@ class Asigna_arreglo(Instruccion):
         self.lista = lista
         self.exp = exp
 
+class Label(Instruccion):
+    '''
+        Nodo de tipo Label
+   
+    '''
+    def __init__(self,id) :
+        self.id = id 
+
+class Goto(Instruccion):
+    '''
+        Nodo de tipo Label
+   
+    '''
+    def __init__(self,id) :
+        self.id = id 
+
+

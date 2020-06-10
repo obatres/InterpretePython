@@ -268,11 +268,12 @@ def p_instruccion(t) :
 
 def p_Label(t):
     'DEFINEL : ID DOSP'
-    print('aceptalabel')
-
+    t[0] = Label(t[1])
+    
 def p_Goto(t):
     'DEFINEGOTO : GOTO ID PTCOMA'
-    print('acepta goto')
+    t[0] = Goto(t[2])
+
 
 def p_asigna_para_valorRet_ra(t):
     'ASIGNACIONEXTRA :  VALORESPARAM IGUAL expresion_log_relacional PTCOMA'
