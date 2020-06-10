@@ -52,10 +52,10 @@ def procesar_mientras(instr, ts) :
         procesar_instrucciones(instr.instrucciones, ts_local)
 
 def procesar_if(instr, ts) :
-    val = resolver_expreision_logica(instr.expLogica, ts)
-    if val :
-        ts_local = TS.TablaDeSimbolos(ts.simbolos)
-        procesar_instrucciones(instr.instrucciones, ts_local)
+    
+    condicion = resolver_expreision_logica(instr.exp,ts)
+
+    if condicion == 1: Llamada_goto(instr.goto,ts,instrucciones)
 
 def procesar_if_else(instr, ts) :
     val = resolver_expreision_logica(instr.expLogica, ts)
@@ -576,6 +576,7 @@ def procesar_asignacion_extra (instr,ts):
     except :
         print('No se puede realizar la asignacion de',instr.id)
         pass
+
 def procesar_asignacion_arreglo (instr,ts):
     diccionario = ts.obtener(instr.id).valor
     lista = instr.lista
@@ -597,9 +598,7 @@ def procesar_asignacion_arreglo (instr,ts):
 def procesa_Label(instr,ts):
     print(instr.id)
 
-def Llamada_goto(instr,ts,listasiguientes):
-
-  
+def Llamada_goto(instr,ts,listasiguientes):  
     siguientes = []
     i = 0
     for ins in listasiguientes:

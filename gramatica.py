@@ -15,8 +15,6 @@ reservadas = {
     'float':'FLOAT',
     'char':'CHAR',
     'array':'ARRAY',
-    'while':'WHILE',
-    'end':'END',
     'abs':'ABS',
     'xor':'XORLOG'
 }
@@ -339,9 +337,9 @@ def p_mientras_instr(t) :
 
 #Recibe if ($t1) goto label;
 def p_if_instr(t) :
-    'if_instr           : IF PARIZQ expresion_log_relacional PARDER GOTO LABEL PTCOMA'
-    t[0] =If(t[3], t[6])
-
+    'if_instr           : IF expresion_numerica DEFINEGOTO'
+    t[0] =If(t[2], t[3])
+    
 def p_if_else_instr(t) :
     'if_else_instr      : IF PARIZQ expresion_log_relacional PARDER LLAVIZQ instrucciones LLAVDER ELSE LLAVIZQ instrucciones LLAVDER'
     t[0] =IfElse(t[3], t[6], t[10])

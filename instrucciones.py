@@ -47,9 +47,9 @@ class If(Instruccion) :
         de instrucciones a ejecutar si la expresión lógica es verdadera.
     '''
 
-    def __init__(self, expLogica, instrucciones = []) :
-        self.expLogica = expLogica
-        self.instrucciones = instrucciones
+    def __init__(self, exp, goto) :
+        self.exp = exp
+        self.goto = goto
 
 class IfElse(Instruccion) : 
     '''

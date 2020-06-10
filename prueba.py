@@ -17,6 +17,14 @@ for i in range(len(l)):
             temp1=temp1.get(indice)
         else:
             temp1=temp1.get(indice)
-print(t)
+print('asignacion:',t)
 
 
+for j in range(len(l)):
+    indice = l[j]
+    if i == can_accesos-1:
+        #Es el ultimo
+        temp1 = temp1.get(indice)
+
+
+print('recuperacion',t)
