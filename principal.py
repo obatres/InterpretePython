@@ -1,5 +1,6 @@
 import gramatica as g
 import ts as TS
+import sys
 from expresiones import *
 from instrucciones import *
 from graphviz import Digraph
@@ -626,7 +627,7 @@ def ejecutar_expresiones_label(listainstrucciones,ts,listaglobal):
             elif isinstance(instr, Main): print('')
             elif isinstance(instr,Asigna_arreglo): procesar_asignacion_arreglo(instr,ts)
             elif isinstance(instr,Label): procesa_Label(instr,ts)
-            elif isinstance(instr,Exit): print('Finaliza el programa')
+            elif isinstance(instr,Exit): sys.exit()
             elif isinstance(instr,Goto):
                 Llamada_goto(instr,ts, listaglobal)
                 return
@@ -650,7 +651,7 @@ def procesar_instrucciones(instrucciones, ts) :
             elif isinstance(instr, Main): print('')
             elif isinstance(instr,Asigna_arreglo): procesar_asignacion_arreglo(instr,ts)
             elif isinstance(instr,Label): procesa_Label(instr,ts)
-            elif isinstance(instr,Exit): print('Finaliza el programa')
+            elif isinstance(instr,Exit): sys.exit()
             elif isinstance(instr,Goto): 
                 Llamada_goto(instr,ts, instrucciones)
                 return

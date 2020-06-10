@@ -11,10 +11,11 @@ label2:
     $t2 = "Estoy en label 2";
     print($t2);
     goto label4;
+
 label3:
     $t3 = 'Estoy en label 3';
     print($t3);
 label4:
     $t4 = 'estoy en label 4';
     print($t4);
- 
+ exit;

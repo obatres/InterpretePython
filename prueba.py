@@ -3,12 +3,9 @@ l=[4,5,'nombre','orlando']
 exp =5
 exp2=6
 cont = 0
-
 can_accesos = len(l)
 temp1= t
-
 for i in range(len(l)):
-    #indice = resolver_expresion(expNum.l[i])
     indice = l[i]
     if i == can_accesos-1:
         #Es el ultimo
@@ -20,7 +17,6 @@ for i in range(len(l)):
             temp1=temp1.get(indice)
         else:
             temp1=temp1.get(indice)
-
 print(t)
 
 

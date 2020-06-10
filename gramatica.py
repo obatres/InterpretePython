@@ -318,7 +318,7 @@ def p_INICIO(t):
 #Recibe: exit;
 def p_EXITF(t):
     'EXITF : EXIT PTCOMA'
-    print(t[1])
+    t[0]= Exit()
 
 #Recibe: print($t1);
 def p_instruccion_imprimir(t) :
