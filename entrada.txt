@@ -3,10 +3,17 @@ main:
     #$t1['as'][1][2][5]="Hola mundo";
     $t1=5;
     print($t1);
-    #goto label2;
+    goto label2;
 label1:
     $t1 = 'Estoy en label 1';
     print($t1);
 label2:
     $t2 = "Estoy en label 2";
     print($t2);
+    goto label4;
+label3:
+    $t3 = 'Estoy en label 3';
+    print($t3);
+label4:
+    $t4 = 'estoy en label 4';
+    print($t4);

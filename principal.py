@@ -598,7 +598,7 @@ def procesa_Label(instr,ts):
 
 def Llamada_goto(instr,ts,listasiguientes):
 
-    print('GOTO: ',instr.id)
+  
     siguientes = []
     i = 0
     
@@ -607,9 +607,8 @@ def Llamada_goto(instr,ts,listasiguientes):
             if ins.id == instr.id:
                 siguientes = listasiguientes[i+1:]
                 ejecutar_expresiones_label(siguientes,ts,listasiguientes)
-                break
-    
-    i = i+1
+                return
+        i = i+1
     return
 def ejecutar_expresiones_label(listainstrucciones,ts,listaglobal):
         for instr in listainstrucciones :
