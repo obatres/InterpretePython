@@ -141,8 +141,8 @@ class Expresion_Pop_pila(ExpresionNumerica):
     def __init__(self, idPila, puntero) :
         self.idPila = idPila 
         self.puntero = puntero
-        
-         
+
+
 class InicioArray(ExpresionNumerica):
     '''
         Esta clase representa la inicializacion de un array.
@@ -240,3 +240,10 @@ class ExpresionLogicaNot ():
     def __init__(self, exp) :
         self.exp = exp
 
+class Expresion_param(ExpresionNumerica):
+    '''
+        Esta clase representa la expresión parametro, ra o valor de retorno
+    '''
+
+    def __init__(self, id) :
+        self.id = id

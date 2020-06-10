@@ -268,6 +268,7 @@ def p_instruccion(t) :
 def p_asigna_para_valorRet_ra(t):
     'ASIGNACIONEXTRA :  VALORESPARAM IGUAL expresion_log_relacional PTCOMA'
     t[0] = AsignacionExtra(t[1],t[3])
+
 def p_valoresSimp (t):
     '''VALORESPARAM :  PARAMETRO
                     | VALORDEVUELTO
@@ -281,6 +282,7 @@ def p_acceso_a_pila(t):
 def p_asigna_puntero(t):
     'ASIGNAPUNTERO : PILAPUNTERO IGUAL expresion_log_relacional PTCOMA'
     t[0] = AsignaPunteroPila(t[1],t[3])
+
 def p_inicia_pila(t):
     'INICIAPILA : PILAPOS IGUAL ARRAY PARIZQ PARDER PTCOMA'
     t[0] = IniciaPila(t[1])
@@ -394,6 +396,13 @@ def p_puntero_pila(t):
 def p_pop_pila(t):
     'expresion_numerica : PILAPOS CORIZQ PILAPUNTERO CORDER'
     t[0] = Expresion_Pop_pila(t[1],t[3])
+
+def p_expresion_parametro(t):
+    '''expresion_numerica :    PARAMETRO
+                            | VALORDEVUELTO
+                            | DIRRETORNO'''
+    t[0] = Expresion_param(t[1])
+
 
 # Recibe temporales $t2
 def p_expresion_tempo(t):

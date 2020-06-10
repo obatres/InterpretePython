@@ -10,9 +10,12 @@ true = 1
 false = 0
 #-----------------------------------------------------------INICIA ANALISIS SEMANTICO
 def procesar_imprimir(instr, ts) :
+
     try:
+            
         #if not ts.obtener(instr.exp.id).tipo == td.ARRAY:
             salida = resolver_registro(instr.exp,ts)
+
             print('>', salida)
             return  str(salida) + '\n'
         #else:
@@ -22,7 +25,6 @@ def procesar_imprimir(instr, ts) :
         pass
 
 def resolver_registro(exp,ts):
-
     return ts.obtener(exp.id).valor
 
 def procesar_definicion(instr, ts) :
@@ -514,6 +516,11 @@ def resolver_expresion_aritmetica(expNum, ts) :
         elif isinstance(expNum.val,float): expNum.tipo = td.FLOAT
         return expNum.val
 
+    elif isinstance(expNum,Expresion_param):
+        expNum.val = ts.obtener(expNum.id).valor
+        expNum.tipo = ts.obtener(expNum.id).tipo
+        return expNum.val
+    
     else:
         print(expNum)
 
@@ -567,6 +574,7 @@ def procesar_asignacion_extra (instr,ts):
     except :
         print('No se puede realizar la asignacion de',instr.id)
         pass
+
 def procesar_instrucciones(instrucciones, ts) :
     ## lista de instrucciones recolectadas
     for instr in instrucciones :

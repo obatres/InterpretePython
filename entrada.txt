@@ -13,8 +13,10 @@ main:
     #print($s0);
     #print($sp);
     $a1=5+5;
-    $a2 ='hola';
-    $ra = 5;
-    $v2=100;
+    $a2 =$a1;
+    $ra = $a2;
+    $v2=$ra;
+
+    print($v2);
 
 
