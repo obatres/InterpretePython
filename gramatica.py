@@ -261,9 +261,18 @@ def p_instruccion(t) :
                         | INICIAPILA
                         | ASIGNAPUNTERO
                         | ASIGNAPILA
-                        | ASIGNACIONEXTRA'''
+                        | ASIGNACIONEXTRA
+                        | DEFINEL
+                        | DEFINEGOTO'''
     t[0] = t[1]
 
+def p_Label(t):
+    'DEFINEL : ID DOSP'
+    print('aceptalabel')
+
+def p_Goto(t):
+    'DEFINEGOTO : GOTO ID PTCOMA'
+    print('acepta goto')
 
 def p_asigna_para_valorRet_ra(t):
     'ASIGNACIONEXTRA :  VALORESPARAM IGUAL expresion_log_relacional PTCOMA'
@@ -289,7 +298,7 @@ def p_inicia_pila(t):
 
 def p_asigna_arreglo(t):
     'ASIGNAARREGLO : TEMPORAL ACCESO IGUAL expresion_log_relacional PTCOMA'  
-    print('accede a un arreglo')  
+    t[0] = Asigna_arreglo(t[1],t[2],t[4])
 #Recibe OPERACIONES LOGICAS
 def p_expresion_logica_ins(t):
     'instruccion : expresion_log_relacional'
@@ -303,7 +312,7 @@ def p_UNSETF(t):
 #RECIBE main:
 def p_INICIO(t):
     'INICIO : MAIN DOSP'
-    print('es main',t[1])
+    t[0] = Main()
 
 #Recibe: exit;
 def p_EXITF(t):

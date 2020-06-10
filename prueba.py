@@ -4,30 +4,23 @@ exp =5
 exp2=6
 cont = 0
 
-def llenar(dicc,cont,exp):
-    if cont>=(len(l)-1):
-        ind = l[cont]
-        if dicc.get(ind):
-            print('existe ultimo')
-            u={ind:exp}
-            dicc.update(u)
-            cont=0
-        else:
-            dicc[ind]=exp
-            print('no existe el ultimo')
-            cont =0
-        print(ind,dicc)
-        return dicc   
+can_accesos = len(l)
+temp1= t
+
+for i in range(len(l)):
+    #indice = resolver_expresion(expNum.l[i])
+    indice = l[i]
+    if i == can_accesos-1:
+        #Es el ultimo
+        temp1[indice]=exp
     else:
-        ind = l[cont]
-        cont = cont +1
-        if not dicc.get(ind):
-            print(ind,dicc)
-            dicc.setdefault(ind,llenar({},cont,exp))
+        temp = temp1.get(indice)
+        if temp == None:
+            temp1[indice]={}
+            temp1=temp1.get(indice)
+        else:
+            temp1=temp1.get(indice)
 
- 
+print(t)
 
 
-r= llenar(t,cont,exp)
-#r=llenar(r,cont,exp2)
-print('Este es r',r)

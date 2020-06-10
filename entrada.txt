@@ -1,22 +1,4 @@
 main:
-    #$s0 = array();
-    #$sp = 4;
-    #$sp =$sp+1;
-    #$s0[$sp]=2;
-    #$sp =$sp+1;
-    #$s0[$sp]=3;
-    #$sp =$sp+1;
-    #$s0[$sp]='sad';
-    #$sp=0;
-    #$t1 = $s0[$sp];
-    #print($t1);
-    #print($s0);
-    #print($sp);
-    $a1=5+5;
-    $a2 =$a1;
-    $ra = $a2;
-    $v2=$ra;
-
-    print($v2);
-
-
+    $t1=array();
+    $t1['as'][1][2][5]="Hola mundo";
+    print($t1);

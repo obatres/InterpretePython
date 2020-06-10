@@ -25,6 +25,7 @@ def procesar_imprimir(instr, ts) :
         pass
 
 def resolver_registro(exp,ts):
+    
     return ts.obtener(exp.id).valor
 
 def procesar_definicion(instr, ts) :
@@ -574,22 +575,45 @@ def procesar_asignacion_extra (instr,ts):
     except :
         print('No se puede realizar la asignacion de',instr.id)
         pass
+def procesar_asignacion_arreglo (instr,ts):
+    diccionario = ts.obtener(instr.id).valor
+    lista = instr.lista
+    niveles = len(lista)
+    valor_a_asignar = resolver_expresion_aritmetica(instr.exp,ts)
 
+    for i in range(len(lista)):
+        indice = resolver_expresion_aritmetica(lista[i],ts)
+        if i== niveles-1:
+            diccionario[indice]=valor_a_asignar
+        else:
+            diccionario_aux = diccionario.get(indice)
+            if diccionario_aux == None:
+                diccionario[indice]={}
+                diccionario=diccionario.get(indice)
+            else:
+                diccionario=diccionario.get(indice)
+
+    
 def procesar_instrucciones(instrucciones, ts) :
     ## lista de instrucciones recolectadas
-    for instr in instrucciones :
-        if isinstance(instr, Imprimir) : procesar_imprimir(instr, ts)
-        elif isinstance(instr, Definicion) : procesar_definicion(instr, ts)
-        elif isinstance(instr, Asignacion) : procesar_asignacion(instr, ts)
-        elif isinstance(instr, Mientras) : procesar_mientras(instr, ts)
-        elif isinstance(instr, If) : procesar_if(instr, ts)
-        elif isinstance(instr, IfElse) : procesar_if_else(instr, ts)
-        elif isinstance(instr, Unset) : procesar_unset(instr,ts)
-        elif isinstance(instr,IniciaPila): procesar_inicioPila(instr,ts)
-        elif isinstance(instr,AsignaPunteroPila): procesar_asignacion_punteropila(instr,ts)
-        elif isinstance(instr,AsignaValorPila): procesar_asignacion_pila(instr,ts)
-        elif isinstance(instr, AsignacionExtra): procesar_asignacion_extra(instr,ts)
-        else : print('Error: instrucción no válida', instr)
+    if isinstance(instrucciones[0],Main):
+        for instr in instrucciones :
+            if isinstance(instr, Imprimir) : procesar_imprimir(instr, ts)
+            elif isinstance(instr, Definicion) : procesar_definicion(instr, ts)
+            elif isinstance(instr, Asignacion) : procesar_asignacion(instr, ts)
+            elif isinstance(instr, Mientras) : procesar_mientras(instr, ts)
+            elif isinstance(instr, If) : procesar_if(instr, ts)
+            elif isinstance(instr, IfElse) : procesar_if_else(instr, ts)
+            elif isinstance(instr, Unset) : procesar_unset(instr,ts)
+            elif isinstance(instr,IniciaPila): procesar_inicioPila(instr,ts)
+            elif isinstance(instr,AsignaPunteroPila): procesar_asignacion_punteropila(instr,ts)
+            elif isinstance(instr,AsignaValorPila): procesar_asignacion_pila(instr,ts)
+            elif isinstance(instr, AsignacionExtra): procesar_asignacion_extra(instr,ts)
+            elif isinstance(instr, Main): print('')
+            elif isinstance(instr,Asigna_arreglo): procesar_asignacion_arreglo(instr,ts)
+            else : print('Error: instrucción no válida', instr)
+    else:
+        print('Error la etiqueta main no esta al inicio del programa o no existe')
 #-----------------------------------------------------------TERMINA ANALISIS SEMANTICO
 
 #-----------------------------------------------------------INICIA GRAFICACION DEL AST

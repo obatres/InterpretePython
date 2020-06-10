@@ -113,3 +113,20 @@ class AsignacionExtra(Instruccion):
     def __init__(self,  id, exp) :
         self.id = id 
         self.exp = exp
+
+class Main (Instruccion):
+    '''
+        Nodo de tipo main
+   
+    '''
+
+class Asigna_arreglo(Instruccion):
+    '''
+        Nodo de tipo asignacion de arreglo
+   
+    '''
+    def __init__(self,id,lista,exp) :
+        self.id = id 
+        self.lista = lista
+        self.exp = exp
+
