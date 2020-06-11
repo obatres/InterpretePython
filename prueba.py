@@ -20,11 +20,17 @@ for i in range(len(l)):
 print('asignacion:',t)
 
 
+temp1= t
 for j in range(len(l)):
     indice = l[j]
-    if i == can_accesos-1:
+    if j == can_accesos-1:
         #Es el ultimo
         temp1 = temp1.get(indice)
+    else:
+        temp = temp1.get(indice)
+        if temp==None:
+            print('no existe el valor')
+        else:
+            temp1=temp1.get(indice)
 
-
-print('recuperacion',t)
+print('recuperacion',temp1)

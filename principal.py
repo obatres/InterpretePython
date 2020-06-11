@@ -52,7 +52,7 @@ def procesar_mientras(instr, ts) :
         procesar_instrucciones(instr.instrucciones, ts_local)
 
 def procesar_if(instr, ts) :
-    
+
     condicion = resolver_expreision_logica(instr.exp,ts)
 
     if condicion == 1: Llamada_goto(instr.goto,ts,instrucciones)
@@ -522,6 +522,31 @@ def resolver_expresion_aritmetica(expNum, ts) :
         expNum.val = ts.obtener(expNum.id).valor
         expNum.tipo = ts.obtener(expNum.id).tipo
         return expNum.val
+    
+    elif isinstance(expNum,AccesoValorArray):
+
+        temporal = ts.obtener(expNum.id).valor
+
+        for j in range(len(expNum.lista)):
+            ind = resolver_expresion_aritmetica(expNum.lista[j],ts)
+            if (j==(len(expNum.lista)-1)):
+
+                temporal = temporal.get(ind)
+                if temporal == None:
+                    print('Error, no existe un valor en el indice: ',ind)
+
+            else:
+                temporal_aux = temporal.get(ind)
+                if temporal_aux == None:
+                    print('Error, no existe un valor en el indice: ',ind)
+                else:
+                    temporal = temporal.get(ind)
+
+        if isinstance (temporal,str): expNum.tipo = td.CADENA
+        elif isinstance(temporal,int): expNum.tipo = td.INT
+        elif isinstance(temporal,float): expNum.tipo = td.FLOAT
+        elif isinstance (temporal,dict): expNum.tipo = td.ARRAY
+        return temporal            
     
     else:
         print(expNum)

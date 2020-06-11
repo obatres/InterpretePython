@@ -443,7 +443,7 @@ def p_inicializacion_array(t):
 
 def p_acceso_array_expresion(t):
     'expresion_numerica : TEMPORAL ACCESO'
-    print('ACCESO DE ARRAY',t[2])
+    t[0] = AccesoValorArray(t[1],t[2])
 
 def p_acceso_lista_array(t):
     'ACCESO : ACCESO CORIZQ expresion_numerica CORDER'

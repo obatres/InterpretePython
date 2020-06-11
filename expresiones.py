@@ -247,3 +247,12 @@ class Expresion_param(ExpresionNumerica):
 
     def __init__(self, id) :
         self.id = id
+
+class AccesoValorArray(ExpresionNumerica):
+    '''
+        Esta clase representa la expresión que accede a un valor de un arreglo declarado
+    '''
+
+    def __init__(self, id, lista) :
+        self.id = id
+        self.lista = lista
