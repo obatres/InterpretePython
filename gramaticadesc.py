@@ -354,6 +354,42 @@ def p_inicializacion_array(t):
     'expresion_numerica : ARRAY PARIZQ PARDER'
     t[0]= InicioArray()
 
+def p_acceso_array_expresion(t):
+    'expresion : TEMPORAL ACCESO'
+    l = list(reversed(t[2]))
+    t[0] = AccesoValorArray(t[1],l)
+
+def p_acceso_lista_array(t):
+    'ACCESO : CORIZQ expresion CORDER ACCESOP'
+    t[0]=t[4]
+    t[0].append(t[2])
+
+def p_acceso_array(t):
+    'ACCESOP : CORIZQ expresion CORDER ACCESOP '
+    t[0]=t[4]
+    t[0].append(t[2])
+
+def p_acceso_array_empty(t):
+    'ACCESOP : VACIO'
+    t[0] = []
+
+#recibe: conversiones TIPOCONVERSION $t1 
+def p_expresion_conversion(t):
+    'expresion_numerica : TIPOCONVERSION expresion'
+    t[0] = ExpresionConversion(t[1],t[2])
+
+#recibe: tipo de conversion (int) (float) (char)
+def p_expresion_tipoConversion(t):
+    '''TIPOCONVERSION : PARIZQ INT PARDER
+                    | PARIZQ FLOAT PARDER
+                    | PARIZQ CHAR PARDER '''
+    t[0]=t[2]
+
+#Recibe: valor absoluto
+def p_expresion_valorabs(t):
+    'expresion_numerica : ABS PARIZQ expresion PARDER'
+    t[0] =  ExpresionValorAbsoluto(t[3])
+
 #Recibe expresiones logicas y relacionales
 def p_expresion_log_relacional(t) :
     '''expresion : expresion_numerica MAYQUE expresion_numerica'''
