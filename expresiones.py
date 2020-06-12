@@ -5,12 +5,15 @@ class OPERACION_ARITMETICA(Enum) :
     MENOS = 2
     POR = 3
     DIVIDIDO = 4
+    RESIDUO = 5
 
 class OPERACION_LOGICA(Enum) :
     MAYOR_QUE = 1
     MENOR_QUE = 2
     IGUAL = 3
     DIFERENTE = 4
+    MAYORQUE = 5
+    MENORQUE = 6
 
 class ExpresionNumerica:
     '''
@@ -35,19 +38,125 @@ class ExpresionNegativo(ExpresionNumerica) :
     '''
     def __init__(self, exp) :
         self.exp = exp
+class ExpresionBitNot (ExpresionNumerica):
+    '''
+        Esta clase representa la Expresión logica bit a bit de NOT 
+    '''
+    def __init__(self, exp) :
+        self.exp = exp
 
+class ExpresionBitAnd (ExpresionNumerica):
+    '''
+        Esta clase representa la Expresión logica bit a bit de AND 
+    '''
+    def __init__(self, exp1, exp2):
+        self.exp1 = exp1
+        self.exp2 = exp2
+
+class ExpresionBitOr (ExpresionNumerica):
+    '''
+        Esta clase representa la Expresión logica bit a bit de OR 
+    '''
+    def __init__(self, exp1, exp2):
+        self.exp1 = exp1
+        self.exp2 = exp2
+
+class ExpresionBitXor (ExpresionNumerica):
+    '''
+        Esta clase representa la Expresión logica bit a bit de XOR 
+    '''
+    def __init__(self, exp1, exp2):
+        self.exp1 = exp1
+        self.exp2 = exp2      
+
+class ExpresionBitIzq(ExpresionNumerica):
+    '''
+        Esta clase representa la Expresión logica bit a bit de corrimiento a la izquierda 
+    '''
+    def __init__(self, exp1, exp2):
+        self.exp1 = exp1
+        self.exp2 = exp2            
+
+class ExpresionBitDer(ExpresionNumerica):
+    '''
+        Esta clase representa la Expresión logica bit a bit de corrimiento a la derecha 
+    '''
+    def __init__(self, exp1, exp2):
+        self.exp1 = exp1
+        self.exp2 = exp2 
+class ExpresionPunteroTemp(ExpresionNumerica):
+    '''
+        Esta clase representa el puntero un temporal.
+    '''
+
+    def __init__(self, id = "") :
+        self.id = id
+
+class ExpresionConversion (ExpresionNumerica):
+    '''
+        Esta clase representa la conversion de tipo de un valor.
+    '''
+
+    def __init__(self, tipo , exp) :
+        self.tipo = tipo 
+        self.exp = exp
 
 class ExpresionNumero(ExpresionNumerica) :
     '''
         Esta clase representa una expresión numérica entera o decimal.
     '''
 
-    def __init__(self, val = 0) :
+    def __init__(self, val = 0, tipo=0) : #AGREGAR TIPO A LA EXPRESION
         self.val = val
+        self.tipo = tipo
 
 class ExpresionIdentificador(ExpresionNumerica) :
     '''
         Esta clase representa un identificador.
+    '''
+
+    def __init__(self, id = "") :
+        self.id = id
+
+class ExpresionPila(ExpresionNumerica):
+    '''
+        Esta clase representa un identificador de pila.
+    '''
+
+    def __init__(self, id = "") :
+        self.id = id   
+
+class ExpresionPunteroPila(ExpresionNumerica):
+    '''
+        Esta clase representa el puntero de pila.
+    '''
+
+    def __init__(self, id = "") :
+        self.id = id  
+class Expresion_Pop_pila(ExpresionNumerica):
+    '''
+        Esta clase representa el pop de pila.
+    '''
+
+    def __init__(self, idPila, puntero) :
+        self.idPila = idPila 
+        self.puntero = puntero
+
+
+class InicioArray(ExpresionNumerica):
+    '''
+        Esta clase representa la inicializacion de un array.
+    '''
+class ExpresionValorAbsoluto(ExpresionNumerica):
+    '''
+        Esta clase representa una expresión que recibe un valor numerico y devuelve su valor absoluto
+    '''
+    def __init__(self, exp) :
+        self.exp = exp
+
+class ExpresionTemporal(ExpresionNumerica) :
+    '''
+        Esta clase representa un temporal.
     '''
 
     def __init__(self, id = "") :
@@ -95,3 +204,55 @@ class ExpresionLogica() :
         self.exp1 = exp1
         self.exp2 = exp2
         self.operador = operador
+class ExpresionLogicaXOR():
+    '''
+        Esta clase representa la expresión lógica XOR
+    '''
+
+    def __init__(self, exp1, exp2) :
+        self.exp1 = exp1
+        self.exp2 = exp2
+
+class ExpresionLogicaAND():
+    '''
+        Esta clase representa la expresión lógica AND
+    '''
+
+    def __init__(self, exp1, exp2) :
+        self.exp1 = exp1
+        self.exp2 = exp2
+
+class ExpresionLogicaOR():
+    '''
+        Esta clase representa la expresión lógica OR
+    '''
+
+    def __init__(self, exp1, exp2) :
+        self.exp1 = exp1
+        self.exp2 = exp2
+
+class ExpresionLogicaNot ():
+    '''
+        Esta clase representa la expresión lógica.
+        Esta clase recibe el operando NOT y el operador
+    '''
+
+    def __init__(self, exp) :
+        self.exp = exp
+
+class Expresion_param(ExpresionNumerica):
+    '''
+        Esta clase representa la expresión parametro, ra o valor de retorno
+    '''
+
+    def __init__(self, id) :
+        self.id = id
+
+class AccesoValorArray(ExpresionNumerica):
+    '''
+        Esta clase representa la expresión que accede a un valor de un arreglo declarado
+    '''
+
+    def __init__(self, id, lista) :
+        self.id = id
+        self.lista = lista
