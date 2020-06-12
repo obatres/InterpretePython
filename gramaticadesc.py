@@ -257,8 +257,18 @@ def p_vacio(t):
 
 def p_instruccion(t) :
     '''instruccion      : imprimir_instr
+                        | asignacion_instr
+                        | if_instr
+                        | INICIO
+                        | UNSETF
                         | EXITF
-                        | INICIO'''
+                        | ASIGNAARREGLO
+                        | INICIAPILA
+                        | ASIGNAPUNTERO
+                        | ASIGNAPILA
+                        | ASIGNACIONEXTRA
+                        | DEFINEL
+                        | DEFINEGOTO'''
     t[0] = t[1]
 
 #RECIBE main:
@@ -390,14 +400,73 @@ def p_expresion_valorabs(t):
     'expresion_numerica : ABS PARIZQ expresion PARDER'
     t[0] =  ExpresionValorAbsoluto(t[3])
 
+def p_Label(t):
+    'DEFINEL : ID DOSP'
+    t[0] = Label(t[1])
+    
+def p_Goto(t):
+    'DEFINEGOTO : GOTO ID PTCOMA'
+    t[0] = Goto(t[2])
+
+def p_asigna_para_valorRet_ra(t):
+    'ASIGNACIONEXTRA :  VALORESPARAM IGUAL expresion PTCOMA'
+    t[0] = AsignacionExtra(t[1],t[3])
+
+def p_valoresSimp (t):
+    '''VALORESPARAM :  PARAMETRO
+                    | VALORDEVUELTO
+                    | DIRRETORNO'''
+    t[0]=t[1]
+
+def p_acceso_a_pila(t):
+    'ASIGNAPILA : PILAPOS CORIZQ PILAPUNTERO CORDER IGUAL expresion PTCOMA'
+    t[0]=AsignaValorPila(t[1],t[6],t[3])
+
+def p_asigna_puntero(t):
+    'ASIGNAPUNTERO : PILAPUNTERO IGUAL expresion PTCOMA'
+    t[0] = AsignaPunteroPila(t[1],t[3])
+
+def p_inicia_pila(t):
+    'INICIAPILA : PILAPOS IGUAL ARRAY PARIZQ PARDER PTCOMA'
+    t[0] = IniciaPila(t[1])
+
+def p_asigna_arreglo(t):
+    'ASIGNAARREGLO : TEMPORAL ACCESO IGUAL expresion PTCOMA'  
+    l =list(reversed(t[2]))
+    t[0] = Asigna_arreglo(t[1],l,t[4])
+
+#Recibe: destruccion de variable unset($t1);
+def p_UNSETF(t):
+    'UNSETF : UNSET PARIZQ expresion PARDER PTCOMA'
+    t[0] = Unset(t[3])
+
+#Recibe if ($t1) goto label;
+def p_if_instr(t) :
+    'if_instr           : IF expresion DEFINEGOTO'
+    t[0] =If(t[2], t[3])
+
+def p_asignacion_instr(t) :
+    'asignacion_instr   : TEMPORAL IGUAL expresion PTCOMA'
+    t[0] =Asignacion(t[1], t[3])
+
 #Recibe expresiones logicas y relacionales
 def p_expresion_log_relacional(t) :
     '''expresion : expresion_numerica MAYQUE expresion_numerica'''
     if t[2] == '>'    : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MAYOR_QUE)
 
+
+
+
+
+
 def p_expresion_bit_not(t):
     'expresion_numerica : NOTBIT expresion'
     t[0] = ExpresionBitNot(t[2])
+
+#RECIBE !$t3
+def p_expresion_logica_not(t):
+    'expresion_numerica : NOTLOG expresion'
+    t[0] = ExpresionLogicaNot(t[2])
 
 def p_error(t):
      # Read ahead looking for a terminating ";"
