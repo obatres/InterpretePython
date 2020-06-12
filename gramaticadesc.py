@@ -232,10 +232,8 @@ from instrucciones import *
 
 def p_init(t) :
     'init            : instrucciones'
-    
     l = list(reversed(t[1]))
     t[0] = l
-    print(t[0])
 
 def p_instrucciones_lista(t) :
     'instrucciones    :  instruccion instruccionesP'
@@ -289,8 +287,27 @@ def p_instruccion_imprimir(t) :
 
 #RECIBE: expresiones aritmeticas y bit a bit
 def p_expresion_binaria(t):
-    '''expresion : expresion_numerica MAS expresion_numerica'''
+    '''expresion :        expresion_numerica MAS expresion_numerica
+                        | expresion_numerica MENOS expresion_numerica
+                        | expresion_numerica POR expresion_numerica
+                        | expresion_numerica DIVIDIDO expresion_numerica
+                        | expresion_numerica RES expresion_numerica
+                        | expresion_numerica ANDBIT expresion_numerica
+                        | expresion_numerica ORBIT expresion_numerica
+                        | expresion_numerica XORBIT expresion_numerica
+                        | expresion_numerica IZQBIT expresion_numerica
+                        | expresion_numerica DERBIT expresion_numerica
+    '''
     if t[2] == '+'  : t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.MAS)
+    elif t[2] == '-': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.MENOS)
+    elif t[2] == '*': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.POR)
+    elif t[2] == '/': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.DIVIDIDO)
+    elif t[2] == '%': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.RESIDUO)
+    elif t[2] == '&': t[0] = ExpresionBitAnd(t[1], t[3])
+    elif t[2] == '|': t[0] = ExpresionBitOr(t[1], t[3])
+    elif t[2] == '^': t[0] = ExpresionBitXor(t[1], t[3])
+    elif t[2] == '<<': t[0] = ExpresionBitIzq(t[1], t[3])
+    elif t[2] == '>>': t[0] = ExpresionBitDer(t[1], t[3])
 
 def p_expresion_unaria(t):
     'expresion_numerica : MENOS expresion %prec UMENOS'
@@ -451,13 +468,25 @@ def p_asignacion_instr(t) :
 
 #Recibe expresiones logicas y relacionales
 def p_expresion_log_relacional(t) :
-    '''expresion : expresion_numerica MAYQUE expresion_numerica'''
+    '''expresion :            expresion_numerica MAYQUE expresion_numerica
+                            | expresion_numerica MENQUE expresion_numerica
+                            | expresion_numerica IGUALQUE expresion_numerica
+                            | expresion_numerica NIGUALQUE expresion_numerica
+                            | expresion_numerica MAYORIG expresion_numerica
+                            | expresion_numerica MENORIG expresion_numerica
+                            | expresion_numerica ANDLOG expresion_numerica
+                            | expresion_numerica ORLOG expresion_numerica
+                            | expresion_numerica XORLOG expresion_numerica
+            '''
     if t[2] == '>'    : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MAYOR_QUE)
-
-
-
-
-
+    elif t[2] == '<'  : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MENOR_QUE)
+    elif t[2] == '==' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.IGUAL)
+    elif t[2] == '!=' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.DIFERENTE)
+    elif t[2] == '>=' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MAYORQUE)
+    elif t[2] == '<=' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MENORQUE)
+    elif t[2] == 'xor' : t[0] = ExpresionLogicaXOR(t[1], t[3])
+    elif t[2] == '&&' : t[0] = ExpresionLogicaAND(t[1], t[3])
+    elif t[2] == '||' : t[0] = ExpresionLogicaOR(t[1], t[3])
 
 def p_expresion_bit_not(t):
     'expresion_numerica : NOTBIT expresion'

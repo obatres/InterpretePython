@@ -1,5 +1,6 @@
 main:
-    print(2);
+    $t1 = 20 << 5;
+    print($t1);
 
 
 
