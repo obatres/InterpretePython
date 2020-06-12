@@ -7,8 +7,10 @@ class Imprimir(Instruccion) :
         La instrucción imprimir únicamente tiene como parámetro una cadena
     '''
 
-    def __init__(self,  exp) :
+    def __init__(self,  exp, linea , columna ) :
         self.exp = exp
+        self.linea = linea
+        self.columna = columna
 
 class Mientras(Instruccion) :
     '''
@@ -36,9 +38,11 @@ class Asignacion(Instruccion) :
         Recibe como parámetro el identificador a asignar y el valor que será asignado.
     '''
 
-    def __init__(self, id, expNumerica) :
+    def __init__(self, id, expNumerica,  linea , columna) :
         self.id = id
         self.expNumerica = expNumerica
+        self.linea = linea
+        self.columna = columna
 
 class If(Instruccion) : 
     '''

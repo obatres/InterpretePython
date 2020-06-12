@@ -204,9 +204,16 @@ def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
 
+#OBTENIENDO LA COLUMNA 
+def get_clomuna(input, token):
+    line_star = input.rfind('\n', 0 ,token.lexpos) + 1
+    return (token.lexpos - line_star)+1
+
+
 # Construyendo el analizador léxico
 import ply.lex as lex
 lexer = lex.lex()
+
 
 
 # Asociación de operadores y precedencia
@@ -321,7 +328,7 @@ def p_EXITF(t):
 #Recibe: print($t1);
 def p_instruccion_imprimir(t) :
     'imprimir_instr     : PRINT PARIZQ expresion_log_relacional PARDER PTCOMA'
-    t[0] =Imprimir(t[3])
+    t[0] =Imprimir(t[3],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 def p_instruccion_definicion(t) :
     'definicion_instr   : NUMERO TEMPORAL PTCOMA'
@@ -329,8 +336,8 @@ def p_instruccion_definicion(t) :
 
 def p_asignacion_instr(t) :
     'asignacion_instr   : TEMPORAL IGUAL expresion_log_relacional PTCOMA'
-    t[0] =Asignacion(t[1], t[3])
-
+    t[0] =Asignacion(t[1], t[3],t.lineno(1),get_clomuna(entry,t.slice[1]))
+    
 def p_mientras_instr(t) :
     'mientras_instr     : MIENTRAS PARIZQ expresion_log_relacional PARDER LLAVIZQ instrucciones LLAVDER'
     t[0] =Mientras(t[3], t[6])
@@ -523,6 +530,8 @@ import ts as TS
 import ply.yacc as yacc
 parser = yacc.yacc()
 
-
+entry = ''
 def parse(input) :
+    global entry
+    entry = input
     return parser.parse(input)

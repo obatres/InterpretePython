@@ -23,7 +23,8 @@ def procesar_imprimir(instr, ts) :
         #else:
             #print('Error, no se puede imprimir un arreglo')
     except:
-        print('error de impresion, valor o variabe no encontrados: ',instr.exp.id)
+        print('error de impresion, valor o variabe no encontrados: ',instr.exp.id ) 
+        print(instr.linea,instr.columna)
         pass
 
 def resolver_registro(exp,ts):
@@ -44,7 +45,7 @@ def procesar_asignacion(instr, ts) :
         else:
             ts.agregar(simbolo)
     except :
-        print('No se puede realizar la asignacionde',instr.id)
+        print('No se puede realizar la asignacionde',instr.id, instr.linea, instr.columna)
         pass
         
 def procesar_mientras(instr, ts) :
@@ -716,8 +717,8 @@ def DibujarAST(instrucciones):
 f = open("./entrada.txt", "r")
 input = f.read()
 
-#instrucciones = g.parse(input)
-instrucciones = gdes.parse(input)
+instrucciones = g.parse(input)
+#instrucciones = gdes.parse(input)
 ts_global = TS.TablaDeSimbolos()
 
 
