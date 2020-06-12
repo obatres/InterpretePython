@@ -1,7 +1,8 @@
 main:
-    $t1=array();
-    $t1['as'][1][2][5]="Hola mundo";
-    $t2 = $t1['as'][1][2][5];
-    print($t1);
-    print($t2);
+    $t1=2;
+    $t2=1;
+    $t3= 10 * 2;
+    print($t3);
+
+
 
