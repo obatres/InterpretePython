@@ -234,22 +234,16 @@ from instrucciones import *
 
 def p_init(t) :
     'init            : instrucciones'
-    l = list(reversed(t[1]))
-    t[0] = l
+    t[0] = t[1]
 
 def p_instrucciones_lista(t) :
-    'instrucciones    :  instruccion instruccionesP'
-    t[0]=t[2]
-    t[0].append(t[1])
+    'instrucciones    : instrucciones instruccion'
+    t[1].append(t[2])
+    t[0] = t[1]
 
 def p_instrucciones_instruccion(t) :
-    'instruccionesP    : instruccion instruccionesP'
-    t[0]=t[2]
-    t[0].append(t[1])
-
-def p_instrucciones_empty(t):
-    'instruccionesP : VACIO'
-    t[0]=[]
+    'instrucciones    : instruccion '
+    t[0] = [t[1]]
 
 def p_instruccion(t) :
     '''instruccion      : imprimir_instr
@@ -303,9 +297,7 @@ def p_inicia_pila(t):
 
 def p_asigna_arreglo(t):
     'ASIGNAARREGLO : TEMPORAL ACCESO IGUAL expresion_log_relacional PTCOMA'  
-    l =list(reversed(t[2]))
-    t[0] = Asigna_arreglo(t[1],l,t[4])
-
+    t[0] = Asigna_arreglo(t[1],t[2],t[4])
 #Recibe OPERACIONES LOGICAS
 def p_expresion_logica_ins(t):
     'instruccion : expresion_log_relacional'
@@ -352,79 +344,69 @@ def p_if_else_instr(t) :
     'if_else_instr      : IF PARIZQ expresion_log_relacional PARDER LLAVIZQ instrucciones LLAVDER ELSE LLAVIZQ instrucciones LLAVDER'
     t[0] =IfElse(t[3], t[6], t[10])
 
-def p_desc_expresion_numerica(t):
-    'expresion_numerica : SIMPLE expresion_numerica_p'
-    t[0] = t[2]
-
 #RECIBE: expresiones aritmeticas y bit a bit
 def p_expresion_binaria(t):
-    '''expresion_numerica_p :  MAS expresion_numerica expresion_numerica_p
-                        |  MENOS expresion_numerica expresion_numerica_p
-                        |  POR expresion_numerica expresion_numerica_p
-                        |  DIVIDIDO expresion_numerica expresion_numerica_p
-                        |  RES expresion_numerica expresion_numerica_p
-                        |  ANDBIT expresion_numerica expresion_numerica_p
-                        |  ORBIT expresion_numerica expresion_numerica_p
-                        |  XORBIT expresion_numerica expresion_numerica_p
-                        |  IZQBIT expresion_numerica expresion_numerica_p
-                        |  DERBIT expresion_numerica expresion_numerica_p'''
-    if t[1] == '+'  : t[0] = ExpresionBinaria(t[2], t[3], OPERACION_ARITMETICA.MAS)
-    elif t[1] == '-': t[0] = ExpresionBinaria(t[2], t[3], OPERACION_ARITMETICA.MENOS)
-    elif t[1] == '*': t[0] = ExpresionBinaria(t[2], t[3], OPERACION_ARITMETICA.POR)
-    elif t[1] == '/': t[0] = ExpresionBinaria(t[2], t[3], OPERACION_ARITMETICA.DIVIDIDO)
-    elif t[1] == '%': t[0] = ExpresionBinaria(t[2], t[3], OPERACION_ARITMETICA.RESIDUO)
-    elif t[1] == '&': 
-        print(t[2],t[3])
-        t[0] = ExpresionBitAnd(t[2], t[3])
-    elif t[1] == '|': t[0] = ExpresionBitOr(t[2], t[3])
-    elif t[1] == '^': t[0] = ExpresionBitXor(t[2], t[3])
-    elif t[1] == '<<': t[0] = ExpresionBitIzq(t[2], t[3])
-    elif t[1] == '>>': t[0] = ExpresionBitDer(t[2], t[3])
-
-def p_expresion_numerica_empty(t):
-    'expresion_numerica_p : VACIO'
-    t[0] = t[-1]
+    '''expresion_numerica : expresion_numerica MAS expresion_numerica
+                        | expresion_numerica MENOS expresion_numerica
+                        | expresion_numerica POR expresion_numerica
+                        | expresion_numerica DIVIDIDO expresion_numerica
+                        | expresion_numerica RES expresion_numerica
+                        | expresion_numerica ANDBIT expresion_numerica
+                        | expresion_numerica ORBIT expresion_numerica
+                        | expresion_numerica XORBIT expresion_numerica
+                        | expresion_numerica IZQBIT expresion_numerica
+                        | expresion_numerica DERBIT expresion_numerica'''
+    if t[2] == '+'  : t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.MAS)
+    elif t[2] == '-': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.MENOS)
+    elif t[2] == '*': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.POR)
+    elif t[2] == '/': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.DIVIDIDO)
+    elif t[2] == '%': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.RESIDUO)
+    elif t[2] == '&': t[0] = ExpresionBitAnd(t[1], t[3])
+    elif t[2] == '|': t[0] = ExpresionBitOr(t[1], t[3])
+    elif t[2] == '^': t[0] = ExpresionBitXor(t[1], t[3])
+    elif t[2] == '<<': t[0] = ExpresionBitIzq(t[1], t[3])
+    elif t[2] == '>>': t[0] = ExpresionBitDer(t[1], t[3])
 
 def p_expresion_bit_not(t):
-    'SIMPLE : NOTBIT expresion_numerica'
+    'expresion_numerica : NOTBIT expresion_numerica'
     t[0] = ExpresionBitNot(t[2])
 
 def p_expresion_unaria(t):
-    'SIMPLE : MENOS expresion_numerica %prec UMENOS'
+    'expresion_numerica : MENOS expresion_numerica %prec UMENOS'
     t[0] = ExpresionNegativo(t[2])
 
 #Recibe (Expresion)
 def p_expresion_agrupacion(t):
-    'SIMPLE : PARIZQ expresion_log_relacional PARDER'
+    'expresion_numerica : PARIZQ expresion_log_relacional PARDER'
     t[0] = t[2]
 
 def p_expresion_number(t):
-    '''SIMPLE : ENTERO  '''
+    '''expresion_numerica : ENTERO  '''
     t[0] = ExpresionNumero(t[1],TS.TIPO_DATO.INT)
     #print(t[1])
 
 def p_expresion_decimal(t):
-    'SIMPLE : DECIMAL'
+    'expresion_numerica : DECIMAL'
     t[0] = ExpresionNumero(t[1],TS.TIPO_DATO.FLOAT)
 
 def p_expresion_id(t):
-    'SIMPLE   : ID'
+    'expresion_numerica   : ID'
     t[0] = ExpresionNumero(t[1])
 
 def p_expresion_pila(t):
-    'SIMPLE   : PILAPOS'
+    'expresion_numerica   : PILAPOS'
     t[0] = ExpresionPila(t[1])
 
 def p_puntero_pila(t):
-    'SIMPLE : PILAPUNTERO'
+    'expresion_numerica : PILAPUNTERO'
     t[0] = ExpresionPunteroPila(t[1])
 
 def p_pop_pila(t):
-    'SIMPLE : PILAPOS CORIZQ PILAPUNTERO CORDER'
+    'expresion_numerica : PILAPOS CORIZQ PILAPUNTERO CORDER'
     t[0] = Expresion_Pop_pila(t[1],t[3])
 
 def p_expresion_parametro(t):
-    '''SIMPLE :    PARAMETRO
+    '''expresion_numerica :    PARAMETRO
                             | VALORDEVUELTO
                             | DIRRETORNO'''
     t[0] = Expresion_param(t[1])
@@ -432,58 +414,50 @@ def p_expresion_parametro(t):
 
 # Recibe temporales $t2
 def p_expresion_tempo(t):
-    'SIMPLE : TEMPORAL'
+    'expresion_numerica : TEMPORAL'
     t[0] = ExpresionTemporal(t[1])                   
     
 # recibe: punteros  &$t1  
 def p_expresion_puntero(t):
-    'SIMPLE : PTEMPORAL'
+    'expresion_numerica : PTEMPORAL'
     t[0] = ExpresionPunteroTemp(t[1])
 
 #recibe: cadena 'hola'
 def p_expresion_cadena(t) :
-    'SIMPLE     : CADENA'
+    'expresion_numerica     : CADENA'
     t[0] = ExpresionNumero(t[1], TS.TIPO_DATO.CADENA)
 
 #recibe: cadena "hola"
 def p_expresion_cade(t) :
-    'SIMPLE     : CADE'
+    'expresion_numerica     : CADE'
     t[0] = ExpresionNumero(t[1], TS.TIPO_DATO.CADENA)
 
 #recibe: read()
 def p_expresion_read(t):
-    'SIMPLE : READ PARIZQ PARDER'
+    'expresion_numerica : READ PARIZQ PARDER'
     print(t[1]) 
 
 def p_inicializacion_array(t):
-    'SIMPLE : ARRAY PARIZQ PARDER'
+    'expresion_numerica : ARRAY PARIZQ PARDER'
     t[0]= InicioArray()
 
 def p_acceso_array_expresion(t):
-    'SIMPLE : TEMPORAL ACCESO'
-    l = list(reversed(t[2]))
-    t[0] = AccesoValorArray(t[1],l)
+    'expresion_numerica : TEMPORAL ACCESO'
+    t[0] = AccesoValorArray(t[1],t[2])
 
 def p_acceso_lista_array(t):
-    'ACCESO : CORIZQ expresion_numerica CORDER ACCESOP'
-    t[0]=t[4]
-    t[0].append(t[2])
+    'ACCESO : ACCESO CORIZQ expresion_numerica CORDER'
+    t[1].append(t[3])
+    t[0] = t[1]
 
 def p_acceso_array(t):
-    'ACCESOP : CORIZQ expresion_numerica CORDER ACCESOP '
-    t[0]=t[4]
-    t[0].append(t[2])
+    'ACCESO : CORIZQ expresion_numerica CORDER '
+    t[0] = [t[2]]
 
-def p_acceso_array_empty(t):
-    'ACCESOP : VACIO'
-    t[0] = []
 
-def p_vacio(t):
-    'VACIO : '
-    pass
 #recibe: conversiones TIPOCONVERSION $t1 
 def p_expresion_conversion(t):
-    'SIMPLE : TIPOCONVERSION expresion_numerica'
+    'expresion_numerica : TIPOCONVERSION expresion_numerica'
     t[0] = ExpresionConversion(t[1],t[2])
 
 #recibe: tipo de conversion (int) (float) (char)
@@ -495,48 +469,39 @@ def p_expresion_tipoConversion(t):
 
 #Recibe: valor absoluto
 def p_expresion_valorabs(t):
-    'SIMPLE : ABS PARIZQ expresion_numerica PARDER'
+    'expresion_numerica : ABS PARIZQ expresion_numerica PARDER'
     t[0] =  ExpresionValorAbsoluto(t[3])
-
-def p_desc_expresion_logica_relacional(t):
-    'expresion_log_relacional : SIMPLE_log expresion_log_relacional_p'
-
-    t[0] = t[2]
 
 #Recibe expresiones logicas y relacionales
 def p_expresion_log_relacional(t) :
-    '''expresion_log_relacional_p : expresion_numerica MAYQUE expresion_numerica
+    '''expresion_log_relacional : expresion_numerica MAYQUE expresion_numerica
                             | expresion_numerica MENQUE expresion_numerica
                             | expresion_numerica IGUALQUE expresion_numerica
                             | expresion_numerica NIGUALQUE expresion_numerica
                             | expresion_numerica MAYORIG expresion_numerica
                             | expresion_numerica MENORIG expresion_numerica
-                            |  ANDLOG expresion_log_relacional expresion_log_relacional_p
-                            |  ORLOG expresion_log_relacional expresion_log_relacional_p
-                            |  XORLOG expresion_log_relacional expresion_log_relacional_p'''
+                            | expresion_numerica ANDLOG expresion_numerica
+                            | expresion_numerica ORLOG expresion_numerica
+                            | expresion_numerica XORLOG expresion_numerica'''
     if t[2] == '>'    : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MAYOR_QUE)
     elif t[2] == '<'  : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MENOR_QUE)
     elif t[2] == '==' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.IGUAL)
     elif t[2] == '!=' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.DIFERENTE)
-    elif t[2] == '>=' :  t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MAYORQUE)
+    elif t[2] == '>=' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MAYORQUE)
     elif t[2] == '<=' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MENORQUE)
-    elif t[1] == 'xor' : t[0] = ExpresionLogicaXOR(t[2], t[3])
-    elif t[1] == '&&' : t[0] = ExpresionLogicaAND(t[2], t[3])
-    elif t[1] == '||' : t[0] = ExpresionLogicaOR(t[2], t[3])
+    elif t[2] == 'xor' : t[0] = ExpresionLogicaXOR(t[1], t[3])
+    elif t[2] == '&&' : t[0] = ExpresionLogicaAND(t[1], t[3])
+    elif t[2] == '||' : t[0] = ExpresionLogicaOR(t[1], t[3])
 
-def p_expresion_log_relacional_empty(t):
-    'expresion_log_relacional_p : VACIO'
-
-    t[0] = t[-1]
 
 #RECIBE !$t3
 def p_expresion_logica_not(t):
-    'SIMPLE_log : NOTLOG expresion_log_relacional'
+    'expresion_log_relacional : NOTLOG expresion_log_relacional'
     t[0] = ExpresionLogicaNot(t[2])
 
 #Sintetiza la expresion de expresion_log_relacional
 def p_expresion_expresionnumerica(t):
-    'SIMPLE_log :  expresion_numerica'
+    'expresion_log_relacional :  expresion_numerica'
     t[0]=t[1]
 
 def p_error(t):
