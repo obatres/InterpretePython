@@ -1,4 +1,4 @@
-t={}
+'''t={}
 l=[4,5,'nombre','orlando']
 exp =5
 exp2=6
@@ -32,5 +32,8 @@ for j in range(len(l)):
             print('no existe el valor')
         else:
             temp1=temp1.get(indice)
+'''
 
+l=[4,5,'nombre','orlando']
+temp1 = list(reversed(l))
 print('recuperacion',temp1)

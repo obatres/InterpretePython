@@ -1,7 +1,6 @@
 main:
-    $t1=array();
-    $t1['as'][1][2][5]="Hola mundo";
-    $t2 = $t1['as'][1][2][5];
+    $t1 = 20 << 5;
     print($t1);
-    print($t2);
+
+
 

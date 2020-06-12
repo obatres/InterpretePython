@@ -1,4 +1,5 @@
 import gramatica as g
+import gramaticadesc as gdes
 import ts as TS
 import sys
 from expresiones import *
@@ -47,18 +48,18 @@ def procesar_asignacion(instr, ts) :
         pass
         
 def procesar_mientras(instr, ts) :
-    while resolver_expreision_logica(instr.expLogica, ts) :
+    while resolver_expresion_logica(instr.expLogica, ts) :
         ts_local = TS.TablaDeSimbolos(ts.simbolos)
         procesar_instrucciones(instr.instrucciones, ts_local)
 
 def procesar_if(instr, ts) :
 
-    condicion = resolver_expreision_logica(instr.exp,ts)
+    condicion = resolver_expresion_logica(instr.exp,ts)
 
     if condicion == 1: Llamada_goto(instr.goto,ts,instrucciones)
 
 def procesar_if_else(instr, ts) :
-    val = resolver_expreision_logica(instr.expLogica, ts)
+    val = resolver_expresion_logica(instr.expLogica, ts)
     if val :
         ts_local = TS.TablaDeSimbolos(ts.simbolos)
         procesar_instrucciones(instr.instrIfVerdadero, ts_local)
@@ -80,7 +81,8 @@ def resolver_cadena(exp, ts) :
     else :
         print('Error: Expresión cadena no válida')
 
-def resolver_expreision_logica(expLog, ts) :
+def resolver_expresion_logica(expLog, ts) :
+
     exp1 = resolver_expresion_aritmetica(expLog.exp1, ts)
     exp2 = resolver_expresion_aritmetica(expLog.exp2, ts)
     if expLog.exp1.tipo == TS.TIPO_DATO.INT or expLog.exp1.tipo == TS.TIPO_DATO.FLOAT:
@@ -490,7 +492,7 @@ def resolver_expresion_aritmetica(expNum, ts) :
             print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un CORR DER bit a bit se espera que ambos sean INT o FLOAT')
     
     elif isinstance (expNum,ExpresionLogica):
-        return resolver_expreision_logica(expNum,ts)
+        return resolver_expresion_logica(expNum,ts)
     
     elif isinstance (expNum, InicioArray):
         expNum.tipo = TS.TIPO_DATO.ARRAY
@@ -714,7 +716,8 @@ def DibujarAST(instrucciones):
 f = open("./entrada.txt", "r")
 input = f.read()
 
-instrucciones = g.parse(input)
+#instrucciones = g.parse(input)
+instrucciones = gdes.parse(input)
 ts_global = TS.TablaDeSimbolos()
 
 
@@ -722,11 +725,13 @@ dot = Digraph(comment='AUGUS')
 try:
     DibujarAST(instrucciones)
 except :
+    print('error al imprimir arbol')
     pass
 
 try:
     procesar_instrucciones(instrucciones, ts_global)
 except :
+    print('Error en parser')
     pass
 
 
