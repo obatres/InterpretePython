@@ -221,6 +221,7 @@ precedence = (
     ('left','MAS','MENOS'),
     ('left','POR','DIVIDIDO'),
     ('left','RES','ABS'),
+    ('right','UMENOS')
     )
 
 # Definición de la gramática
@@ -231,21 +232,39 @@ from instrucciones import *
 
 def p_init(t) :
     'init            : instrucciones'
-    t[0] = t[1]
+    
+    l = list(reversed(t[1]))
+    t[0] = l
+    print(t[0])
 
 def p_instrucciones_lista(t) :
-    'instrucciones    : instrucciones instruccion'
-    t[1].append(t[2])
-    t[0] = t[1]
+    'instrucciones    :  instruccion instruccionesP'
+    t[0]=t[2]
+    t[0].append(t[1])
 
 def p_instrucciones_instruccion(t) :
-    'instrucciones    : instruccion '
-    t[0] = [t[1]]
+    'instruccionesP    : instruccion instruccionesP'
+    t[0]=t[2]
+    t[0].append(t[1])
+
+def p_instrucciones_empty(t):
+    'instruccionesP : VACIO'
+    t[0]=[]
+
+def p_vacio(t):
+    'VACIO : '
+    pass
 
 def p_instruccion(t) :
     '''instruccion      : imprimir_instr
-                        | EXITF'''
+                        | EXITF
+                        | INICIO'''
     t[0] = t[1]
+
+#RECIBE main:
+def p_INICIO(t):
+    'INICIO : MAIN DOSP'
+    t[0] = Main()
 
 #Recibe: exit;
 def p_EXITF(t):
@@ -261,11 +280,16 @@ def p_instruccion_imprimir(t) :
 #RECIBE: expresiones aritmeticas y bit a bit
 def p_expresion_binaria(t):
     '''expresion : expresion_numerica MAS expresion_numerica'''
-    print(t[1],t[3])
+    if t[2] == '+'  : t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.MAS)
+
+def p_expresion_unaria(t):
+    'expresion_numerica : MENOS expresion %prec UMENOS'
+    t[0] = ExpresionNegativo(t[2])
 
 def p_simp(t):
     'expresion : expresion_numerica'
     t[0]=t[1]
+
 #Recibe (Expresion)
 def p_expresion_agrupacion(t):
     'expresion_numerica : PARIZQ expresion PARDER'
@@ -274,14 +298,70 @@ def p_expresion_agrupacion(t):
 def p_expresion_number(t):
     '''expresion_numerica : ENTERO  '''
     t[0] = ExpresionNumero(t[1],TS.TIPO_DATO.INT)
-    #print(t[1])
 
+def p_expresion_decimal(t):
+    'expresion_numerica : DECIMAL'
+    t[0] = ExpresionNumero(t[1],TS.TIPO_DATO.FLOAT)
+
+def p_expresion_id(t):
+    'expresion_numerica   : ID'
+    t[0] = ExpresionNumero(t[1])
+
+def p_expresion_pila(t):
+    'expresion_numerica   : PILAPOS'
+    t[0] = ExpresionPila(t[1])
+
+def p_puntero_pila(t):
+    'expresion_numerica : PILAPUNTERO'
+    t[0] = ExpresionPunteroPila(t[1])
+
+def p_pop_pila(t):
+    'expresion_numerica : PILAPOS CORIZQ PILAPUNTERO CORDER'
+    t[0] = Expresion_Pop_pila(t[1],t[3])
+
+def p_expresion_parametro(t):
+    '''expresion_numerica :    PARAMETRO
+                            | VALORDEVUELTO
+                            | DIRRETORNO'''
+    t[0] = Expresion_param(t[1])
+
+# Recibe temporales $t2
+def p_expresion_tempo(t):
+    'expresion_numerica : TEMPORAL'
+    t[0] = ExpresionTemporal(t[1])                   
+    
+# recibe: punteros  &$t1  
+def p_expresion_puntero(t):
+    'expresion_numerica : PTEMPORAL'
+    t[0] = ExpresionPunteroTemp(t[1])
+
+#recibe: cadena 'hola'
+def p_expresion_cadena(t) :
+    'expresion_numerica     : CADENA'
+    t[0] = ExpresionNumero(t[1], TS.TIPO_DATO.CADENA)
+
+#recibe: cadena "hola"
+def p_expresion_cade(t) :
+    'expresion_numerica     : CADE'
+    t[0] = ExpresionNumero(t[1], TS.TIPO_DATO.CADENA)
+
+#recibe: read()
+def p_expresion_read(t):
+    'expresion_numerica : READ PARIZQ PARDER'
+    print(t[1]) 
+
+def p_inicializacion_array(t):
+    'expresion_numerica : ARRAY PARIZQ PARDER'
+    t[0]= InicioArray()
 
 #Recibe expresiones logicas y relacionales
 def p_expresion_log_relacional(t) :
     '''expresion : expresion_numerica MAYQUE expresion_numerica'''
-    print(t[1],t[3])
+    if t[2] == '>'    : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MAYOR_QUE)
 
+def p_expresion_bit_not(t):
+    'expresion_numerica : NOTBIT expresion'
+    t[0] = ExpresionBitNot(t[2])
 
 def p_error(t):
      # Read ahead looking for a terminating ";"

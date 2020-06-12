@@ -725,11 +725,13 @@ dot = Digraph(comment='AUGUS')
 try:
     DibujarAST(instrucciones)
 except :
+    print('error al imprimir arbol')
     pass
 
 try:
     procesar_instrucciones(instrucciones, ts_global)
 except :
+    print('Error en parser')
     pass
 
 
