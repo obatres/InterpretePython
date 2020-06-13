@@ -1,7 +1,9 @@
 main:
     $t1 = 20 + 6;
-    $t2 = 20 + 'asd';
-    print($t2);
+    $t2 = 20 @> 3;
+    $t3 = array();
+    $t3[0][4]=5;
+    print($t4);
     print($t1);
 
 

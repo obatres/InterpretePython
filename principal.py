@@ -798,24 +798,62 @@ def DibujarAST(instrucciones):
             print('')
     #print(dot.source)
 
+
+def ReporteTS():
+    generado = '<<table border=\'0\' cellborder=\'1\' color=\'blue\' cellspacing='+'\'0\''+'><tr><td colspan=\'4\'>TABLA DE SIMBOLOS</td></tr><tr><td>No.</td><td>identificador</td><td>valor</td><td>tipo</td></tr>'
+    cont = 0
+
+    for i in ts_global.simbolos:
+        generado += '<tr><td>'+str(cont)+'</td><td>'+str(ts_global.obtener(i).id)+'</td><td>'+str(ts_global.obtener(i).valor)+'</td><td>'+str(ts_global.obtener(i).tipo)+'</td></tr>'
+        cont +=1
+    generado +=' </table>>'
+
+    dotTS = Digraph('Tabla de simbolos',filename='TablaSimbolos.gv')
+    print(generado)
+    dotTS.attr('node',shape='plaintext')
+    dotTS.node('node',label=generado)
+    dotTS.view()
+
+def ReporteErrores():
+    generado = '<<table border=\'0\' cellborder=\'1\' color=\'blue\' cellspacing='+'\'0\''+'><tr><td colspan=\'2\'>LISTADO DE ERRORES</td></tr><tr><td>No.</td><td>Error</td></tr>'
+    cont = 0
+
+    for i in errores:
+        generado +='<tr><td>'+str(cont)+'</td><td>'+str(i)+'</td></tr>'
+        cont +=1
+    
+    generado +=' </table>>'
+    dotErr = Digraph('Errores',filename='ListadoDeErrores.gv')
+    print(generado)
+    dotErr.attr('node',shape='plaintext')
+    dotErr.node('node',label=generado)
+    dotErr.view()
 #-----------------------------------------------------------TERMINA GRAFICACION DEL AST
 
 #-----------------------------------------------------------EJECUCION DEL ANALIZADOR
 f = open("./entrada.txt", "r")
 input = f.read()
 
+
+bandera = true
 #ANALIZADOR ASCENDENTE
 def ejecutar_asc(input):
     import gramatica as g
     instrucciones = g.parse(input)
     return instrucciones
-instrucciones = ejecutar_asc(input)
+
 
 def errores_asc():
     import gramatica as g
     errores = g.retornalista()
     return errores 
-errores = errores_asc()
+
+if bandera:
+    instrucciones = ejecutar_asc(input)
+    errores = errores_asc()
+elif bandera==False:
+    instrucciones = ejecutar_desc(input)
+    errores = errores_desc()
 
 #ANALIZADOR DESCENDENTE
 def ejecutar_desc(input):
@@ -847,8 +885,9 @@ except :
     print('Error en parser')
     pass
 
-for i in errores:
-    print(i)
+
+rts =ReporteTS()
+rer = ReporteErrores()
 class objetopila():
 
     def __init__(self, valor, tipo):
