@@ -7,8 +7,10 @@ class Imprimir(Instruccion) :
         La instrucción imprimir únicamente tiene como parámetro una cadena
     '''
 
-    def __init__(self,  exp) :
+    def __init__(self,  exp, linea , columna ) :
         self.exp = exp
+        self.linea = linea
+        self.columna = columna
 
 class Mientras(Instruccion) :
     '''
@@ -36,9 +38,11 @@ class Asignacion(Instruccion) :
         Recibe como parámetro el identificador a asignar y el valor que será asignado.
     '''
 
-    def __init__(self, id, expNumerica) :
+    def __init__(self, id, expNumerica,  linea , columna) :
         self.id = id
         self.expNumerica = expNumerica
+        self.linea = linea
+        self.columna = columna
 
 class If(Instruccion) : 
     '''
@@ -47,9 +51,11 @@ class If(Instruccion) :
         de instrucciones a ejecutar si la expresión lógica es verdadera.
     '''
 
-    def __init__(self, exp, goto) :
+    def __init__(self, exp, goto,  linea , columna) :
         self.exp = exp
         self.goto = goto
+        self.linea = linea
+        self.columna = columna
 
 class IfElse(Instruccion) : 
     '''
@@ -70,8 +76,10 @@ class Unset(Instruccion):
         La instrucción unset únicamente tiene como parámetro un registro
     '''
 
-    def __init__(self,  exp) :
+    def __init__(self,  exp,  linea , columna) :
         self.exp = exp    
+        self.linea = linea
+        self.columna = columna
 
 class ErrorSin(Instruccion):
     '''
@@ -86,68 +94,88 @@ class IniciaPila (Instruccion):
     '''
         Inicia una pila
     '''
-    def __init__(self,  id) :
+    def __init__(self,  id,  linea , columna) :
         self.id = id  
+        self.linea = linea
+        self.columna = columna
 
 class AsignaPunteroPila(Instruccion):
     '''
         Asigna puntero de  una pila
     '''
-    def __init__(self,  id, exp) :
+    def __init__(self,  id, exp,  linea , columna) :
         self.id = id 
         self.exp = exp 
+        self.linea = linea
+        self.columna = columna
 
 class AsignaValorPila(Instruccion):
     '''
         Asigna un valor a una posicion de  una pila
     '''
-    def __init__(self,  id, exp, puntero) :
+    def __init__(self,  id, exp, puntero,  linea , columna) :
         self.id = id 
         self.exp = exp
         self.puntero = puntero 
+        self.linea = linea
+        self.columna = columna
 
 class AsignacionExtra(Instruccion):
     '''
         Asigna un valor a un registro parametro, ra y retorno
     '''
-    def __init__(self,  id, exp) :
+    def __init__(self,  id, exp,  linea , columna) :
         self.id = id 
         self.exp = exp
+        self.linea = linea
+        self.columna = columna
 
 class Main (Instruccion):
     '''
         Nodo de tipo main
    
     '''
+    def __init__(self,  linea , columna) :
+        self.linea = linea
+        self.columna = columna
 
 class Asigna_arreglo(Instruccion):
     '''
         Nodo de tipo asignacion de arreglo
    
     '''
-    def __init__(self,id,lista,exp) :
+    def __init__(self,id,lista,exp,  linea , columna) :
         self.id = id 
         self.lista = lista
         self.exp = exp
+        self.linea = linea
+        self.columna = columna
 
 class Label(Instruccion):
     '''
         Nodo de tipo Label
    
     '''
-    def __init__(self,id) :
+    def __init__(self,id,  linea , columna) :
         self.id = id 
+        self.linea = linea
+        self.columna = columna
 
 class Goto(Instruccion):
     '''
         Nodo de tipo Label
    
     '''
-    def __init__(self,id) :
+    def __init__(self,id,  linea , columna) :
         self.id = id 
+        self.linea = linea
+        self.columna = columna
 
 class Exit():
     '''
         Nodo de tipo Exit
    
     '''
+    def __init__(self,  linea , columna) :
+        self.linea = linea
+        self.columna = columna
