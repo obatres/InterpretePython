@@ -199,8 +199,15 @@ def t_newline(t):
     t.lexer.lineno += t.value.count("\n")
     
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
+    print("Error Lexico en el token: '%s'" % t.value[0])
+    err = "Error Lexico en el token: '%s'" % t.value[0]
+    lista_errores.append(err)
     t.lexer.skip(1)
+
+#OBTENIENDO LA COLUMNA 
+def get_clomuna(input, token):
+    line_star = input.rfind('\n', 0 ,token.lexpos) + 1
+    return (token.lexpos - line_star)+1
 
 # Construyendo el analizador léxico
 import ply.lex as lex
@@ -272,17 +279,17 @@ def p_instruccion(t) :
 #RECIBE main:
 def p_INICIO(t):
     'INICIO : MAIN DOSP'
-    t[0] = Main()
+    t[0] = Main(t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 #Recibe: exit;
 def p_EXITF(t):
     'EXITF : EXIT PTCOMA'
-    t[0]= Exit()
+    t[0]= Exit(t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 #Recibe: print($t1);
 def p_instruccion_imprimir(t) :
     'imprimir_instr     : PRINT PARIZQ expresion PARDER PTCOMA'
-    t[0] =Imprimir(t[3])
+    t[0] =Imprimir(t[3],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 
 #RECIBE: expresiones aritmeticas y bit a bit
@@ -298,20 +305,20 @@ def p_expresion_binaria(t):
                         | expresion_numerica IZQBIT expresion_numerica
                         | expresion_numerica DERBIT expresion_numerica
     '''
-    if t[2] == '+'  : t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.MAS)
-    elif t[2] == '-': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.MENOS)
-    elif t[2] == '*': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.POR)
-    elif t[2] == '/': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.DIVIDIDO)
-    elif t[2] == '%': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.RESIDUO)
-    elif t[2] == '&': t[0] = ExpresionBitAnd(t[1], t[3])
-    elif t[2] == '|': t[0] = ExpresionBitOr(t[1], t[3])
-    elif t[2] == '^': t[0] = ExpresionBitXor(t[1], t[3])
-    elif t[2] == '<<': t[0] = ExpresionBitIzq(t[1], t[3])
-    elif t[2] == '>>': t[0] = ExpresionBitDer(t[1], t[3])
+    if t[2] == '+'  : t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.MAS,t.lineno(1),get_clomuna(entry,t.slice[2]))
+    elif t[2] == '-': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.MENOS,t.lineno(1),get_clomuna(entry,t.slice[2]))
+    elif t[2] == '*': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.POR,t.lineno(1),get_clomuna(entry,t.slice[2]))
+    elif t[2] == '/': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.DIVIDIDO,t.lineno(1),get_clomuna(entry,t.slice[2]))
+    elif t[2] == '%': t[0] = ExpresionBinaria(t[1], t[3], OPERACION_ARITMETICA.RESIDUO,t.lineno(1),get_clomuna(entry,t.slice[2]))
+    elif t[2] == '&': t[0] = ExpresionBitAnd(t[1], t[3],t.lineno(1),get_clomuna(entry,t.slice[2]))
+    elif t[2] == '|': t[0] = ExpresionBitOr(t[1], t[3],t.lineno(1),get_clomuna(entry,t.slice[2]))
+    elif t[2] == '^': t[0] = ExpresionBitXor(t[1], t[3],t.lineno(1),get_clomuna(entry,t.slice[2]))
+    elif t[2] == '<<': t[0] = ExpresionBitIzq(t[1], t[3],t.lineno(1),get_clomuna(entry,t.slice[2]))
+    elif t[2] == '>>': t[0] = ExpresionBitDer(t[1], t[3],t.lineno(1),get_clomuna(entry,t.slice[2]))
 
 def p_expresion_unaria(t):
     'expresion_numerica : MENOS expresion %prec UMENOS'
-    t[0] = ExpresionNegativo(t[2])
+    t[0] = ExpresionNegativo(t[2],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 def p_simp(t):
     'expresion : expresion_numerica'
@@ -324,53 +331,53 @@ def p_expresion_agrupacion(t):
 
 def p_expresion_number(t):
     '''expresion_numerica : ENTERO  '''
-    t[0] = ExpresionNumero(t[1],TS.TIPO_DATO.INT)
+    t[0] = ExpresionNumero(t[1],TS.TIPO_DATO.INT,t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 def p_expresion_decimal(t):
     'expresion_numerica : DECIMAL'
-    t[0] = ExpresionNumero(t[1],TS.TIPO_DATO.FLOAT)
+    t[0] = ExpresionNumero(t[1],TS.TIPO_DATO.FLOAT,t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 def p_expresion_id(t):
     'expresion_numerica   : ID'
-    t[0] = ExpresionNumero(t[1])
+    t[0] = ExpresionNumero(t[1],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 def p_expresion_pila(t):
     'expresion_numerica   : PILAPOS'
-    t[0] = ExpresionPila(t[1])
+    t[0] = ExpresionPila(t[1],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 def p_puntero_pila(t):
     'expresion_numerica : PILAPUNTERO'
-    t[0] = ExpresionPunteroPila(t[1])
+    t[0] = ExpresionPunteroPila(t[1],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 def p_pop_pila(t):
     'expresion_numerica : PILAPOS CORIZQ PILAPUNTERO CORDER'
-    t[0] = Expresion_Pop_pila(t[1],t[3])
+    t[0] = Expresion_Pop_pila(t[1],t[3],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 def p_expresion_parametro(t):
     '''expresion_numerica :    PARAMETRO
                             | VALORDEVUELTO
                             | DIRRETORNO'''
-    t[0] = Expresion_param(t[1])
+    t[0] = Expresion_param(t[1],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 # Recibe temporales $t2
 def p_expresion_tempo(t):
     'expresion_numerica : TEMPORAL'
-    t[0] = ExpresionTemporal(t[1])                   
+    t[0] = ExpresionTemporal(t[1],t.lineno(1),get_clomuna(entry,t.slice[1]))                   
     
 # recibe: punteros  &$t1  
 def p_expresion_puntero(t):
     'expresion_numerica : PTEMPORAL'
-    t[0] = ExpresionPunteroTemp(t[1])
+    t[0] = ExpresionPunteroTemp(t[1],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 #recibe: cadena 'hola'
 def p_expresion_cadena(t) :
     'expresion_numerica     : CADENA'
-    t[0] = ExpresionNumero(t[1], TS.TIPO_DATO.CADENA)
+    t[0] = ExpresionNumero(t[1], TS.TIPO_DATO.CADENA,t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 #recibe: cadena "hola"
 def p_expresion_cade(t) :
     'expresion_numerica     : CADE'
-    t[0] = ExpresionNumero(t[1], TS.TIPO_DATO.CADENA)
+    t[0] = ExpresionNumero(t[1], TS.TIPO_DATO.CADENA,t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 #recibe: read()
 def p_expresion_read(t):
@@ -379,12 +386,12 @@ def p_expresion_read(t):
 
 def p_inicializacion_array(t):
     'expresion_numerica : ARRAY PARIZQ PARDER'
-    t[0]= InicioArray()
+    t[0]= InicioArray(t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 def p_acceso_array_expresion(t):
     'expresion : TEMPORAL ACCESO'
     l = list(reversed(t[2]))
-    t[0] = AccesoValorArray(t[1],l)
+    t[0] = AccesoValorArray(t[1],l,t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 def p_acceso_lista_array(t):
     'ACCESO : CORIZQ expresion CORDER ACCESOP'
@@ -403,7 +410,7 @@ def p_acceso_array_empty(t):
 #recibe: conversiones TIPOCONVERSION $t1 
 def p_expresion_conversion(t):
     'expresion_numerica : TIPOCONVERSION expresion'
-    t[0] = ExpresionConversion(t[1],t[2])
+    t[0] = ExpresionConversion(t[1],t[2],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 #recibe: tipo de conversion (int) (float) (char)
 def p_expresion_tipoConversion(t):
@@ -415,19 +422,19 @@ def p_expresion_tipoConversion(t):
 #Recibe: valor absoluto
 def p_expresion_valorabs(t):
     'expresion_numerica : ABS PARIZQ expresion PARDER'
-    t[0] =  ExpresionValorAbsoluto(t[3])
+    t[0] =  ExpresionValorAbsoluto(t[3],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 def p_Label(t):
     'DEFINEL : ID DOSP'
-    t[0] = Label(t[1])
+    t[0] = Label(t[1],t.lineno(1),get_clomuna(entry,t.slice[1]))
     
 def p_Goto(t):
     'DEFINEGOTO : GOTO ID PTCOMA'
-    t[0] = Goto(t[2])
+    t[0] = Goto(t[2],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 def p_asigna_para_valorRet_ra(t):
     'ASIGNACIONEXTRA :  VALORESPARAM IGUAL expresion PTCOMA'
-    t[0] = AsignacionExtra(t[1],t[3])
+    t[0] = AsignacionExtra(t[1],t[3],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 def p_valoresSimp (t):
     '''VALORESPARAM :  PARAMETRO
@@ -437,34 +444,34 @@ def p_valoresSimp (t):
 
 def p_acceso_a_pila(t):
     'ASIGNAPILA : PILAPOS CORIZQ PILAPUNTERO CORDER IGUAL expresion PTCOMA'
-    t[0]=AsignaValorPila(t[1],t[6],t[3])
+    t[0]=AsignaValorPila(t[1],t[6],t[3],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 def p_asigna_puntero(t):
     'ASIGNAPUNTERO : PILAPUNTERO IGUAL expresion PTCOMA'
-    t[0] = AsignaPunteroPila(t[1],t[3])
+    t[0] = AsignaPunteroPila(t[1],t[3],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 def p_inicia_pila(t):
     'INICIAPILA : PILAPOS IGUAL ARRAY PARIZQ PARDER PTCOMA'
-    t[0] = IniciaPila(t[1])
+    t[0] = IniciaPila(t[1],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 def p_asigna_arreglo(t):
     'ASIGNAARREGLO : TEMPORAL ACCESO IGUAL expresion PTCOMA'  
     l =list(reversed(t[2]))
-    t[0] = Asigna_arreglo(t[1],l,t[4])
+    t[0] = Asigna_arreglo(t[1],l,t[4],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 #Recibe: destruccion de variable unset($t1);
 def p_UNSETF(t):
     'UNSETF : UNSET PARIZQ expresion PARDER PTCOMA'
-    t[0] = Unset(t[3])
+    t[0] = Unset(t[3],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 #Recibe if ($t1) goto label;
 def p_if_instr(t) :
     'if_instr           : IF expresion DEFINEGOTO'
-    t[0] =If(t[2], t[3])
+    t[0] =If(t[2], t[3],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 def p_asignacion_instr(t) :
     'asignacion_instr   : TEMPORAL IGUAL expresion PTCOMA'
-    t[0] =Asignacion(t[1], t[3])
+    t[0] =Asignacion(t[1], t[3]),t.lineno(1),get_clomuna(entry,t.slice[1])
 
 #Recibe expresiones logicas y relacionales
 def p_expresion_log_relacional(t) :
@@ -478,34 +485,35 @@ def p_expresion_log_relacional(t) :
                             | expresion_numerica ORLOG expresion_numerica
                             | expresion_numerica XORLOG expresion_numerica
             '''
-    if t[2] == '>'    : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MAYOR_QUE)
-    elif t[2] == '<'  : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MENOR_QUE)
-    elif t[2] == '==' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.IGUAL)
-    elif t[2] == '!=' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.DIFERENTE)
-    elif t[2] == '>=' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MAYORQUE)
-    elif t[2] == '<=' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MENORQUE)
-    elif t[2] == 'xor' : t[0] = ExpresionLogicaXOR(t[1], t[3])
-    elif t[2] == '&&' : t[0] = ExpresionLogicaAND(t[1], t[3])
-    elif t[2] == '||' : t[0] = ExpresionLogicaOR(t[1], t[3])
+    if t[2] == '>'    : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MAYOR_QUE,t.lineno(1),get_clomuna(entry,t.slice[2]))
+    elif t[2] == '<'  : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MENOR_QUE,t.lineno(1),get_clomuna(entry,t.slice[2]))
+    elif t[2] == '==' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.IGUAL,t.lineno(1),get_clomuna(entry,t.slice[2]))
+    elif t[2] == '!=' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.DIFERENTE,t.lineno(1),get_clomuna(entry,t.slice[2]))
+    elif t[2] == '>=' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MAYORQUE,t.lineno(1),get_clomuna(entry,t.slice[2]))
+    elif t[2] == '<=' : t[0] = ExpresionLogica(t[1], t[3], OPERACION_LOGICA.MENORQUE,t.lineno(1),get_clomuna(entry,t.slice[2]))
+    elif t[2] == 'xor' : t[0] = ExpresionLogicaXOR(t[1], t[3],t.lineno(1),get_clomuna(entry,t.slice[2]))
+    elif t[2] == '&&' : t[0] = ExpresionLogicaAND(t[1], t[3],t.lineno(1),get_clomuna(entry,t.slice[2]))
+    elif t[2] == '||' : t[0] = ExpresionLogicaOR(t[1], t[3],t.lineno(1),get_clomuna(entry,t.slice[2]))
 
 def p_expresion_bit_not(t):
     'expresion_numerica : NOTBIT expresion'
-    t[0] = ExpresionBitNot(t[2])
+    t[0] = ExpresionBitNot(t[2],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 #RECIBE !$t3
 def p_expresion_logica_not(t):
     'expresion_numerica : NOTLOG expresion'
-    t[0] = ExpresionLogicaNot(t[2])
+    t[0] = ExpresionLogicaNot(t[2],t.lineno(1),get_clomuna(entry,t.slice[1]))
 
 def p_error(t):
      # Read ahead looking for a terminating ";"
-     while True:
-         tok = parser.token()             # Get the next token
-         if not tok or tok.type == 'PTCOMA': break
-     parser.errok()
- 
+    while True:
+        tok = parser.token()             # Get the next token
+        if not tok or tok.type == 'PTCOMA': break
+    parser.errok()
+    err = "Error en el token \'" + str(t.value) +"\' en la linea: "+ str(t.lineno) + ' de tipo: SINTACTICO'
+    lista_errores.append(err)
      # Return SEMI to the parser as the next lookahead token
-     return tok 
+    return tok 
     #print(t)
     #print("Error sintáctico en '%s'" % t.value,'> ',str(t.lineno))
   
@@ -516,6 +524,12 @@ import ts as TS
 import ply.yacc as yacc
 parser = yacc.yacc()
 
-
+lista_errores = []
+entry= ''
 def parse(input) :
+    global entry
+    entry = input
     return parser.parse(input)
+
+def retornalista():
+    return lista_errores

@@ -1,5 +1,4 @@
-import gramatica as g
-import gramaticadesc as gdes
+
 import ts as TS
 import sys
 from expresiones import *
@@ -25,6 +24,8 @@ def procesar_imprimir(instr, ts) :
     except:
         print('error de impresion, valor o variabe no encontrados: ',instr.exp.id ) 
         print(instr.linea,instr.columna)
+        err = 'Error de impresion, valor o variabe no encontrados: ',instr.exp.id ,'En la linea: ',instr.linea,'En la columna: ',instr.columna, 'Tipo: SEMANTICO'
+        errores.append(err)
         pass
 
 def resolver_registro(exp,ts):
@@ -46,6 +47,8 @@ def procesar_asignacion(instr, ts) :
             ts.agregar(simbolo)
     except :
         print('No se puede realizar la asignacionde',instr.id, instr.linea, instr.columna)
+        err = 'Error No se puede realizar la asignacionde ',instr.id ,' En la linea: ',instr.linea,' En la columna: ',instr.columna, 'Tipo: SEMANTICO'
+        errores.append(err)
         pass
         
 def procesar_mientras(instr, ts) :
@@ -54,8 +57,11 @@ def procesar_mientras(instr, ts) :
         procesar_instrucciones(instr.instrucciones, ts_local)
 
 def procesar_if(instr, ts) :
-
-    condicion = resolver_expresion_logica(instr.exp,ts)
+    try:
+        condicion = resolver_expresion_logica(instr.exp,ts)
+    except :
+        err = 'Error No se puede resolver la expresion a comparar en el if ',instr.exp ,' En la linea: ',instr.linea,' En la columna: ',instr.columna, 'Tipo: SEMANTICO'
+        errores.append(err)
 
     if condicion == 1: Llamada_goto(instr.goto,ts,instrucciones)
 
@@ -108,7 +114,9 @@ def resolver_expresion_logica(expLog, ts) :
                 if exp1 <= exp2: return true
                 else:            return false 
         else:
-            print('error de tipos ',exp1,'y ',exp2,' no pueden ser operados en una operacion relacional, \n se espera que ambos tengan el mismo tipo')
+            print('Error de tipos ',exp1,'y ',exp2,' no pueden ser operados en una operacion relacional, se espera que ambos tengan el mismo tipo')
+            err = 'Error de tipos ',exp1,'y ',exp2,' no pueden ser operados en una operacion relacional, se espera que ambos tengan el mismo tipo' ,' En la linea: ',expLog.linea,' En la columna: ',expLog.columna, 'Tipo: SEMANTICO'
+            errores.append(err)  
     elif expLog.exp1.tipo == TS.TIPO_DATO.CADENA:
         if expLog.exp2.tipo == TS.TIPO_DATO.CADENA:
             expLog.tipo = TS.TIPO_DATO.INT
@@ -132,6 +140,8 @@ def resolver_expresion_logica(expLog, ts) :
                 else:            return false                                                                      
         else:
             print('error de tipos ',exp1,'y ',exp2,' no pueden ser operados en una operacion relacional, \n se espera que ambos tengan el mismo tipo')
+            err = 'Error de tipos ',exp1,'y ',exp2,' no pueden ser operados en una operacion relacional, se espera que ambos tengan el mismo tipo' ,' En la linea: ',expLog.linea,' En la columna: ',expLog.columna, 'Tipo: SEMANTICO'
+            errores.append(err)  
 
 def resolver_expresion_aritmetica(expNum, ts) :
     if isinstance(expNum, ExpresionBinaria) :
@@ -190,9 +200,12 @@ def resolver_expresion_aritmetica(expNum, ts) :
                     return expNum.val
                 else:
                     print('Error de operacion: el operador '+str(expNum.exp1.val)+' y el operador'+str(expNum.exp2.val)+' no reconocen este tipo de operacion')
-            
+                    err = 'Error de operacion: el operador '+str(expNum.exp1.val)+' y el operador'+str(expNum.exp2.val)+' no reconocen este tipo de operacion' ,' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                    errores.append(err)  
             else:
                 print('Error de tipos: el operador ',expNum.exp2.val,' no es de tipo INT o FLOAT y no puede ser operado ')
+                err = 'Error de tipos: el operador ',expNum.exp2.val,' no es de tipo INT o FLOAT y no puede ser operado' ,' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                errores.append(err)  
 
         elif (expNum.exp1.tipo==td.FLOAT):
     
@@ -219,8 +232,12 @@ def resolver_expresion_aritmetica(expNum, ts) :
                     return expNum.val
                 else:
                     print('Error de operacion: el operador '+str(expNum.exp1.val)+' y el operador'+str(expNum.exp2.val)+' no reconocen este tipo de operacion')
+                    err = 'Error de operacion: el operador '+str(expNum.exp1.val)+' y el operador'+str(expNum.exp2.val)+' no reconocen este tipo de operacion' ,' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                    errores.append(err)  
             else:
                 print('Error de tipos: el operador '+str(expNum.exp2.val)+' no es de tipo INT o FLOAT y no puede ser operado ')   
+                err = 'Error de tipos: el operador '+str(expNum.exp2.val)+' no es de tipo INT o FLOAT y no puede ser operado ' ,' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                errores.append(err)  
 
         elif (expNum.exp1.tipo==td.CADENA):
             if(expNum.exp2.tipo==td.CADENA):
@@ -230,9 +247,13 @@ def resolver_expresion_aritmetica(expNum, ts) :
                     return expNum.val
                 else:
                     print('Error de operacion: el operador '+str(expNum.exp1.val)+' y el operador'+str(expNum.exp2.val)+' no reconocen este tipo de operacion')
+                    err = 'Error de operacion: el operador '+str(expNum.exp1.val)+' y el operador'+str(expNum.exp2.val)+' no reconocen este tipo de operacion ' ,' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                    errores.append(err)  
             else:
                 print('Error de tipos: el operador '+str(expNum.exp2.val)+' no es de tipo CADENA y no puede ser operado ')
-
+                err = 'Error de tipos: el operador '+str(expNum.exp2.val)+' no es de tipo CADENA y no puede ser operado' ,' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                errores.append(err)
+    
     elif isinstance(expNum, ExpresionNegativo) :
         exp = resolver_expresion_aritmetica(expNum.exp, ts)
         expNum.val=exp*-1
@@ -267,6 +288,8 @@ def resolver_expresion_aritmetica(expNum, ts) :
             expNum.val=temp
             expNum.tipo = expNum.exp.tipo
             print('No es posible obtener el valor absoluto de: ',expNum.val)
+            err = 'Error, no es posible obtener el valor absoluto de: ',expNum.val ,' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+            errores.append(err)
         return expNum.val
 
     elif isinstance (expNum,ExpresionConversion):
@@ -287,6 +310,8 @@ def resolver_expresion_aritmetica(expNum, ts) :
                 return expNum.val
             else:
                 print('la conversion a (int) de ',temp,'no se puede realizar por error de tipo')
+                err = 'Error la conversion a (int) de ',temp,'no se puede realizar por error de tipo',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                errores.append(err)
         
         elif conv=='float':
             if expNum.exp.tipo==TS.TIPO_DATO.CADENA:
@@ -337,6 +362,8 @@ def resolver_expresion_aritmetica(expNum, ts) :
         else: 
             expNum.val=1964
             print('Valor',temp,' no asociado a una condicion logica')
+            err = 'Error: Valor',temp,' no asociado a una condicion logica',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+            errores.append(err)
         expNum.tipo=TS.TIPO_DATO.INT
         return expNum.val
    
@@ -351,19 +378,26 @@ def resolver_expresion_aritmetica(expNum, ts) :
                 elif exp2==false:
                     return true
                 else:
-                    print("error de valor ",exp2," no puede ser comparado en un XOR")          
+                    print("error de valor ",exp2," no puede ser comparado en un XOR") 
+                    err = 'Error de valor ',exp2,'no puede ser comparado en un XOR',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                    errores.append(err)        
             elif exp1==false:
                 if exp2==true:
                     return true
                 elif exp2==false:
                     return false
                 else:
-                    print("error de valor ",exp2,", no puede ser comparado en un XOR") 
+                    print("error de valor ",exp2,", no puede ser comparado en un XOR")
+                    err = 'Error de valor ',exp2,'no puede ser comparado en un XOR',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                    errores.append(err)    
             else:
-                print("error de valor ",exp1," no puede ser comparado en un XOR")       
+                print("error de valor ",exp1," no puede ser comparado en un XOR")    
+                err = 'Error de valor ',exp1,'no puede ser comparado en un XOR',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                errores.append(err)    
         else:
             print('error de tipos ',exp2,'y ',exp2,' no pueden operarse en un XOR, ambos deben ser INT')
-
+            err = 'Error de tipos ',exp2,'y ',exp2,' no pueden operarse en un XOR, ambos deben ser INT',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+            errores.append(err)  
     elif isinstance (expNum, ExpresionLogicaOR):
         exp1 = resolver_expresion_aritmetica(expNum.exp1,ts)
         exp2 = resolver_expresion_aritmetica(expNum.exp2,ts)
@@ -375,7 +409,9 @@ def resolver_expresion_aritmetica(expNum, ts) :
                 elif exp2==false:
                     return true
                 else:
-                    print("error de valor ",exp2," no puede ser comparado en un OR")          
+                    print("error de valor ",exp2," no puede ser comparado en un OR") 
+                    err = 'Error de valor ',exp2,' no puede ser comparado en un OR',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                    errores.append(err)         
             elif exp1==false:
                 if exp2==true:
                     return true
@@ -383,11 +419,16 @@ def resolver_expresion_aritmetica(expNum, ts) :
                     return false
                 else:
                     print("error de valor ",exp2,", no puede ser comparado en un OR") 
+                    err = 'Error de valor ',exp2,' no puede ser comparado en un OR',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                    errores.append(err)  
             else:
-                print("error de valor ",exp1," no puede ser comparado en un OR")       
+                print("error de valor ",exp1," no puede ser comparado en un OR")    
+                err = 'Error de valor ',exp1,' no puede ser comparado en un OR',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                errores.append(err)  
         else:
             print('error de tipos ',exp2,'y ',exp2,' no pueden operarse en un OR, ambos deben ser INT')
-    
+            err = 'Error de tipos ',exp1,'y ',exp2,' no pueden operarse en un OR, ambos deben ser INT',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+            errores.append(err) 
     elif isinstance (expNum, ExpresionLogicaAND):   
         exp1 = resolver_expresion_aritmetica(expNum.exp1,ts)
         exp2 = resolver_expresion_aritmetica(expNum.exp2,ts)
@@ -399,7 +440,9 @@ def resolver_expresion_aritmetica(expNum, ts) :
                 elif exp2==false:
                     return false
                 else:
-                    print("error de valor ",exp2," no puede ser comparado en un AND")          
+                    print("error de valor ",exp2," no puede ser comparado en un AND")   
+                    err = 'Error de valor ',exp2,' no puede ser comparado en un AND',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                    errores.append(err)   
             elif exp1==false:
                 if exp2==true:
                     return false
@@ -407,10 +450,16 @@ def resolver_expresion_aritmetica(expNum, ts) :
                     return true
                 else:
                     print("error de valor ",exp2,", no puede ser comparado en un AND") 
+                    err = 'Error de valor ',exp2,' no puede ser comparado en un AND',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                    errores.append(err)  
             else:
-                print("error de valor ",exp1,", no puede ser comparado en un AND")       
+                print("error de valor ",exp1,", no puede ser comparado en un AND") 
+                err = 'Error de valor ',exp1,' no puede ser comparado en un AND',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                errores.append(err)       
         else:
             print('error de tipos ',exp1,' y "=',exp2,' no pueden operarse en un AND, ambos deben ser INT')
+            err = 'Error de tipos ',exp1,' y "=',exp2,' no pueden operarse en un AND, ambos deben ser INT',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+            errores.append(err)   
     
     elif isinstance (expNum, ExpresionBitNot):
         temp = resolver_expresion_aritmetica(expNum.exp,ts)
@@ -421,7 +470,9 @@ def resolver_expresion_aritmetica(expNum, ts) :
             return expNum.val
         else:
             print('El valor ',temp,'no pude ser operado en binario por un NOT, se esperaba un tipo INT o FLOAT')
-
+            err = 'Error el valor ',temp,'no pude ser operado en binario por un NOT, se esperaba un tipo INT o FLOAT',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+            errores.append(err)   
+   
     elif isinstance (expNum, ExpresionBitAnd):
         exp1 = resolver_expresion_aritmetica(expNum.exp1,ts)
         exp2 = resolver_expresion_aritmetica(expNum.exp2,ts)
@@ -433,9 +484,12 @@ def resolver_expresion_aritmetica(expNum, ts) :
                 return t1 & t2
             else:
                 print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un AND bit a bit se espera que ambos sean INT o FLOAT')
+                err = 'Error de tipos ',exp1,' y ',exp2,'no se pueden operar en un AND bit a bit se espera que ambos sean INT o FLOAT',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                errores.append(err) 
         else:
             print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un AND bit a bit se espera que ambos sean INT o FLOAT')
-
+            err = 'Error de tipos ',exp1,' y ',exp2,'no se pueden operar en un AND bit a bit se espera que ambos sean INT o FLOAT',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+            errores.append(err) 
     elif isinstance (expNum, ExpresionBitOr):
         exp1 = resolver_expresion_aritmetica(expNum.exp1,ts)
         exp2 = resolver_expresion_aritmetica(expNum.exp2,ts)
@@ -447,9 +501,12 @@ def resolver_expresion_aritmetica(expNum, ts) :
                 return t1 | t2
             else:
                 print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un OR bit a bit se espera que ambos sean INT o FLOAT')
+                err = 'Error de tipos ',exp1,' y ',exp2,'no se pueden operar en un OR bit a bit se espera que ambos sean INT o FLOAT',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                errores.append(err) 
         else:
             print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un OR bit a bit se espera que ambos sean INT o FLOAT')
-
+            err = 'Error de tipos ',exp1,' y ',exp2,'no se pueden operar en un OR bit a bit se espera que ambos sean INT o FLOAT',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+            errores.append(err) 
     elif isinstance (expNum, ExpresionBitXor):
         exp1 = resolver_expresion_aritmetica(expNum.exp1,ts)
         exp2 = resolver_expresion_aritmetica(expNum.exp2,ts)
@@ -461,9 +518,12 @@ def resolver_expresion_aritmetica(expNum, ts) :
                 return t1 ^ t2
             else:
                 print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un XOR bit a bit se espera que ambos sean INT o FLOAT')
+                err = 'Error de tipos ',exp1,' y ',exp2,'no se pueden operar en un XOR bit a bit se espera que ambos sean INT o FLOAT',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                errores.append(err) 
         else:
             print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un XOR bit a bit se espera que ambos sean INT o FLOAT')
-
+            err = 'Error de tipos ',exp1,' y ',exp2,'no se pueden operar en un XOR bit a bit se espera que ambos sean INT o FLOAT',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+            errores.append(err) 
     elif isinstance (expNum, ExpresionBitIzq):
         exp1 = resolver_expresion_aritmetica(expNum.exp1,ts)
         exp2 = resolver_expresion_aritmetica(expNum.exp2,ts)
@@ -475,9 +535,12 @@ def resolver_expresion_aritmetica(expNum, ts) :
                 return t1 << t2
             else:
                 print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un CORR IZQ bit a bit se espera que ambos sean INT o FLOAT')
+                err = 'Error de tipos ',exp1,' y ',exp2,'no se pueden operar en un CORR IZQ bit a bit se espera que ambos sean INT o FLOAT',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                errores.append(err) 
         else:
             print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un CORR IZQ bit a bit se espera que ambos sean INT o FLOAT')
-
+            err = 'Error de tipos ',exp1,' y ',exp2,'no se pueden operar en un CORR IZQ bit a bit se espera que ambos sean INT o FLOAT',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+            errores.append(err) 
     elif isinstance (expNum, ExpresionBitDer):
         exp1 = resolver_expresion_aritmetica(expNum.exp1,ts)
         exp2 = resolver_expresion_aritmetica(expNum.exp2,ts)
@@ -489,9 +552,12 @@ def resolver_expresion_aritmetica(expNum, ts) :
                 return t1 >> t2
             else:
                 print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un CORR DER bit a bit se espera que ambos sean INT o FLOAT')
+                err = 'Error de tipos ',exp1,' y ',exp2,'no se pueden operar en un CORR DER bit a bit se espera que ambos sean INT o FLOAT',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                errores.append(err) 
         else:
             print ('error de tipos ',exp1,' y ',exp2,'no se pueden operar en un CORR DER bit a bit se espera que ambos sean INT o FLOAT')
-    
+            err = 'Error de tipos ',exp1,' y ',exp2,'no se pueden operar en un CORR DER bit a bit se espera que ambos sean INT o FLOAT',' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+            errores.append(err) 
     elif isinstance (expNum,ExpresionLogica):
         return resolver_expresion_logica(expNum,ts)
     
@@ -537,11 +603,14 @@ def resolver_expresion_aritmetica(expNum, ts) :
                 temporal = temporal.get(ind)
                 if temporal == None:
                     print('Error, no existe un valor en el indice: ',ind)
-
+                    err = 'Error, no existe un valor en el indice: ',ind,' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                    errores.append(err) 
             else:
                 temporal_aux = temporal.get(ind)
                 if temporal_aux == None:
                     print('Error, no existe un valor en el indice: ',ind)
+                    err = 'Error, no existe un valor en el indice: ',ind,' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+                    errores.append(err) 
                 else:
                     temporal = temporal.get(ind)
 
@@ -553,6 +622,8 @@ def resolver_expresion_aritmetica(expNum, ts) :
     
     else:
         print(expNum)
+        err = 'Error, no existe un valor en el indice: ',ind,' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
+        errores.append(err) 
 
 def procesar_unset(exp, ts):
     
@@ -561,11 +632,15 @@ def procesar_unset(exp, ts):
         ts.eliminar(temp)
     else:
         print('El valor ',exp.exp,'no puede ser ejecutado por unset(), se esperaba un registro')
+        err = 'Error el valor ',exp.exp,'no puede ser ejecutado por unset(), se esperaba un registro',' En la linea: ',exp.linea,' En la columna: ',exp.columna, 'Tipo: SEMANTICO'
+        errores.append(err) 
 
 def procesar_inicioPila(instr,ts):
     pila = TS.Simbolo(instr.id,td.PILA,[])
     if ts.existeSimbolo(pila):
         print('La pila ya existe')
+        err = 'Error el valor ',instr.id,'La pila ya existe',' En la linea: ',instr.linea,' En la columna: ',instr.columna, 'Tipo: SEMANTICO'
+        errores.append(err) 
     else:
         ts.agregar(pila)
 
@@ -590,6 +665,8 @@ def procesar_asignacion_pila (instr,ts):
             ts.actualizar(nuevapila)
         else:
             print('error pila',instr.id,'no existe')
+            err = 'Error pila',instr.id,'no existe',' En la linea: ',instr.linea,' En la columna: ',instr.columna, 'Tipo: SEMANTICO'
+            errores.append(err) 
     except :
         print('error en asignacion de valor a la pila')
 
@@ -603,6 +680,8 @@ def procesar_asignacion_extra (instr,ts):
             ts.agregar(simbolo)
     except :
         print('No se puede realizar la asignacion de',instr.id)
+        err = 'Error No se puede realizar la asignacion de',instr.id,' En la linea: ',instr.linea,' En la columna: ',instr.columna, 'Tipo: SEMANTICO'
+        errores.append(err) 
         pass
 
 def procesar_asignacion_arreglo (instr,ts):
@@ -658,7 +737,10 @@ def ejecutar_expresiones_label(listainstrucciones,ts,listaglobal):
             elif isinstance(instr,Goto):
                 Llamada_goto(instr,ts, listaglobal)
                 return
-            else : print('Error: instrucción no válida', instr)
+            else : 
+                print('Error: instrucción no válida', instr)
+                err = 'Error: instrucción no válida', instr,' En la linea: ',instr.linea,' En la columna: ',instr.columna, 'Tipo: SEMANTICO'
+                errores.append(err) 
 
 def procesar_instrucciones(instrucciones, ts) :
     ## lista de instrucciones recolectadas
@@ -683,9 +765,14 @@ def procesar_instrucciones(instrucciones, ts) :
                 Llamada_goto(instr,ts, instrucciones)
                 return
             
-            else : print('Error: instrucción no válida', instr)
+            else : 
+                err = 'Error: instrucción no válida', instr,' En la linea: ',instr.linea,' En la columna: ',instr.columna, 'Tipo: SEMANTICO'
+                errores.append(err) 
+
     else:
         print('Error la etiqueta main no esta al inicio del programa o no existe')
+        err = 'Error la etiqueta main no esta al inicio del programa o no existe',' En la linea: ',instr.linea,' En la columna: ',instr.columna, 'Tipo: SEMANTICO'
+        errores.append(err) 
 #-----------------------------------------------------------TERMINA ANALISIS SEMANTICO
 
 #-----------------------------------------------------------INICIA GRAFICACION DEL AST
@@ -717,8 +804,33 @@ def DibujarAST(instrucciones):
 f = open("./entrada.txt", "r")
 input = f.read()
 
-instrucciones = g.parse(input)
-#instrucciones = gdes.parse(input)
+#ANALIZADOR ASCENDENTE
+def ejecutar_asc(input):
+    import gramatica as g
+    instrucciones = g.parse(input)
+    return instrucciones
+instrucciones = ejecutar_asc(input)
+
+def errores_asc():
+    import gramatica as g
+    errores = g.retornalista()
+    return errores 
+errores = errores_asc()
+
+#ANALIZADOR DESCENDENTE
+def ejecutar_desc(input):
+    import gramaticadesc as gdes
+    instrucciones = gdes.parse(input)
+    return instrucciones
+#instrucciones = ejecutar_desc(input)
+
+def errores_desc():
+    import gramaticadesc as gdes
+    errores = gdes.retornalista()
+    return errores
+#errores = errores_desc()
+
+#INICIALIZACION DE LA TABLA DE SIMBOLOS
 ts_global = TS.TablaDeSimbolos()
 
 
