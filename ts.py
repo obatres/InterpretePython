@@ -31,6 +31,7 @@ class TablaDeSimbolos() :
 
         return self.simbolos[id]
 
+
     def obtenerPuntero(self,id):
         cont =0
         if not id in self.simbolos :
@@ -56,7 +57,9 @@ class TablaDeSimbolos() :
             return True
 
     def eliminar(self,id):
+
         if not id in self.simbolos :
             print('Error: variable ', id, ' no definida.')
         else:
             del self.simbolos[id]
+
