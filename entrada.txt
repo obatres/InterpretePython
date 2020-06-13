@@ -1,7 +1,8 @@
 main:
     $t1 = 20 + 6;
-    $t2 = 20 @ 'asd';
+    $t2 = 20 + 'asd';
     print($t2);
+    print($t1);
 
 
 

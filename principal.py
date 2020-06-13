@@ -847,7 +847,8 @@ except :
     print('Error en parser')
     pass
 
-
+for i in errores:
+    print(i)
 class objetopila():
 
     def __init__(self, valor, tipo):
