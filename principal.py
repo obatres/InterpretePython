@@ -798,7 +798,7 @@ def DibujarAST(instrucciones):
             print('')
     #print(dot.source)
 
-
+#------------------------------------------------------------REPORTES
 def ReporteTS():
     generado = '<<table border=\'0\' cellborder=\'1\' color=\'blue\' cellspacing='+'\'0\''+'><tr><td colspan=\'4\'>TABLA DE SIMBOLOS</td></tr><tr><td>No.</td><td>identificador</td><td>valor</td><td>tipo</td></tr>'
     cont = 0
