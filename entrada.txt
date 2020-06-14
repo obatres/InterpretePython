@@ -1,10 +1,26 @@
 main:
-    $t1 = 20 + 6;
-    $t2 = 20 @> 3;
-    $t3 = array();
-    $t3[0][4]=5;
-    print($t4);
-    print($t1);
+    #$s0 = array();
+    #$sp = 4;
+    #$sp =$sp+1;
+    #$s0[$sp]=2;
+    #$sp =$sp+1;
+    #$s0[$sp]=3;
+    #$sp =$sp+1;
+    #$s0[$sp]='sad';
+    #$sp=0;
+    #$t1 = $s0[$sp];
+    #print($t1);
+    #print($s0);
+    #print($sp);
+    goto label1;
+label1:
+    $a1=5+5;
+    $a2 =$a1;
+    $ra = $a2;
+    $v2=$ra;
 
-
+    print($v2);
+    $a=|| ~ && ! & ^ >> <<
+    "asdasd"
+    'sadasd'
 
