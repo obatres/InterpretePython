@@ -1,4 +1,5 @@
 from PyQt5.QtGui import *
+from PyQt5.QtGui import QColor, QSyntaxHighlighter, QTextFormat, QColor, QTextCharFormat, QFont
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
@@ -11,11 +12,90 @@ FONT_SIZES = [7, 8, 9, 10, 11, 12, 13, 14, 18, 24, 36, 48, 64, 72, 96, 144, 288]
 IMAGE_EXTENSIONS = ['.jpg','.png','.bmp']
 HTML_EXTENSIONS = ['.htm', '.html']
 
+
+def format(colorizar):
+    color_letra = QColor()
+
+    HighLight_texto = QTextCharFormat()
+
+    color_letra.setNamedColor(colorizar)
+
+    HighLight_texto.setForeground(color_letra)
+
+    return HighLight_texto
+
 def hexuuid():
     return uuid.uuid4().hex
 
 def splitext(p):
     return os.path.splitext(p)[1].lower()
+
+class Resaltado(QSyntaxHighlighter):
+    
+    def __init__(self, document):
+        QSyntaxHighlighter.__init__(self, document)
+    
+        patrones = []
+
+        patrones += [
+                (r'\d+(\.\d+)?',0, format('darkBlue')), 
+                (r'[a-zA-Z_][a-zA-Z_0-9]*',0, format('darkRed')),
+                ('if',0,format('darkMagenta')),
+                ('else' ,0,format('darkMagenta')),
+                ('main',0,format('darkMagenta')),
+                ('goto',0,format('darkMagenta')),
+                ('unset',0,format('darkMagenta')),
+                ('print',0,format('darkMagenta')),
+                ('read',0,format('darkMagenta')),
+                ('exit',0,format('darkMagenta')),
+                ('int',0,format('darkMagenta')),
+                ('float',0,format('darkMagenta')),
+                ('char',0,format('darkMagenta')),
+                ('array',0,format('darkMagenta')),
+                ('abs',0,format('darkMagenta')),
+                ('xor',0,format('darkMagenta')),
+
+                (r'!',0,format('darkGray')),
+                (r'&&',0,format('darkGray')),
+                (r'\|\|',0,format('darkGray')),
+                (r'~',0,format('darkGray')),
+                (r'&',0,format('darkGray')),
+                (r'\|',0,format('darkGray')),
+                ( r'\^',0,format('darkGray')),
+                ( r'<<',0,format('darkGray')),
+                ( r'>>',0,format('darkGray')),
+                ( r'\$(t[0-9]+)',0,format('darkCyan')),
+                ( r'\&\$(t[0-9]+)',0,format('darkCyan')),
+                ( r'\$[a][0-9]+',0,format('darkCyan')),
+                ( r'\$[v][0-9]+',0,format('darkCyan')),
+                ( r'\$[r][a]',0,format('darkCyan')),
+                ( r'\$[s][0-9]+',0,format('darkCyan')),             
+                ( r'\$[s][p]',0,format('darkCyan')),  
+                ( r'[r][0-9]+',0,format('darkCyan')),  
+                ( r'\'.*?\'',0,format('darkYellow')), 
+                ( r'\".*?\"',0,format('darkYellow')),
+
+                (r'\#.*\n',0,format('darkGreen')),
+            ]
+
+        self.patrones = [(QRegExp(patron), indice,estilo)
+            for (patron, indice, estilo) in patrones]
+
+    def highlightBlock(self, text):
+        """Apply syntax highlighting to the given block of text.
+        """
+        # Do other syntax formatting
+        for exp, pos, estilo in self.patrones:
+            i = exp.indexIn(text, 0)
+            while i >= 0:
+
+                i = exp.pos(pos)
+                length = len(exp.cap(pos))
+                self.setFormat(i, length, estilo)
+                i = exp.indexIn(text, i + length)
+
+        self.setCurrentBlockState(0)
+
 
 class TextEdit(QTextEdit):
 
@@ -66,22 +146,31 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
 
         layout = QVBoxLayout()
-        self.editor = TextEdit()
+        self.editor = QPlainTextEdit()
+
         # Setup the QTextEdit editor configuration
-        self.editor.setAutoFormatting(QTextEdit.AutoAll)
+        
+        #self.editor.setAutoFormatting(QTextEdit.AutoAll)
         self.editor.selectionChanged.connect(self.update_format)
         # Initialize default font size.
         font = QFont('Times', 12)
         self.editor.setFont(font)
         
         # We need to repeat the size to init the current format.
-        self.editor.setFontPointSize(12)
+        #self.editor.setFontPointSize(12)
 
         # self.path holds the path of the currently open file.
         # If none, we haven't got a file open yet (or creating new).
         self.path = None
 
+        self.consola = TextEdit()
+        self.consola.setAutoFormatting(QTextEdit.AutoAll)
+        self.consola.setFont(font)
+        self.consola.setFontPointSize(12)
+        #self.consola.setTextBackgroundColor("grey")
+
         layout.addWidget(self.editor)
+        layout.addWidget(self.consola)
 
         container = QWidget()
         container.setLayout(layout)
@@ -200,7 +289,7 @@ class MainWindow(QMainWindow):
 
         # We need references to these actions/settings to update as selection changes, so attach to self.
         self.fonts = QFontComboBox()
-        self.fonts.currentFontChanged.connect(self.editor.setCurrentFont)
+        #self.fonts.currentFontChanged.connect(self.editor.setCurrentFont)
         format_toolbar.addWidget(self.fonts)
 
         self.fontsize = QComboBox()
@@ -223,7 +312,7 @@ class MainWindow(QMainWindow):
         self.italic_action.setStatusTip("Italic")
         self.italic_action.setShortcut(QKeySequence.Italic)
         self.italic_action.setCheckable(True)
-        self.italic_action.toggled.connect(self.editor.setFontItalic)
+        #self.italic_action.toggled.connect(self.editor.setFontItalic)
         format_toolbar.addAction(self.italic_action)
         format_menu.addAction(self.italic_action)
 
@@ -231,7 +320,7 @@ class MainWindow(QMainWindow):
         self.underline_action.setStatusTip("Underline")
         self.underline_action.setShortcut(QKeySequence.Underline)
         self.underline_action.setCheckable(True)
-        self.underline_action.toggled.connect(self.editor.setFontUnderline)
+        #self.underline_action.toggled.connect(self.editor.setFontUnderline)
         format_toolbar.addAction(self.underline_action)
         format_menu.addAction(self.underline_action)
 
@@ -302,18 +391,18 @@ class MainWindow(QMainWindow):
         # Disable signals for all format widgets, so changing values here does not trigger further formatting.
         self.block_signals(self._format_actions, True)
 
-        self.fonts.setCurrentFont(self.editor.currentFont())
+        #self.fonts.setCurrentFont(self.editor.currentFont())
         # Nasty, but we get the font-size as a float but want it was an int
-        self.fontsize.setCurrentText(str(int(self.editor.fontPointSize())))
+        #self.fontsize.setCurrentText(str(int(self.editor.fontPointSize())))
 
-        self.italic_action.setChecked(self.editor.fontItalic())
-        self.underline_action.setChecked(self.editor.fontUnderline())
-        self.bold_action.setChecked(self.editor.fontWeight() == QFont.Bold)
+        #self.italic_action.setChecked(self.editor.fontItalic())
+        #self.underline_action.setChecked(self.editor.fontUnderline())
+        #self.bold_action.setChecked(self.editor.fontWeight() == QFont.Bold)
 
-        self.alignl_action.setChecked(self.editor.alignment() == Qt.AlignLeft)
-        self.alignc_action.setChecked(self.editor.alignment() == Qt.AlignCenter)
-        self.alignr_action.setChecked(self.editor.alignment() == Qt.AlignRight)
-        self.alignj_action.setChecked(self.editor.alignment() == Qt.AlignJustify)
+        #self.alignl_action.setChecked(self.editor.alignment() == Qt.AlignLeft)
+        #self.alignc_action.setChecked(self.editor.alignment() == Qt.AlignCenter)
+        #self.alignr_action.setChecked(self.editor.alignment() == Qt.AlignRight)
+        #self.alignj_action.setChecked(self.editor.alignment() == Qt.AlignJustify)
 
         self.block_signals(self._format_actions, False)
 
@@ -329,6 +418,9 @@ class MainWindow(QMainWindow):
         try:
             with open(path, 'rU') as f:
                 text = f.read()
+                highlight = Resaltado(self.editor.document())
+                highlight.highlightBlock(self.editor.toPlainText())
+                self.editor.setPlainText(text)  
 
         except Exception as e:
             self.dialog_critical(str(e))
@@ -336,7 +428,8 @@ class MainWindow(QMainWindow):
         else:
             self.path = path
             # Qt will automatically try and guess the format as txt/html
-            self.editor.setText(text)
+            #self.editor.setText(text)
+            self.editor.setPlainText(text)
             self.update_title()
 
     def file_save(self):
