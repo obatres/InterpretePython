@@ -287,7 +287,7 @@ def p_Goto(t):
 
 def p_asigna_para_valorRet_ra(t):
     'ASIGNACIONEXTRA :  VALORESPARAM IGUAL expresion_log_relacional PTCOMA'
-    t[0] = AsignacionExtra(t[1],t[3],t.lineno(1),get_clomuna(entry,t.slice[1]))
+    t[0] = AsignacionExtra(t[1],t[3],t.lineno(1),get_clomuna(entry,t.slice[2]))
 
 def p_valoresSimp (t):
     '''VALORESPARAM :  PARAMETRO
@@ -466,7 +466,7 @@ def p_acceso_array(t):
 #recibe: conversiones TIPOCONVERSION $t1 
 def p_expresion_conversion(t):
     'expresion_numerica : TIPOCONVERSION expresion_numerica'
-    t[0] = ExpresionConversion(t[1],t[2])
+    t[0] = ExpresionConversion(t[1],t[2],t.lineno(1),0)
 
 #recibe: tipo de conversion (int) (float) (char)
 def p_expresion_tipoConversion(t):

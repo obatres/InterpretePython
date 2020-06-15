@@ -1,0 +1,121 @@
+digraph AST {
+	nodo1 [label=AUGUS]
+	nodo2 [label=Asignacion]
+	nodo1 -> nodo2
+	nodo3 [label="$t1"]
+	nodo2 -> nodo3
+	nodo4 [label=Exp]
+	nodo2 -> nodo4
+	nodo5 [label="Inicia Array"]
+	nodo4 -> nodo5
+	nodo6 [label=Asignacion]
+	nodo1 -> nodo6
+	nodo7 [label="$t5"]
+	nodo6 -> nodo7
+	nodo8 [label=Exp]
+	nodo6 -> nodo8
+	nodo9 [label="$t1"]
+	nodo10 [label=acceso]
+	nodo8 -> nodo10
+	nodo11 [label=Exp]
+	nodo10 -> nodo11
+	nodo12 [label=as]
+	nodo11 -> nodo12
+	nodo13 [label=Exp]
+	nodo10 -> nodo13
+	nodo14 [label=1]
+	nodo13 -> nodo14
+	nodo15 [label=Exp]
+	nodo10 -> nodo15
+	nodo16 [label=2]
+	nodo15 -> nodo16
+	nodo17 [label=Exp]
+	nodo10 -> nodo17
+	nodo18 [label=5]
+	nodo17 -> nodo18
+	nodo8 -> nodo9
+	nodo19 [label=Asignacion]
+	nodo1 -> nodo19
+	nodo20 [label="$t1"]
+	nodo19 -> nodo20
+	nodo21 [label=Exp]
+	nodo19 -> nodo21
+	nodo22 [label=5]
+	nodo21 -> nodo22
+	nodo23 [label=Print]
+	nodo1 -> nodo23
+	nodo24 [label=Exp]
+	nodo23 -> nodo24
+	nodo25 [label="$t1"]
+	nodo24 -> nodo25
+	nodo26 [label=Asignacion]
+	nodo1 -> nodo26
+	nodo27 [label="$t1"]
+	nodo26 -> nodo27
+	nodo28 [label=Exp]
+	nodo26 -> nodo28
+	nodo29 [label="Estoy en label 1"]
+	nodo28 -> nodo29
+	nodo30 [label=Print]
+	nodo1 -> nodo30
+	nodo31 [label=Exp]
+	nodo30 -> nodo31
+	nodo32 [label="$t1"]
+	nodo31 -> nodo32
+	nodo33 [label=Asignacion]
+	nodo1 -> nodo33
+	nodo34 [label="$t2"]
+	nodo33 -> nodo34
+	nodo35 [label=Exp]
+	nodo33 -> nodo35
+	nodo36 [label="Estoy en label 2"]
+	nodo35 -> nodo36
+	nodo37 [label=Print]
+	nodo1 -> nodo37
+	nodo38 [label=Exp]
+	nodo37 -> nodo38
+	nodo39 [label="$t2"]
+	nodo38 -> nodo39
+	nodo40 [label=If]
+	nodo1 -> nodo40
+	nodo41 [label=Exp]
+	nodo40 -> nodo41
+	nodo43 [label=Exp]
+	nodo42 -> nodo43
+	nodo44 [label=4]
+	nodo43 -> nodo44
+	nodo42 [label=MAYOR_QUE]
+	nodo45 [label=Exp]
+	nodo42 -> nodo45
+	nodo46 [label=3]
+	nodo45 -> nodo46
+	nodo41 -> nodo42
+	nodo47 [label=Asignacion]
+	nodo1 -> nodo47
+	nodo48 [label="$t3"]
+	nodo47 -> nodo48
+	nodo49 [label=Exp]
+	nodo47 -> nodo49
+	nodo50 [label="Estoy en label 3"]
+	nodo49 -> nodo50
+	nodo51 [label=Print]
+	nodo1 -> nodo51
+	nodo52 [label=Exp]
+	nodo51 -> nodo52
+	nodo53 [label="$t3"]
+	nodo52 -> nodo53
+	nodo54 [label=Asignacion]
+	nodo1 -> nodo54
+	nodo55 [label="$t4"]
+	nodo54 -> nodo55
+	nodo56 [label=Exp]
+	nodo54 -> nodo56
+	nodo57 [label="estoy en label 4"]
+	nodo56 -> nodo57
+	nodo58 [label=Print]
+	nodo1 -> nodo58
+	nodo59 [label=Exp]
+	nodo58 -> nodo59
+	nodo60 [label="$t4"]
+	nodo59 -> nodo60
+}
