@@ -1,0 +1,4 @@
+digraph "Tabla de simbolos" {
+	node [shape=plaintext]
+	"node" [label=<<table border='0' cellborder='1' color='blue' cellspacing='0'><tr><td colspan='4'>TABLA DE SIMBOLOS</td></tr><tr><td>No.</td><td>identificador</td><td>valor</td><td>tipo</td></tr><tr><td>0</td><td>$t1</td><td>5</td><td>TIPO_DATO.INT</td></tr><tr><td>1</td><td>$t5</td><td>Hola mundo</td><td>TIPO_DATO.CADENA</td></tr><tr><td>2</td><td>$t2</td><td>Estoy en label 2</td><td>TIPO_DATO.CADENA</td></tr><tr><td>3</td><td>$t4</td><td>estoy en label 4</td><td>TIPO_DATO.CADENA</td></tr> </table>>]
+}

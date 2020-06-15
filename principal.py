@@ -15,8 +15,8 @@ def procesar_imprimir(instr, ts) :
     try:
             
         #if not ts.obtener(instr.exp.id).tipo == td.ARRAY:
-            salida = resolver_registro(instr.exp,ts)
-
+            #salida = resolver_registro(instr.exp,ts)
+            salida = resolver_expresion_aritmetica(instr.exp,ts)
             print('>', salida)
             return  str(salida) + '\n'
         #else:
@@ -631,8 +631,8 @@ def procesar_unset(exp, ts):
         temp = exp.exp.id
         ts.eliminar(temp)
     else:
-        print('El valor ',exp.exp,'no puede ser ejecutado por unset(), se esperaba un registro')
-        err = 'Error el valor ',exp.exp,'no puede ser ejecutado por unset(), se esperaba un registro',' En la linea: ',exp.linea,' En la columna: ',exp.columna, 'Tipo: SEMANTICO'
+        print('El valor ',exp.exp.id,'no puede ser ejecutado por unset(), se esperaba un registro')
+        err = 'Error el valor ',exp.exp.id,'no puede ser ejecutado por unset(), se esperaba un registro',' En la linea: ',exp.linea,' En la columna: ',exp.columna, 'Tipo: SEMANTICO'
         errores.append(err) 
 
 def procesar_inicioPila(instr,ts):
@@ -776,6 +776,155 @@ def procesar_instrucciones(instrucciones, ts) :
 #-----------------------------------------------------------TERMINA ANALISIS SEMANTICO
 
 #-----------------------------------------------------------INICIA GRAFICACION DEL AST
+def dibujar_exit(instr,root,cont):
+    cont=cont+1
+    nodo = 'nodo'+ str(cont)
+    dot.node(nodo,'Exit')
+    dot.edge(root, nodo)
+
+    return cont
+
+def dibujar_Goto(instr,root,cont):
+    cont=cont+1
+    nodo = 'nodo'+ str(cont)
+    dot.node(nodo,'Goto')
+    dot.edge(root, nodo)
+
+    cont=cont+1
+    nodo1 = 'nodo'+ str(cont)
+    dot.node(nodo1,str(instr.id))
+    dot.edge(nodo, nodo1)
+    return cont
+
+def dibujar_Label(instr,root,cont):
+    cont=cont+1
+    nodo = 'nodo'+ str(cont)
+    dot.node(nodo,'Etiqueta')
+    dot.edge(root, nodo)
+
+    cont=cont+1
+    nodo1 = 'nodo'+ str(cont)
+    dot.node(nodo1,str(instr.id))
+    dot.edge(nodo, nodo1)
+    return cont
+
+def dibujar_Asigna_arreglo(instr,root,cont):
+    cont=cont+1
+    nodo = 'nodo'+ str(cont)
+    dot.node(nodo,'AsignaArreglo')
+    dot.edge(root, nodo)
+
+    cont=cont+1
+    nodo1 = 'nodo'+ str(cont)
+    dot.node(nodo1,str(instr.id))
+    dot.edge(nodo, nodo1)
+
+    dot.node(nodo1,instr.id)
+    cont = cont +1
+    nodo2= 'nodo'+str(cont)
+    dot.node(nodo2,"acceso")
+    dot.edge(nodo,nodo2)
+
+    for i in instr.lista:
+        cont = dibujar_expresion(i,nodo2,cont)
+    cont = dibujar_expresion(instr.exp,nodo,cont)
+    return cont  
+
+def dibujar_main(instr,root,cont):
+    cont=cont+1
+    nodo = 'nodo'+ str(cont)
+    dot.node(nodo,'Etiqueta')
+    dot.edge(root, nodo)
+
+    cont=cont+1
+    nodo1 = 'nodo'+ str(cont)
+    dot.node(nodo1,'Main')
+    dot.edge(nodo, nodo1)
+
+    return cont
+
+def dibujar_AsignaRegistro(instr,root,cont):
+    cont=cont+1
+    nodo = 'nodo'+ str(cont)
+    dot.node(nodo,'AsignaRegistro')
+    dot.edge(root, nodo)
+
+    cont=cont+1
+    nodo1 = 'nodo'+ str(cont)
+    dot.node(nodo1,str(instr.id))
+    dot.edge(nodo, nodo1)
+
+    cont = dibujar_expresion(instr.exp,nodo,cont)
+
+    return cont
+
+def dibujar_AsignaValorPila(instr,root,cont):
+    cont=cont+1
+    nodo = 'nodo'+ str(cont)
+    dot.node(nodo,'AsignaValorPila')
+    dot.edge(root, nodo)
+
+    cont=cont+1
+    nodo1 = 'nodo'+ str(cont)
+    dot.node(nodo1,str(instr.id))
+    dot.edge(nodo, nodo1)
+
+    cont=cont+1
+    nodo2 = 'nodo'+ str(cont)
+    dot.node(nodo2,str(instr.puntero))
+    dot.edge(nodo, nodo2)
+
+    cont = dibujar_expresion(instr.exp,nodo,cont)
+    return cont
+
+def dibujar_AsignaPunteroPila(instr,root,cont):
+    cont=cont+1
+    nodo = 'nodo'+ str(cont)
+    dot.node(nodo,'AsignaPunteroPila')
+    dot.edge(root, nodo)
+
+    cont=cont+1
+    nodo1 = 'nodo'+ str(cont)
+    dot.node(nodo1,str(instr.id))
+    dot.edge(nodo, nodo1)
+
+    cont = dibujar_expresion(instr.exp,nodo,cont)
+
+    return cont
+
+def dibujar_unset(instr,root,cont):
+    cont=cont+1
+    nodo = 'nodo'+ str(cont)
+    dot.node(nodo,'Unset')
+    dot.edge(root, nodo)
+
+    cont = dibujar_expresion(instr.exp,nodo,cont)
+
+    return cont
+
+def dibujar_IniciaPila(instr,root,cont):
+    cont=cont+1
+    nodo = 'nodo'+ str(cont)
+    dot.node(nodo,'IniciaPila')
+    dot.edge(root, nodo)
+
+    cont=cont+1
+    nodo1 = 'nodo'+ str(cont)
+    dot.node(nodo1,str(instr.id))
+    dot.edge(nodo, nodo1)
+    return cont
+
+def dibujar_if(instr,root,cont):
+    cont=cont+1
+    nodo = 'nodo'+ str(cont)
+    dot.node(nodo,'If')
+    dot.edge(root, nodo)
+
+    cont = dibujar_expresion(instr.exp,nodo,cont)
+
+    cont= dibujar_Goto(instr.goto,nodo,cont)
+
+    return cont
 
 def dibujar_asignacion(instr,root,cont):
     cont=cont+1
@@ -786,7 +935,115 @@ def dibujar_asignacion(instr,root,cont):
     nodo1= 'nodo'+str(cont)
     dot.node(nodo1,instr.id)
     dot.edge(nodo,nodo1)
+    cont = dibujar_expresion(instr.expNumerica,nodo,cont)
     return cont
+
+def dibujar_print(instr,root,cont):
+    cont=cont+1
+    nodo = 'nodo'+ str(cont)
+    dot.node(nodo,'Print')
+    dot.edge(root, nodo)
+
+    cont = dibujar_expresion(instr.exp,nodo,cont)
+
+    return cont
+
+def dibujar_expresion(instr,root,cont):
+    cont +=1
+    nodo = 'nodo'+str(cont)
+    dot.node(nodo,'Exp')
+    dot.edge(root,nodo)
+    
+    cont = cont +1
+    nodo1= 'nodo'+str(cont)
+    
+    if isinstance(instr,ExpresionNumero):
+        dot.node(nodo1,str(instr.val))  
+    elif isinstance(instr, ExpresionTemporal):  
+        dot.node(nodo1,instr.id)
+    elif isinstance(instr,ExpresionBinaria):    
+        cont = dibujar_expresion(instr.exp1,nodo1,cont) 
+        dot.node(nodo1,str(instr.operador.name))
+        cont = dibujar_expresion(instr.exp2,nodo1,cont)
+    elif isinstance(instr,ExpresionNegativo):
+        dot.node(nodo1,'-')
+        cont = dibujar_expresion(instr.exp,nodo1,cont)
+    elif isinstance(instr,ExpresionBitNot):
+        dot.node(nodo1,'~')
+        cont = dibujar_expresion(instr.exp,nodo1,cont)
+    elif isinstance(instr,ExpresionBitAnd):
+        cont = dibujar_expresion(instr.exp1,nodo1,cont) 
+        dot.node(nodo1,'And bit')
+        cont = dibujar_expresion(instr.exp2,nodo1,cont)
+    elif isinstance(instr,ExpresionBitOr):
+        cont = dibujar_expresion(instr.exp1,nodo1,cont) 
+        dot.node(nodo1,'Or bit')
+        cont = dibujar_expresion(instr.exp2,nodo1,cont)
+    elif isinstance(instr,ExpresionBitXor):
+        cont = dibujar_expresion(instr.exp1,nodo1,cont) 
+        dot.node(nodo1,'Xor bit')
+        cont = dibujar_expresion(instr.exp2,nodo1,cont)
+    elif isinstance(instr,ExpresionBitIzq):
+        cont = dibujar_expresion(instr.exp1,nodo1,cont) 
+        dot.node(nodo1,'Corr Izq')
+        cont = dibujar_expresion(instr.exp2,nodo1,cont)
+    elif isinstance(instr,ExpresionBitDer):
+        cont = dibujar_expresion(instr.exp1,nodo1,cont) 
+        dot.node(nodo1,'Corr Der')
+        cont = dibujar_expresion(instr.exp2,nodo1,cont)     
+    elif isinstance(instr, ExpresionPunteroTemp):  
+        dot.node(nodo1,instr.id)
+    elif isinstance(instr,ExpresionConversion):
+        dot.node(nodo1,'Conversion')
+        dot.node(nodo1,str(instr.tipo))
+        cont = dibujar_expresion(instr.exp,nodo,cont)
+    elif isinstance(instr, ExpresionPila):  
+        dot.node(nodo1,instr.id)
+    elif isinstance(instr, ExpresionPunteroPila):  
+        dot.node(nodo1,instr.id)
+    elif isinstance(instr, Expresion_Pop_pila):  
+        dot.node(nodo1,instr.idPila)
+        dot.node(nodo1,instr.puntero)
+    elif isinstance(instr, InicioArray):
+        dot.node(nodo1,"Inicia Array") 
+    elif isinstance(instr, ExpresionValorAbsoluto):
+        dot.node(nodo1,'ABS')
+        cont = dibujar_expresion(instr.exp,nodo1,cont) 
+    elif isinstance(instr, ExpresionLogica):
+        cont = dibujar_expresion(instr.exp1,nodo1,cont) 
+        dot.node(nodo1,str(instr.operador.name))
+        cont = dibujar_expresion(instr.exp2,nodo1,cont)
+    elif isinstance(instr,ExpresionLogicaXOR):
+        cont = dibujar_expresion(instr.exp1,nodo1,cont) 
+        dot.node(nodo1,'Xor')
+        cont = dibujar_expresion(instr.exp2,nodo1,cont)  
+    elif isinstance(instr,ExpresionLogicaAND):
+        cont = dibujar_expresion(instr.exp1,nodo1,cont) 
+        dot.node(nodo1,'And')
+        cont = dibujar_expresion(instr.exp2,nodo1,cont)    
+    elif isinstance(instr,ExpresionLogicaOR):
+        cont = dibujar_expresion(instr.exp1,nodo1,cont) 
+        dot.node(nodo1,'Or')
+        cont = dibujar_expresion(instr.exp2,nodo1,cont)  
+    elif isinstance(instr,ExpresionLogicaNot):
+        dot.node(nodo1,'!')
+        cont = dibujar_expresion(instr.exp,nodo1,cont)
+    elif isinstance(instr,Expresion_param):
+        dot.node(nodo1,instr.id)
+    elif isinstance(instr,AccesoValorArray):
+        dot.node(nodo1,instr.id)
+        cont = cont +1
+        nodo2= 'nodo'+str(cont)
+        dot.node(nodo2,"acceso")
+        dot.edge(nodo,nodo2)
+
+        for i in instr.lista:
+            cont = dibujar_expresion(i,nodo2,cont)
+        
+    dot.edge(nodo,nodo1)
+
+    return cont
+
 
 def DibujarAST(instrucciones):
     cont = 1
@@ -794,11 +1051,23 @@ def DibujarAST(instrucciones):
     dot.node(root, 'AUGUS')
     for instr in instrucciones:
         if isinstance(instr,Asignacion) : cont = dibujar_asignacion(instr,root,cont)
+        elif isinstance(instr,Imprimir) : cont = dibujar_print(instr,root,cont)
+        elif isinstance(instr,If): cont = dibujar_if(instr,root,cont)
+        elif isinstance(instr,Unset): cont = dibujar_unset(instr,root,cont)
+        elif isinstance(instr,IniciaPila): cont = dibujar_IniciaPila(instr,root,cont)
+        elif isinstance(instr,AsignaPunteroPila): cont = dibujar_AsignaPunteroPila(instr,root,cont)
+        elif isinstance(instr,AsignaValorPila): cont = dibujar_AsignaValorPila(instr,root,cont)
+        elif isinstance(instr,AsignacionExtra): cont = dibujar_AsignaRegistro(instr,root,cont)
+        elif isinstance(instr,Main): cont = dibujar_main(instr,root,cont)
+        elif isinstance(instr,Asigna_arreglo): cont=dibujar_Asigna_arreglo(instr,root,cont)
+        elif isinstance(instr,Label): cont=dibujar_Label(instr,root,cont)
+        elif isinstance(instr,Goto): cont=dibujar_Goto(instr,root,cont)
+        elif isinstance(instr,Exit): cont=dibujar_exit(instr,root,cont)
         else : 
             print('')
     #print(dot.source)
 
-
+#------------------------------------------------------------REPORTES
 def ReporteTS():
     generado = '<<table border=\'0\' cellborder=\'1\' color=\'blue\' cellspacing='+'\'0\''+'><tr><td colspan=\'4\'>TABLA DE SIMBOLOS</td></tr><tr><td>No.</td><td>identificador</td><td>valor</td><td>tipo</td></tr>'
     cont = 0
@@ -808,8 +1077,8 @@ def ReporteTS():
         cont +=1
     generado +=' </table>>'
 
-    dotTS = Digraph('Tabla de simbolos',filename='TablaSimbolos.gv')
-    print(generado)
+    dotTS = Digraph('Tabla de simbolos',filename='TablaSimbolos')
+    #print(generado)
     dotTS.attr('node',shape='plaintext')
     dotTS.node('node',label=generado)
     dotTS.view()
@@ -823,8 +1092,8 @@ def ReporteErrores():
         cont +=1
     
     generado +=' </table>>'
-    dotErr = Digraph('Errores',filename='ListadoDeErrores.gv')
-    print(generado)
+    dotErr = Digraph('Errores',filename='ListadoDeErrores')
+    #print(generado)
     dotErr.attr('node',shape='plaintext')
     dotErr.node('node',label=generado)
     dotErr.view()
@@ -872,9 +1141,10 @@ def errores_desc():
 ts_global = TS.TablaDeSimbolos()
 
 
-dot = Digraph(comment='AUGUS')
+dot = Digraph('AST',filename='AST')
 try:
     DibujarAST(instrucciones)
+    dot.view()
 except :
     print('error al imprimir arbol')
     pass
