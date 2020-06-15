@@ -1,0 +1,53 @@
+digraph "Reporte Gramatical" {
+	nodo0 [label=instruccion]
+	nodo1 [label=instrucciones]
+	nodo1 -> nodo0
+	nodo1 [label=instrucciones]
+	nodo2 [label=instruccion]
+	nodo3 [label=instrucciones]
+	nodo3 -> nodo2
+	nodo3 -> nodo1
+	nodo3 [label=instrucciones]
+	nodo4 [label=instruccion]
+	nodo5 [label=instrucciones]
+	nodo5 -> nodo4
+	nodo5 -> nodo3
+	nodo5 [label=instrucciones]
+	nodo6 [label=instruccion]
+	nodo7 [label=instrucciones]
+	nodo7 -> nodo6
+	nodo7 -> nodo5
+	nodo7 [label=":"]
+	nodo8 [label=LABEL]
+	nodo9 [label=instruccion]
+	nodo9 -> nodo8
+	nodo9 -> nodo7
+	nodo9 [label=instrucciones]
+	nodo10 [label=instruccion]
+	nodo11 [label=instrucciones]
+	nodo11 -> nodo10
+	nodo11 -> nodo9
+	nodo11 [label=":"]
+	nodo12 [label=LABEL]
+	nodo13 [label=instruccion]
+	nodo13 -> nodo12
+	nodo13 -> nodo11
+	nodo13 [label=instrucciones]
+	nodo14 [label=instruccion]
+	nodo15 [label=instrucciones]
+	nodo15 -> nodo14
+	nodo15 -> nodo13
+	nodo15 [label=":"]
+	nodo16 [label=LABEL]
+	nodo17 [label=instruccion]
+	nodo17 -> nodo16
+	nodo17 -> nodo15
+	nodo17 [label=instrucciones]
+	nodo18 [label=instruccion]
+	nodo19 [label=instrucciones]
+	nodo19 -> nodo18
+	nodo19 -> nodo17
+	nodo19 [label=instrucciones]
+	nodo20 [label=init]
+	nodo20 -> nodo19
+}

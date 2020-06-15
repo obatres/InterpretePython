@@ -1073,7 +1073,7 @@ def ReporteTS():
     cont = 0
 
     for i in ts_global.simbolos:
-        generado += '<tr><td>'+str(cont)+'</td><td>'+str(ts_global.obtener(i).id)+'</td><td>'+str(ts_global.obtener(i).valor)+'</td><td>'+str(ts_global.obtener(i).tipo)+'</td></tr>'
+        generado += '<tr><td>'+str(cont)+'</td><td>'+str(ts_global.obtener(i).id)+'</td><td>'+str(ts_global.obtener(i).valor)+'</td><td>'+str(ts_global.obtener(i).tipo.name)+'</td></tr>'
         cont +=1
     generado +=' </table>>'
 
@@ -1109,17 +1109,27 @@ bandera = true
 def ejecutar_asc(input):
     import gramatica as g
     instrucciones = g.parse(input)
+    g.verGramatica()
     return instrucciones
 
+def r_asc(input):
+    import RGramaticalASC as RGASC
+    asc = RGASC.parse(input)
+    rasc = RGASC.verGramatica()
+    return rasc
+
+#r= r_asc(input)
 
 def errores_asc():
     import gramatica as g
     errores = g.retornalista()
+    
     return errores 
 
 if bandera:
     instrucciones = ejecutar_asc(input)
     errores = errores_asc()
+    
 elif bandera==False:
     instrucciones = ejecutar_desc(input)
     errores = errores_desc()
@@ -1144,7 +1154,8 @@ ts_global = TS.TablaDeSimbolos()
 dot = Digraph('AST',filename='AST')
 try:
     DibujarAST(instrucciones)
-    dot.view()
+    #dot.view()
+
 except :
     print('error al imprimir arbol')
     pass
@@ -1156,8 +1167,8 @@ except :
     pass
 
 
-rts =ReporteTS()
-rer = ReporteErrores()
+#rts =ReporteTS()
+#rer = ReporteErrores()
 class objetopila():
 
     def __init__(self, valor, tipo):

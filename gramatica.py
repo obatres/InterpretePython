@@ -239,23 +239,64 @@ precedence = (
     )
 
 # Definición de la gramática
-
+from graphviz import Digraph
 from expresiones import *
 from instrucciones import *
+
+dotGR = Digraph('Reporte Gramatical',filename='Gramatical ASC')
+cont =0
+def inc():
+    global cont 
+    cont+=1
+    return cont
 
 
 def p_init(t) :
     'init            : instrucciones'
-    t[0] = t[1]
+    print("INIT -> INTRUCCIONES")
+    t[0] = t[1]  
+    global cont 
+    hijo = 'nodo' + str(cont) 
+    dotGR.node(hijo,'instrucciones')
+    cont = inc()
+    padre = 'nodo' + str(cont)  
+    dotGR.node(padre, 'init')
+    dotGR.edge(padre,hijo)
 
 def p_instrucciones_lista(t) :
     'instrucciones    : instrucciones instruccion'
+    print('instrucciones -> instrucciones instruccion')
+    
     t[1].append(t[2])
     t[0] = t[1]
+    global cont
+    hijo2 = 'nodo' + str(cont) 
+    dotGR.node(hijo2,'instrucciones')
+
+    cont = inc()
+    hijo1 = 'nodo' + str(cont) 
+    dotGR.node(hijo1,'instruccion')
+
+    cont=inc()
+    padre = 'nodo' + str(cont)
+    dotGR.node(padre,'instrucciones')
+    
+    
+    dotGR.edge(padre,hijo1)
+    dotGR.edge(padre,hijo2)
 
 def p_instrucciones_instruccion(t) :
     'instrucciones    : instruccion '
     t[0] = [t[1]]
+    global cont
+
+    hijo1 = 'nodo' + str(cont) 
+    dotGR.node(hijo1,'instruccion')
+    cont = inc()
+    padre = 'nodo' + str(cont)
+    dotGR.node(padre,'instrucciones')
+
+    dotGR.edge(padre,hijo1)
 
 def p_instruccion(t) :
     '''instruccion      : imprimir_instr
@@ -275,11 +316,27 @@ def p_instruccion(t) :
                         | DEFINEL
                         | DEFINEGOTO'''
     t[0] = t[1]
+    global cont 
 
+    #padre = 'nodo' + str(cont) 
+    #dotGR.node(padre,'instruccion')
+    
 def p_Label(t):
     'DEFINEL : ID DOSP'
     t[0] = Label(t[1],t.lineno(1),get_clomuna(entry,t.slice[1]))
     
+    global cont 
+    hijo2 ='nodo'+ str(cont)
+    dotGR.node(hijo2,':')
+    cont = inc()
+    hijo1 = 'nodo' + str(cont) 
+    dotGR.node(hijo1,'LABEL')
+    cont = inc()
+    padre = 'nodo' + str(cont)
+    dotGR.node(padre,'instruccion')
+
+    dotGR.edge(padre,hijo1)
+    dotGR.edge(padre,hijo2)
 def p_Goto(t):
     'DEFINEGOTO : GOTO ID PTCOMA'
     t[0] = Goto(t[2],t.lineno(1),get_clomuna(entry,t.slice[1]))
@@ -540,3 +597,6 @@ def parse(input) :
 
 def retornalista():
     return lista_errores
+
+def verGramatica():
+    return dotGR.view()
