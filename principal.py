@@ -1083,6 +1083,8 @@ def ReporteTS():
     dotTS.node('node',label=generado)
     dotTS.view()
 
+
+
 def ReporteErrores():
     generado = '<<table border=\'0\' cellborder=\'1\' color=\'blue\' cellspacing='+'\'0\''+'><tr><td colspan=\'2\'>LISTADO DE ERRORES</td></tr><tr><td>No.</td><td>Error</td></tr>'
     cont = 0
@@ -1097,28 +1099,39 @@ def ReporteErrores():
     dotErr.attr('node',shape='plaintext')
     dotErr.node('node',label=generado)
     dotErr.view()
+
+def ReporteGramatical():
+    generado = '<<table border=\'0\' cellborder=\'1\' color=\'blue\' cellspacing='+'\'0\''+'><tr><td colspan=\'2\'>REPORTE GRAMATICAL</td></tr><tr><td>No.</td><td>Gramatica recursiva por izquierda</td></tr>'
+    cont = 0
+
+    aux = list(reversed(gram))
+    for i in aux:
+        generado += '<tr><td>'+str(cont)+'</td><td align = \'left\'>'+str(i)+'</td></tr>'
+        cont +=1
+    generado +=' </table>>'
+
+    dotTS = Digraph('Reporte Gramatical',filename='ReporteGramatical')
+    print(generado)
+    dotTS.attr('node',shape='plaintext')
+    dotTS.node('node',label=generado)
+    dotTS.view()
 #-----------------------------------------------------------TERMINA GRAFICACION DEL AST
 
 #-----------------------------------------------------------EJECUCION DEL ANALIZADOR
 f = open("./entrada.txt", "r")
 input = f.read()
 
-
+gram = []
 bandera = true
 #ANALIZADOR ASCENDENTE
 def ejecutar_asc(input):
     import gramatica as g
-    instrucciones = g.parse(input)
-    g.verGramatica()
+    global gram
+    gram = g.verGramatica()
+    instrucciones = g.parse(input)    
     return instrucciones
 
-def r_asc(input):
-    import RGramaticalASC as RGASC
-    asc = RGASC.parse(input)
-    rasc = RGASC.verGramatica()
-    return rasc
 
-#r= r_asc(input)
 
 def errores_asc():
     import gramatica as g
@@ -1129,6 +1142,7 @@ def errores_asc():
 if bandera:
     instrucciones = ejecutar_asc(input)
     errores = errores_asc()
+    #print(list(reversed(gram)))
     
 elif bandera==False:
     instrucciones = ejecutar_desc(input)
@@ -1166,7 +1180,7 @@ except :
     print('Error en parser')
     pass
 
-
+ReporteGramatical()
 #rts =ReporteTS()
 #rer = ReporteErrores()
 class objetopila():
