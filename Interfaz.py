@@ -139,6 +139,86 @@ class TextEdit(QTextEdit):
 
         super(TextEdit, self).insertFromMimeData(source)
 
+class LineNumberArea(QWidget):
+    def __init__(self, editor):
+        super().__init__(editor)
+        self.editor = editor
+
+    def sizeHint(self):
+        return QSize(self.editor.lineNumberAreaWidth(), 0)
+
+    def paintEvent(self, event):
+        self.editor.lineNumberAreaPaintEvent(event)
+
+class PlainTextEdit(QPlainTextEdit):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        self.lineNumberArea = LineNumberArea(self)
+
+        self.blockCountChanged.connect(self.updateLineNumberAreaWidth)
+        self.updateRequest.connect(self.updateLineNumberArea)
+        self.cursorPositionChanged.connect(self.highlightCurrentLine)
+        self.updateLineNumberAreaWidth(0)
+
+    def lineNumberAreaWidth(self):
+        digits = 1
+        max_value = max(1, self.blockCount())
+        while max_value >= 10:
+            max_value /= 10
+            digits += 1
+        space = 3 + self.fontMetrics().width('9') * digits
+        return space
+
+    def updateLineNumberAreaWidth(self, _):
+        self.setViewportMargins(self.lineNumberAreaWidth(), 0, 0, 0)
+
+    def updateLineNumberArea(self, rect, dy):
+        if dy:
+            self.lineNumberArea.scroll(0, dy)
+        else:
+            self.lineNumberArea.update(0, rect.y(), self.lineNumberArea.width(), rect.height())
+        if rect.contains(self.viewport().rect()):
+            self.updateLineNumberAreaWidth(0)
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        cr = self.contentsRect()
+        self.lineNumberArea.setGeometry(QRect(cr.left(), cr.top(), self.lineNumberAreaWidth(), cr.height()))
+
+    def highlightCurrentLine(self):
+        extraSelections = []
+        if not self.isReadOnly():
+            selection = QTextEdit.ExtraSelection()
+            lineColor = QColor(Qt.yellow).lighter(160)
+            selection.format.setBackground(lineColor)
+            selection.format.setProperty(QTextFormat.FullWidthSelection, True)
+            selection.cursor = self.textCursor()
+            selection.cursor.clearSelection()
+            extraSelections.append(selection)
+        self.setExtraSelections(extraSelections)
+
+    def lineNumberAreaPaintEvent(self, event):
+        painter = QPainter(self.lineNumberArea)
+        painter.fillRect(event.rect(), Qt.lightGray)
+        block = self.firstVisibleBlock()
+        blockNumber = block.blockNumber()
+        top = self.blockBoundingGeometry(block).translated(self.contentOffset()).top()
+        bottom = top + self.blockBoundingRect(block).height()
+        height = self.fontMetrics().height()
+
+        while block.isValid() and (top <= event.rect().bottom()):
+            if block.isVisible() and (bottom >= event.rect().top()):
+                number = str(blockNumber + 1)
+                painter.setPen(Qt.black)
+                painter.drawText(0, top, self.lineNumberArea.width(), height, Qt.AlignRight, number)
+
+            block = block.next()
+            top = bottom
+            bottom = top + self.blockBoundingRect(block).height()
+            blockNumber += 1
+
+
 
 class MainWindow(QMainWindow):
 
@@ -146,14 +226,14 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
 
         layout = QVBoxLayout()
-        self.editor = QPlainTextEdit()
+        self.editor = PlainTextEdit()
 
         # Setup the QTextEdit editor configuration
         
         #self.editor.setAutoFormatting(QTextEdit.AutoAll)
         self.editor.selectionChanged.connect(self.update_format)
         # Initialize default font size.
-        font = QFont('Times', 12)
+        font = QFont('Times', 10)
         self.editor.setFont(font)
         
         # We need to repeat the size to init the current format.
@@ -181,18 +261,18 @@ class MainWindow(QMainWindow):
 
         # Uncomment to disable native menubar on Mac
         # self.menuBar().setNativeMenuBar(False)
-
+#File
         file_toolbar = QToolBar("File")
         file_toolbar.setIconSize(QSize(14, 14))
         self.addToolBar(file_toolbar)
         file_menu = self.menuBar().addMenu("&File")
-
+#Open File
         open_file_action = QAction(QIcon(os.path.join('images', 'blue-folder-open-document.png')), "Open file...", self)
         open_file_action.setStatusTip("Open file")
         open_file_action.triggered.connect(self.file_open)
         file_menu.addAction(open_file_action)
         file_toolbar.addAction(open_file_action)
-
+#Save File
         save_file_action = QAction(QIcon(os.path.join('images', 'disk.png')), "Save", self)
         save_file_action.setStatusTip("Save current page")
         save_file_action.triggered.connect(self.file_save)
@@ -271,16 +351,21 @@ class MainWindow(QMainWindow):
         self.addToolBar(Ejec_toolbar)
         Ejecutar_menu = self.menuBar().addMenu("&Ejecutar")
         
-        '''open_file_action = QAction(QIcon(os.path.join('images', 'blue-folder-open-document.png')), "Open file...", self)
-        open_file_action.setStatusTip("Open file")
-        open_file_action.triggered.connect(self.file_open)
-        file_menu.addAction(open_file_action)
-        file_toolbar.addAction(open_file_action) '''  
-
-        EjecutarPLY = QAction("Ejecutar PLY",self)  
-        EjecutarPLY.setStatusTip("Ejecutar PLY")
+        EjecutarPLY = QAction("Ejecutar Asc",self)  
+        EjecutarPLY.setStatusTip("Ejecutar Asc")
         Ejecutar_menu.addAction(EjecutarPLY)
         Ejec_toolbar.addAction(EjecutarPLY)
+
+        EjecutarDesc = QAction("Ejecutar Desc",self)  
+        EjecutarDesc.setStatusTip("Ejecutar Desc")
+        Ejecutar_menu.addAction(EjecutarDesc)
+        Ejec_toolbar.addAction(EjecutarDesc)
+
+        EjecutarDeb = QAction("Ejecutar Debug",self)  
+        EjecutarDeb.setStatusTip("Ejecutar Debug")
+        Ejecutar_menu.addAction(EjecutarDeb)
+        Ejec_toolbar.addAction(EjecutarDeb)
+
 #-----------------------------------------------------------------------------BOTON FORMATO
         format_toolbar = QToolBar("Format")
         format_toolbar.setIconSize(QSize(16, 16))
@@ -363,7 +448,7 @@ class MainWindow(QMainWindow):
 
         format_menu.addSeparator()
 
-        # A list of all format-related widgets/actions, so we can disable/enable signals when updating.
+# A list of all format-related widgets/actions, so we can disable/enable signals when updating.
         self._format_actions = [
             self.fonts,
             self.fontsize,
@@ -481,7 +566,7 @@ class MainWindow(QMainWindow):
 if __name__ == '__main__':
 
     app = QApplication(sys.argv)
-    app.setApplicationName("Megasolid Idiom")
+    app.setApplicationName("AUGUS IDE")
 
     window = MainWindow()
     app.exec_()
