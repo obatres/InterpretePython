@@ -1073,7 +1073,7 @@ def ReporteTS():
     cont = 0
 
     for i in ts_global.simbolos:
-        generado += '<tr><td>'+str(cont)+'</td><td>'+str(ts_global.obtener(i).id)+'</td><td>'+str(ts_global.obtener(i).valor)+'</td><td>'+str(ts_global.obtener(i).tipo)+'</td></tr>'
+        generado += '<tr><td>'+str(cont)+'</td><td>'+str(ts_global.obtener(i).id)+'</td><td>'+str(ts_global.obtener(i).valor)+'</td><td>'+str(ts_global.obtener(i).tipo.name)+'</td></tr>'
         cont +=1
     generado +=' </table>>'
 
@@ -1082,6 +1082,8 @@ def ReporteTS():
     dotTS.attr('node',shape='plaintext')
     dotTS.node('node',label=generado)
     dotTS.view()
+
+
 
 def ReporteErrores():
     generado = '<<table border=\'0\' cellborder=\'1\' color=\'blue\' cellspacing='+'\'0\''+'><tr><td colspan=\'2\'>LISTADO DE ERRORES</td></tr><tr><td>No.</td><td>Error</td></tr>'
@@ -1097,37 +1099,53 @@ def ReporteErrores():
     dotErr.attr('node',shape='plaintext')
     dotErr.node('node',label=generado)
     dotErr.view()
+
+def ReporteGramatical():
+    generado = '<<table border=\'0\' cellborder=\'1\' color=\'blue\' cellspacing='+'\'0\''+'><tr><td colspan=\'2\'>REPORTE GRAMATICAL</td></tr><tr><td>No.</td><td>Producciones</td></tr>'
+    cont = 0
+
+    aux = list(reversed(gram))
+    for i in aux:
+        generado += '<tr><td>'+str(cont)+'</td><td align = \'left\'>'+str(i)+'</td></tr>'
+        cont +=1
+    generado +=' </table>>'
+
+    dotTS = Digraph('Reporte Gramatical',filename='ReporteGramatical')
+    print(generado)
+    dotTS.attr('node',shape='plaintext')
+    dotTS.node('node',label=generado)
+    dotTS.view()
 #-----------------------------------------------------------TERMINA GRAFICACION DEL AST
 
 #-----------------------------------------------------------EJECUCION DEL ANALIZADOR
 f = open("./entrada.txt", "r")
 input = f.read()
 
-
-bandera = true
+gram = []
+bandera = False
 #ANALIZADOR ASCENDENTE
 def ejecutar_asc(input):
     import gramatica as g
-    instrucciones = g.parse(input)
+    global gram
+    gram = g.verGramatica()
+    instrucciones = g.parse(input)    
     return instrucciones
+
 
 
 def errores_asc():
     import gramatica as g
     errores = g.retornalista()
+    
     return errores 
 
-if bandera:
-    instrucciones = ejecutar_asc(input)
-    errores = errores_asc()
-elif bandera==False:
-    instrucciones = ejecutar_desc(input)
-    errores = errores_desc()
 
 #ANALIZADOR DESCENDENTE
 def ejecutar_desc(input):
     import gramaticadesc as gdes
+    global gram
     instrucciones = gdes.parse(input)
+    gram = gdes.verGramatica()
     return instrucciones
 #instrucciones = ejecutar_desc(input)
 
@@ -1137,6 +1155,17 @@ def errores_desc():
     return errores
 #errores = errores_desc()
 
+if bandera:
+    instrucciones = ejecutar_asc(input)
+    errores = errores_asc()
+    #print(list(reversed(gram)))
+    
+elif bandera==False:
+    instrucciones = ejecutar_desc(input)
+    errores = errores_desc()
+    print(gram)
+
+
 #INICIALIZACION DE LA TABLA DE SIMBOLOS
 ts_global = TS.TablaDeSimbolos()
 
@@ -1144,7 +1173,8 @@ ts_global = TS.TablaDeSimbolos()
 dot = Digraph('AST',filename='AST')
 try:
     DibujarAST(instrucciones)
-    dot.view()
+    #dot.view()
+
 except :
     print('error al imprimir arbol')
     pass
@@ -1155,9 +1185,9 @@ except :
     print('Error en parser')
     pass
 
-
-rts =ReporteTS()
-rer = ReporteErrores()
+ReporteGramatical()
+#rts =ReporteTS()
+#rer = ReporteErrores()
 class objetopila():
 
     def __init__(self, valor, tipo):

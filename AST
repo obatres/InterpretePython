@@ -264,10 +264,16 @@ digraph AST {
 	nodo130 -> nodo131
 	nodo132 [label="$t11"]
 	nodo131 -> nodo132
-	nodo133 [label=Etiqueta]
+	nodo133 [label=Print]
 	nodo1 -> nodo133
-	nodo134 [label=label4]
+	nodo134 [label=Exp]
 	nodo133 -> nodo134
-	nodo135 [label=Exit]
-	nodo1 -> nodo135
+	nodo135 [label="hola \n mundo"]
+	nodo134 -> nodo135
+	nodo136 [label=Etiqueta]
+	nodo1 -> nodo136
+	nodo137 [label=label4]
+	nodo136 -> nodo137
+	nodo138 [label=Exit]
+	nodo1 -> nodo138
 }
