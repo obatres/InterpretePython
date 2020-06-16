@@ -1101,7 +1101,7 @@ def ReporteErrores():
     dotErr.view()
 
 def ReporteGramatical():
-    generado = '<<table border=\'0\' cellborder=\'1\' color=\'blue\' cellspacing='+'\'0\''+'><tr><td colspan=\'2\'>REPORTE GRAMATICAL</td></tr><tr><td>No.</td><td>Gramatica recursiva por izquierda</td></tr>'
+    generado = '<<table border=\'0\' cellborder=\'1\' color=\'blue\' cellspacing='+'\'0\''+'><tr><td colspan=\'2\'>REPORTE GRAMATICAL</td></tr><tr><td>No.</td><td>Producciones</td></tr>'
     cont = 0
 
     aux = list(reversed(gram))
@@ -1122,7 +1122,7 @@ f = open("./entrada.txt", "r")
 input = f.read()
 
 gram = []
-bandera = true
+bandera = False
 #ANALIZADOR ASCENDENTE
 def ejecutar_asc(input):
     import gramatica as g
@@ -1139,19 +1139,13 @@ def errores_asc():
     
     return errores 
 
-if bandera:
-    instrucciones = ejecutar_asc(input)
-    errores = errores_asc()
-    #print(list(reversed(gram)))
-    
-elif bandera==False:
-    instrucciones = ejecutar_desc(input)
-    errores = errores_desc()
 
 #ANALIZADOR DESCENDENTE
 def ejecutar_desc(input):
     import gramaticadesc as gdes
+    global gram
     instrucciones = gdes.parse(input)
+    gram = gdes.verGramatica()
     return instrucciones
 #instrucciones = ejecutar_desc(input)
 
@@ -1160,6 +1154,17 @@ def errores_desc():
     errores = gdes.retornalista()
     return errores
 #errores = errores_desc()
+
+if bandera:
+    instrucciones = ejecutar_asc(input)
+    errores = errores_asc()
+    #print(list(reversed(gram)))
+    
+elif bandera==False:
+    instrucciones = ejecutar_desc(input)
+    errores = errores_desc()
+    print(gram)
+
 
 #INICIALIZACION DE LA TABLA DE SIMBOLOS
 ts_global = TS.TablaDeSimbolos()
