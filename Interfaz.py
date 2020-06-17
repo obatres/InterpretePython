@@ -353,7 +353,7 @@ class MainWindow(QMainWindow):
         Ejecutar_menu = self.menuBar().addMenu("&Ejecutar")
         
 
-        EjecutarPLY = QAction("Ejecutar Asc",self)  
+        EjecutarPLY = QAction(QIcon(os.path.join('images', 'application-run.png')), "Ascendente", self)  
         EjecutarPLY.setStatusTip("Ejecutar Asc")
         EjecutarPLY.triggered.connect(self.EjecutarAsc)  
         
@@ -362,13 +362,13 @@ class MainWindow(QMainWindow):
 
         #self.toolbar.addAction(EjecutarPLY)
 
-        EjecutarDesc = QAction("Ejecutar Desc",self)  
+        EjecutarDesc = QAction(QIcon(os.path.join('images', 'Run.png')), "Descendente", self)  
         EjecutarDesc.setStatusTip("Ejecutar Desc")
         EjecutarDesc.triggered.connect(self.EjecutarDesc)  
         Ejecutar_menu.addAction(EjecutarDesc)
         Ejec_toolbar.addAction(EjecutarDesc)
 
-        EjecutarDeb = QAction("Ejecutar Debug",self)  
+        EjecutarDeb = QAction(QIcon(os.path.join('images', 'debug.png')), "Debug", self)  
         EjecutarDeb.setStatusTip("Ejecutar Debug")
         EjecutarDeb.triggered.connect(self.EjecutarDeb)  
         Ejecutar_menu.addAction(EjecutarDeb)
@@ -586,6 +586,7 @@ class MainWindow(QMainWindow):
     def EjecutarAsc(self):
         import principal as f
         self.consola.clear()
+       
         f.ejecutar_asc(self.editor.toPlainText())
         f.errores_asc()
         f.ReporteErrores()
@@ -594,11 +595,13 @@ class MainWindow(QMainWindow):
         f.GenerarAST()
         s = f.RecibirSalida()
         self.consola.setPlainText(s)
+
         return 
 
     def EjecutarDesc(self):
         import principal as j
         self.consola.clear()
+        
         j.ejecutar_desc(self.editor.toPlainText())
         j.errores_desc()
         j.ReporteErrores()
@@ -607,19 +610,22 @@ class MainWindow(QMainWindow):
         j.GenerarAST()
         s = j.RecibirSalida()
         self.consola.setPlainText(s)
-        return None
+       
+
     
     def EjecutarDeb(self):
         import principal as de 
         self.consola.clear()
+    
         de.ejecutar_debug(self.editor.toPlainText(),self.i)
         de.ReporteTS()
         de.ReporteErrores()
         self.i =  self.i + 1
         s = de.RecibirSalida()
         self.consola.setPlainText(s)
+
+
         
-    
     def ReporteGramatical(self):
         import principal as l
         l.ReporteGramatical()

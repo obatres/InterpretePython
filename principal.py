@@ -738,6 +738,8 @@ def Llamada_goto(instr,ts,listasiguientes):
     i = 0
     for ins in listasiguientes:
         if isinstance(ins,Label):
+            global Etiqueta
+            Etiqueta = str(instr.id)
             if ins.id == instr.id:
                 siguientes = listasiguientes[i+1:]
                 ejecutar_expresiones_label(siguientes,ts,listasiguientes)
@@ -758,10 +760,10 @@ def ejecutar_expresiones_label(listainstrucciones,ts,listaglobal):
             elif isinstance(instr,AsignaPunteroPila): procesar_asignacion_punteropila(instr,ts)
             elif isinstance(instr,AsignaValorPila): procesar_asignacion_pila(instr,ts)
             elif isinstance(instr, AsignacionExtra): procesar_asignacion_extra(instr,ts)
-            elif isinstance(instr, Main): print('')
+            elif isinstance(instr, Main): Etiqueta = 'Main'
             elif isinstance(instr,Asigna_arreglo): procesar_asignacion_arreglo(instr,ts)
             elif isinstance(instr,Label): procesa_Label(instr,ts)
-            elif isinstance(instr,Exit): sys.exit()
+            elif isinstance(instr,Exit): return
             elif isinstance(instr,Goto):
                 Llamada_goto(instr,ts, listaglobal)
                 return
@@ -791,7 +793,7 @@ def procesar_instrucciones(instrucciones, ts) :
                 Etiqueta = 'Main'
             elif isinstance(instr,Asigna_arreglo): procesar_asignacion_arreglo(instr,ts)
             elif isinstance(instr,Label): procesa_Label(instr,ts)
-            elif isinstance(instr,Exit): sys.exit()
+            elif isinstance(instr,Exit): return
             elif isinstance(instr,Goto): 
                 Llamada_goto(instr,ts, instrucciones)
                 return
@@ -826,7 +828,7 @@ def procesar_instrucciones_debugger(instrucciones, ts, i) :
                 Etiqueta = 'Main'
             elif isinstance(instrucciones[i],Asigna_arreglo): procesar_asignacion_arreglo(instrucciones[i],ts)
             elif isinstance(instrucciones[i],Label): procesa_Label(instrucciones[i],ts)
-            elif isinstance(instrucciones[i],Exit): sys.exit()
+            elif isinstance(instrucciones[i],Exit): return
             elif isinstance(instrucciones[i],Goto): 
                 Llamada_goto(instrucciones[i],ts, instrucciones)
                 return

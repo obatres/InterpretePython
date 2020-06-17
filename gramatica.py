@@ -603,6 +603,8 @@ parser = yacc.yacc()
 lista_errores = []
 entry = ''
 def parse(input) :
+    lexer = lex.lex()
+    parser = yacc.yacc()
     global entry
     entry = input
     return parser.parse(input)
