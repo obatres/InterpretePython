@@ -1,4 +1,4 @@
 digraph "Tabla de simbolos" {
 	node [shape=plaintext]
-	"node" [label=<<table border='0' cellborder='1' color='blue' cellspacing='0'><tr><td colspan='4'>TABLA DE SIMBOLOS</td></tr><tr><td>No.</td><td>identificador</td><td>valor</td><td>tipo</td></tr><tr><td>0</td><td>$t2</td><td>saasd</td><td>CADENA</td></tr> </table>>]
+	"node" [label=<<table border='0' cellborder='1' color='blue' cellspacing='0'><tr><td colspan='5'>TABLA DE SIMBOLOS</td></tr><tr><td>No.</td><td>identificador</td><td>valor</td><td>tipo</td><td>Etiqueta</td></tr><tr><td>0</td><td>$t2</td><td>saasd</td><td>CADENA</td><td>Main</td></tr><tr><td>1</td><td>$t3</td><td>sadsd</td><td>CADENA</td><td>Label2</td></tr> </table>>]
 }

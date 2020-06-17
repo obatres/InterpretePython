@@ -6,64 +6,78 @@ digraph AST {
 	nodo2 -> nodo3
 	nodo4 [label=Asignacion]
 	nodo1 -> nodo4
-	nodo5 [label="$t3"]
+	nodo5 [label="$t2"]
 	nodo4 -> nodo5
 	nodo6 [label=Exp]
 	nodo4 -> nodo6
-	nodo7 [label="Read ( )"]
+	nodo7 [label=saasd]
 	nodo6 -> nodo7
-	nodo8 [label=Asignacion]
+	nodo8 [label=Print]
 	nodo1 -> nodo8
-	nodo9 [label="$t1"]
+	nodo9 [label=Exp]
 	nodo8 -> nodo9
-	nodo10 [label=Exp]
-	nodo8 -> nodo10
-	nodo11 [label=2]
-	nodo10 -> nodo11
-	nodo12 [label=Asignacion]
-	nodo1 -> nodo12
-	nodo13 [label="$t2"]
-	nodo12 -> nodo13
-	nodo14 [label=Exp]
-	nodo12 -> nodo14
-	nodo15 [label=saasd]
-	nodo14 -> nodo15
-	nodo16 [label=Print]
-	nodo1 -> nodo16
-	nodo17 [label=Exp]
-	nodo16 -> nodo17
-	nodo18 [label="$t1"]
-	nodo17 -> nodo18
-	nodo19 [label=Print]
-	nodo1 -> nodo19
-	nodo20 [label=Exp]
-	nodo19 -> nodo20
-	nodo21 [label="$t2"]
-	nodo20 -> nodo21
-	nodo22 [label=Print]
-	nodo1 -> nodo22
-	nodo23 [label=Exp]
-	nodo22 -> nodo23
-	nodo24 [label="$t3"]
-	nodo23 -> nodo24
-	nodo25 [label=AsignaRegistro]
-	nodo1 -> nodo25
-	nodo26 [label="$a0"]
-	nodo25 -> nodo26
-	nodo27 [label=Exp]
-	nodo25 -> nodo27
-	nodo28 [label=0]
-	nodo27 -> nodo28
-	nodo29 [label=Etiqueta]
-	nodo1 -> nodo29
-	nodo30 [label=label]
-	nodo29 -> nodo30
-	nodo31 [label=Etiqueta]
-	nodo1 -> nodo31
-	nodo32 [label=label2]
-	nodo31 -> nodo32
-	nodo33 [label=Etiqueta]
-	nodo1 -> nodo33
-	nodo34 [label=label3]
-	nodo33 -> nodo34
+	nodo10 [label="$t2"]
+	nodo9 -> nodo10
+	nodo1 [label=AUGUS]
+	nodo2 [label=Etiqueta]
+	nodo1 -> nodo2
+	nodo3 [label=Main]
+	nodo2 -> nodo3
+	nodo4 [label=Asignacion]
+	nodo1 -> nodo4
+	nodo5 [label="$t2"]
+	nodo4 -> nodo5
+	nodo6 [label=Exp]
+	nodo4 -> nodo6
+	nodo7 [label=saasd]
+	nodo6 -> nodo7
+	nodo8 [label=Print]
+	nodo1 -> nodo8
+	nodo9 [label=Exp]
+	nodo8 -> nodo9
+	nodo10 [label="$t2"]
+	nodo9 -> nodo10
+	nodo11 [label=Etiqueta]
+	nodo1 -> nodo11
+	nodo12 [label=Label2]
+	nodo11 -> nodo12
+	nodo13 [label=Asignacion]
+	nodo1 -> nodo13
+	nodo14 [label="$t3"]
+	nodo13 -> nodo14
+	nodo15 [label=Exp]
+	nodo13 -> nodo15
+	nodo16 [label=sadsd]
+	nodo15 -> nodo16
+	nodo1 [label=AUGUS]
+	nodo2 [label=Etiqueta]
+	nodo1 -> nodo2
+	nodo3 [label=Main]
+	nodo2 -> nodo3
+	nodo4 [label=Asignacion]
+	nodo1 -> nodo4
+	nodo5 [label="$t2"]
+	nodo4 -> nodo5
+	nodo6 [label=Exp]
+	nodo4 -> nodo6
+	nodo7 [label=saasd]
+	nodo6 -> nodo7
+	nodo8 [label=Print]
+	nodo1 -> nodo8
+	nodo9 [label=Exp]
+	nodo8 -> nodo9
+	nodo10 [label="$t2"]
+	nodo9 -> nodo10
+	nodo11 [label=Etiqueta]
+	nodo1 -> nodo11
+	nodo12 [label=Label2]
+	nodo11 -> nodo12
+	nodo13 [label=Asignacion]
+	nodo1 -> nodo13
+	nodo14 [label="$t3"]
+	nodo13 -> nodo14
+	nodo15 [label=Exp]
+	nodo13 -> nodo15
+	nodo16 [label=sadsd]
+	nodo15 -> nodo16
 }

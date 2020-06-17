@@ -50,7 +50,7 @@ def procesar_definicion(instr, ts) :
 def procesar_asignacion(instr, ts) :
     try:
         val = resolver_expresion_aritmetica(instr.expNumerica, ts)
-        simbolo = TS.Simbolo(instr.id, instr.expNumerica.tipo, val)
+        simbolo = TS.Simbolo(instr.id, instr.expNumerica.tipo, val,Etiqueta)
         if ts.existeSimbolo(simbolo) :
             ts.actualizar(simbolo)
         else:
@@ -663,7 +663,7 @@ def procesar_unset(exp, ts):
         errores.append(err) 
 
 def procesar_inicioPila(instr,ts):
-    pila = TS.Simbolo(instr.id,td.PILA,[])
+    pila = TS.Simbolo(instr.id,td.PILA,[],Etiqueta)
     if ts.existeSimbolo(pila):
         print('La pila ya existe')
         err = 'Error el valor ',instr.id,'La pila ya existe',' En la linea: ',instr.linea,' En la columna: ',instr.columna, 'Tipo: SEMANTICO'
@@ -673,7 +673,7 @@ def procesar_inicioPila(instr,ts):
 
 def procesar_asignacion_punteropila(instr,ts):
     valor=resolver_expresion_aritmetica(instr.exp,ts)
-    punteropila = TS.Simbolo(instr.id,td.INT,valor)
+    punteropila = TS.Simbolo(instr.id,td.INT,valor,Etiqueta)
     if ts.existeSimbolo(punteropila):
         ts.actualizar(punteropila)
     else:
@@ -686,7 +686,7 @@ def procesar_asignacion_pila (instr,ts):
         valor = resolver_expresion_aritmetica(instr.exp,ts)
         pila.insert(pos,valor)
 
-        nuevapila = TS.Simbolo(instr.id,td.PILA,pila)
+        nuevapila = TS.Simbolo(instr.id,td.PILA,pila,Etiqueta)
 
         if ts.existeSimbolo(nuevapila):
             ts.actualizar(nuevapila)
@@ -700,7 +700,7 @@ def procesar_asignacion_pila (instr,ts):
 def procesar_asignacion_extra (instr,ts):
     try:
         val = resolver_expresion_aritmetica(instr.exp, ts)
-        simbolo = TS.Simbolo(instr.id, instr.exp.tipo, val)
+        simbolo = TS.Simbolo(instr.id, instr.exp.tipo, val,Etiqueta)
         if ts.existeSimbolo(simbolo) :
             ts.actualizar(simbolo)
         else:
@@ -730,6 +730,7 @@ def procesar_asignacion_arreglo (instr,ts):
                 diccionario=diccionario.get(indice)
 
 def procesa_Label(instr,ts):
+    global Etiqueta
     Etiqueta=str(instr.id)
 
 def Llamada_goto(instr,ts,listasiguientes):  
@@ -785,7 +786,9 @@ def procesar_instrucciones(instrucciones, ts) :
             elif isinstance(instr,AsignaPunteroPila): procesar_asignacion_punteropila(instr,ts)
             elif isinstance(instr,AsignaValorPila): procesar_asignacion_pila(instr,ts)
             elif isinstance(instr, AsignacionExtra): procesar_asignacion_extra(instr,ts)
-            elif isinstance(instr, Main): Etiqueta = 'Main'
+            elif isinstance(instr, Main): 
+                global Etiqueta
+                Etiqueta = 'Main'
             elif isinstance(instr,Asigna_arreglo): procesar_asignacion_arreglo(instr,ts)
             elif isinstance(instr,Label): procesa_Label(instr,ts)
             elif isinstance(instr,Exit): sys.exit()
@@ -818,7 +821,9 @@ def procesar_instrucciones_debugger(instrucciones, ts, i) :
             elif isinstance(instrucciones[i],AsignaPunteroPila): procesar_asignacion_punteropila(instrucciones[i],ts)
             elif isinstance(instrucciones[i],AsignaValorPila): procesar_asignacion_pila(instrucciones[i],ts)
             elif isinstance(instrucciones[i], AsignacionExtra): procesar_asignacion_extra(instrucciones[i],ts)
-            elif isinstance(instrucciones[i], Main): Etiqueta = 'Main'
+            elif isinstance(instrucciones[i], Main):
+                global Etiqueta
+                Etiqueta = 'Main'
             elif isinstance(instrucciones[i],Asigna_arreglo): procesar_asignacion_arreglo(instrucciones[i],ts)
             elif isinstance(instrucciones[i],Label): procesa_Label(instrucciones[i],ts)
             elif isinstance(instrucciones[i],Exit): sys.exit()
@@ -833,6 +838,7 @@ def procesar_instrucciones_debugger(instrucciones, ts, i) :
             insta = M()
             insta.OkMessage()
             insta.cerrar()
+            return
     else:
         print('Error la etiqueta main no esta al inicio del programa o no existe')
         err = 'Error la etiqueta main no esta al inicio del programa o no existe',' En la linea: ',instrucciones[i].linea,' En la columna: ',instrucciones[i].columna, 'Tipo: SEMANTICO'
@@ -1134,11 +1140,11 @@ def DibujarAST(instrucciones):
 
 #------------------------------------------------------------REPORTES
 def ReporteTS():
-    generado = '<<table border=\'0\' cellborder=\'1\' color=\'blue\' cellspacing='+'\'0\''+'><tr><td colspan=\'4\'>TABLA DE SIMBOLOS</td></tr><tr><td>No.</td><td>identificador</td><td>valor</td><td>tipo</td></tr>'
+    generado = '<<table border=\'0\' cellborder=\'1\' color=\'blue\' cellspacing='+'\'0\''+'><tr><td colspan=\'5\'>TABLA DE SIMBOLOS</td></tr><tr><td>No.</td><td>identificador</td><td>valor</td><td>tipo</td><td>Etiqueta</td></tr>'
     cont = 0
 
     for i in ts_global.simbolos:
-        generado += '<tr><td>'+str(cont)+'</td><td>'+str(ts_global.obtener(i).id)+'</td><td>'+str(ts_global.obtener(i).valor)+'</td><td>'+str(ts_global.obtener(i).tipo.name)+'</td></tr>'
+        generado += '<tr><td>'+str(cont)+'</td><td>'+str(ts_global.obtener(i).id)+'</td><td>'+str(ts_global.obtener(i).valor)+'</td><td>'+str(ts_global.obtener(i).tipo.name)+'</td><td>'+str(ts_global.obtener(i).amb)+'</td></tr>'
         cont +=1
     generado +=' </table>>'
 
@@ -1240,10 +1246,15 @@ def ejecutar_debug(input,i):
     import gramatica as l
     global gram
     global instrucciones
+    try:
+        gram = l.verGramatica()
+        instrucciones = l.parse(input) 
+        procesar_instrucciones_debugger(instrucciones,ts_global,i)
+    except :
+        s = M()
+        s.OkMessage()
+        s.cerrar()
 
-    gram = l.verGramatica()
-    instrucciones = l.parse(input) 
-    procesar_instrucciones_debugger(instrucciones,ts_global,i)
 
 class objetopila():
 
