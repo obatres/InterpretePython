@@ -223,7 +223,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
-
+        self.i = 0
         layout = QVBoxLayout()
         self.editor = PlainTextEdit()
         self.consola = QPlainTextEdit()
@@ -370,7 +370,7 @@ class MainWindow(QMainWindow):
 
         EjecutarDeb = QAction("Ejecutar Debug",self)  
         EjecutarDeb.setStatusTip("Ejecutar Debug")
-        EjecutarDeb.triggered.connect(self.getInteger)  
+        EjecutarDeb.triggered.connect(self.EjecutarDeb)  
         Ejecutar_menu.addAction(EjecutarDeb)
         Ejec_toolbar.addAction(EjecutarDeb)
 
@@ -590,7 +590,8 @@ class MainWindow(QMainWindow):
         f.errores_asc()
         f.ReporteErrores()
         f.ReporteTS()
-        #f.DibujarAST()
+        f.ReporteGramatical()
+        f.GenerarAST()
         s = f.RecibirSalida()
         self.consola.setPlainText(s)
         return 
@@ -602,15 +603,33 @@ class MainWindow(QMainWindow):
         j.errores_desc()
         j.ReporteErrores()
         j.ReporteTS()
-        #j.DibujarAST()
+        j.ReporteGramatical()
+        j.GenerarAST()
         s = j.RecibirSalida()
         self.consola.setPlainText(s)
         return None
-
+    
+    def EjecutarDeb(self):
+        import principal as de 
+        self.consola.clear()
+        de.ejecutar_debug(self.editor.toPlainText(),self.i)
+        de.ReporteTS()
+        de.ReporteErrores()
+        self.i =  self.i + 1
+        s = de.RecibirSalida()
+        self.consola.setPlainText(s)
+        
+    
     def ReporteGramatical(self):
         import principal as l
         l.ReporteGramatical()
 
+    def OkMessage(self):
+        #buttonReply = QMessageBox.question(self, 'PyQt5 message', "Do you want to save?", QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, QMessageBox.Cancel)
+        btn = QMessageBox.information(self, 'FIN',
+                'Terminada la ejecucion del debug',
+                QMessageBox.Yes)
+        
 
 if __name__ == '__main__':
     

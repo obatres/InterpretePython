@@ -802,7 +802,43 @@ def procesar_instrucciones(instrucciones, ts) :
         err = 'Error la etiqueta main no esta al inicio del programa o no existe',' En la linea: ',instr.linea,' En la columna: ',instr.columna, 'Tipo: SEMANTICO'
         errores.append(err) 
 #-----------------------------------------------------------TERMINA ANALISIS SEMANTICO
+#------------------------------------------DEBUGGER
+def procesar_instrucciones_debugger(instrucciones, ts, i) :
+    ## lista de instrucciones recolectadas
+    if isinstance(instrucciones[0],Main):
+        if i <= len(instrucciones):
+            if isinstance(instrucciones[i], Imprimir) : procesar_imprimir(instrucciones[i], ts)
+            elif isinstance(instrucciones[i], Definicion) : procesar_definicion(instrucciones[i], ts)
+            elif isinstance(instrucciones[i], Asignacion) : procesar_asignacion(instrucciones[i], ts)
+            elif isinstance(instrucciones[i], Mientras) : procesar_mientras(instrucciones[i], ts)
+            elif isinstance(instrucciones[i], If) : procesar_if(instrucciones[i], ts)
+            elif isinstance(instrucciones[i], IfElse) : procesar_if_else(instrucciones[i], ts)
+            elif isinstance(instrucciones[i], Unset) : procesar_unset(instrucciones[i],ts)
+            elif isinstance(instrucciones[i],IniciaPila): procesar_inicioPila(instrucciones[i],ts)
+            elif isinstance(instrucciones[i],AsignaPunteroPila): procesar_asignacion_punteropila(instrucciones[i],ts)
+            elif isinstance(instrucciones[i],AsignaValorPila): procesar_asignacion_pila(instrucciones[i],ts)
+            elif isinstance(instrucciones[i], AsignacionExtra): procesar_asignacion_extra(instrucciones[i],ts)
+            elif isinstance(instrucciones[i], Main): Etiqueta = 'Main'
+            elif isinstance(instrucciones[i],Asigna_arreglo): procesar_asignacion_arreglo(instrucciones[i],ts)
+            elif isinstance(instrucciones[i],Label): procesa_Label(instrucciones[i],ts)
+            elif isinstance(instrucciones[i],Exit): sys.exit()
+            elif isinstance(instrucciones[i],Goto): 
+                Llamada_goto(instrucciones[i],ts, instrucciones)
+                return
+            
+            else : 
+                err = 'Error: instrucción no válida', instrucciones[i],' En la linea: ',instrucciones[i].linea,' En la columna: ',instrucciones[i].columna, 'Tipo: SEMANTICO'
+                errores.append(err) 
+        else:
+            insta = M()
+            insta.OkMessage()
+            insta.cerrar()
+    else:
+        print('Error la etiqueta main no esta al inicio del programa o no existe')
+        err = 'Error la etiqueta main no esta al inicio del programa o no existe',' En la linea: ',instrucciones[i].linea,' En la columna: ',instrucciones[i].columna, 'Tipo: SEMANTICO'
+        errores.append(err) 
 
+#-----------------------------------------FINALIZA DEBUGGER
 #-----------------------------------------------------------INICIA GRAFICACION DEL AST
 def dibujar_exit(instr,root,cont):
     cont=cont+1
@@ -1067,7 +1103,9 @@ def dibujar_expresion(instr,root,cont):
 
         for i in instr.lista:
             cont = dibujar_expresion(i,nodo2,cont)
-        
+    elif isinstance(instr,Read):
+        dot.node(nodo1,"Read ( )") 
+
     dot.edge(nodo,nodo1)
 
     return cont
@@ -1163,7 +1201,6 @@ def ejecutar_asc(input):
     instrucciones = g.parse(input) 
     procesar_instrucciones(instrucciones, ts_global)   
 
-
 def errores_asc():
     import gramatica as g
     global errores
@@ -1199,6 +1236,14 @@ def RecibirSalida():
     nuevo = copy.copy(resultado)
     return nuevo
    
+def ejecutar_debug(input,i):
+    import gramatica as l
+    global gram
+    global instrucciones
+
+    gram = l.verGramatica()
+    instrucciones = l.parse(input) 
+    procesar_instrucciones_debugger(instrucciones,ts_global,i)
 
 class objetopila():
 

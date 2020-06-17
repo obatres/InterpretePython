@@ -4,276 +4,66 @@ digraph AST {
 	nodo1 -> nodo2
 	nodo3 [label=Main]
 	nodo2 -> nodo3
-	nodo4 [label=IniciaPila]
+	nodo4 [label=Asignacion]
 	nodo1 -> nodo4
-	nodo5 [label="$s0"]
+	nodo5 [label="$t3"]
 	nodo4 -> nodo5
-	nodo6 [label=AsignaPunteroPila]
-	nodo1 -> nodo6
-	nodo7 [label="$sp"]
+	nodo6 [label=Exp]
+	nodo4 -> nodo6
+	nodo7 [label="Read ( )"]
 	nodo6 -> nodo7
-	nodo8 [label=Exp]
-	nodo6 -> nodo8
-	nodo9 [label=4]
+	nodo8 [label=Asignacion]
+	nodo1 -> nodo8
+	nodo9 [label="$t1"]
 	nodo8 -> nodo9
-	nodo10 [label=AsignaPunteroPila]
-	nodo1 -> nodo10
-	nodo11 [label="$sp"]
+	nodo10 [label=Exp]
+	nodo8 -> nodo10
+	nodo11 [label=2]
 	nodo10 -> nodo11
-	nodo12 [label=Exp]
-	nodo10 -> nodo12
-	nodo14 [label=Exp]
-	nodo13 -> nodo14
-	nodo15 [label="$sp"]
-	nodo14 -> nodo15
-	nodo13 [label=MAS]
-	nodo16 [label=Exp]
-	nodo13 -> nodo16
-	nodo17 [label=1]
-	nodo16 -> nodo17
+	nodo12 [label=Asignacion]
+	nodo1 -> nodo12
+	nodo13 [label="$t2"]
 	nodo12 -> nodo13
-	nodo18 [label=AsignaValorPila]
-	nodo1 -> nodo18
-	nodo19 [label="$s0"]
-	nodo18 -> nodo19
-	nodo20 [label="$sp"]
-	nodo18 -> nodo20
-	nodo21 [label=Exp]
-	nodo18 -> nodo21
-	nodo22 [label=2]
-	nodo21 -> nodo22
-	nodo23 [label=AsignaPunteroPila]
-	nodo1 -> nodo23
-	nodo24 [label="$sp"]
+	nodo14 [label=Exp]
+	nodo12 -> nodo14
+	nodo15 [label=saasd]
+	nodo14 -> nodo15
+	nodo16 [label=Print]
+	nodo1 -> nodo16
+	nodo17 [label=Exp]
+	nodo16 -> nodo17
+	nodo18 [label="$t1"]
+	nodo17 -> nodo18
+	nodo19 [label=Print]
+	nodo1 -> nodo19
+	nodo20 [label=Exp]
+	nodo19 -> nodo20
+	nodo21 [label="$t2"]
+	nodo20 -> nodo21
+	nodo22 [label=Print]
+	nodo1 -> nodo22
+	nodo23 [label=Exp]
+	nodo22 -> nodo23
+	nodo24 [label="$t3"]
 	nodo23 -> nodo24
-	nodo25 [label=Exp]
-	nodo23 -> nodo25
-	nodo27 [label=Exp]
-	nodo26 -> nodo27
-	nodo28 [label="$sp"]
-	nodo27 -> nodo28
-	nodo26 [label=MAS]
-	nodo29 [label=Exp]
-	nodo26 -> nodo29
-	nodo30 [label=1]
-	nodo29 -> nodo30
+	nodo25 [label=AsignaRegistro]
+	nodo1 -> nodo25
+	nodo26 [label="$a0"]
 	nodo25 -> nodo26
-	nodo31 [label=AsignaValorPila]
+	nodo27 [label=Exp]
+	nodo25 -> nodo27
+	nodo28 [label=0]
+	nodo27 -> nodo28
+	nodo29 [label=Etiqueta]
+	nodo1 -> nodo29
+	nodo30 [label=label]
+	nodo29 -> nodo30
+	nodo31 [label=Etiqueta]
 	nodo1 -> nodo31
-	nodo32 [label="$s0"]
+	nodo32 [label=label2]
 	nodo31 -> nodo32
-	nodo33 [label="$sp"]
-	nodo31 -> nodo33
-	nodo34 [label=Exp]
-	nodo31 -> nodo34
-	nodo35 [label=3]
-	nodo34 -> nodo35
-	nodo36 [label=AsignaPunteroPila]
-	nodo1 -> nodo36
-	nodo37 [label="$sp"]
-	nodo36 -> nodo37
-	nodo38 [label=Exp]
-	nodo36 -> nodo38
-	nodo40 [label=Exp]
-	nodo39 -> nodo40
-	nodo41 [label="$sp"]
-	nodo40 -> nodo41
-	nodo39 [label=MAS]
-	nodo42 [label=Exp]
-	nodo39 -> nodo42
-	nodo43 [label=1]
-	nodo42 -> nodo43
-	nodo38 -> nodo39
-	nodo44 [label=AsignaValorPila]
-	nodo1 -> nodo44
-	nodo45 [label="$s0"]
-	nodo44 -> nodo45
-	nodo46 [label="$sp"]
-	nodo44 -> nodo46
-	nodo47 [label=Exp]
-	nodo44 -> nodo47
-	nodo48 [label=sad]
-	nodo47 -> nodo48
-	nodo49 [label=AsignaPunteroPila]
-	nodo1 -> nodo49
-	nodo50 [label="$sp"]
-	nodo49 -> nodo50
-	nodo51 [label=Exp]
-	nodo49 -> nodo51
-	nodo52 [label=0]
-	nodo51 -> nodo52
-	nodo53 [label=Asignacion]
-	nodo1 -> nodo53
-	nodo54 [label="$t1"]
-	nodo53 -> nodo54
-	nodo55 [label=Exp]
-	nodo53 -> nodo55
-	nodo56 [label="$s0"]
-	nodo56 [label="$sp"]
-	nodo55 -> nodo56
-	nodo57 [label=Print]
-	nodo1 -> nodo57
-	nodo58 [label=Exp]
-	nodo57 -> nodo58
-	nodo59 [label="$t1"]
-	nodo58 -> nodo59
-	nodo60 [label=Print]
-	nodo1 -> nodo60
-	nodo61 [label=Exp]
-	nodo60 -> nodo61
-	nodo62 [label="$s0"]
-	nodo61 -> nodo62
-	nodo63 [label=Print]
-	nodo1 -> nodo63
-	nodo64 [label=Exp]
-	nodo63 -> nodo64
-	nodo65 [label="$sp"]
-	nodo64 -> nodo65
-	nodo66 [label=Goto]
-	nodo1 -> nodo66
-	nodo67 [label=label1]
-	nodo66 -> nodo67
-	nodo68 [label=Etiqueta]
-	nodo1 -> nodo68
-	nodo69 [label=label1]
-	nodo68 -> nodo69
-	nodo70 [label=If]
-	nodo1 -> nodo70
-	nodo71 [label=Exp]
-	nodo70 -> nodo71
-	nodo73 [label=Exp]
-	nodo72 -> nodo73
-	nodo74 [label=2]
-	nodo73 -> nodo74
-	nodo72 [label=MAYOR_QUE]
-	nodo75 [label=Exp]
-	nodo72 -> nodo75
-	nodo76 [label=3]
-	nodo75 -> nodo76
-	nodo71 -> nodo72
-	nodo77 [label=Goto]
-	nodo70 -> nodo77
-	nodo78 [label=label4]
-	nodo77 -> nodo78
-	nodo79 [label=AsignaRegistro]
-	nodo1 -> nodo79
-	nodo80 [label="$a1"]
-	nodo79 -> nodo80
-	nodo81 [label=Exp]
-	nodo79 -> nodo81
-	nodo83 [label=Exp]
-	nodo82 -> nodo83
-	nodo84 [label=5]
-	nodo83 -> nodo84
-	nodo82 [label=MAS]
-	nodo85 [label=Exp]
-	nodo82 -> nodo85
-	nodo86 [label=5]
-	nodo85 -> nodo86
-	nodo81 -> nodo82
-	nodo87 [label=AsignaRegistro]
-	nodo1 -> nodo87
-	nodo88 [label="$a2"]
-	nodo87 -> nodo88
-	nodo89 [label=Exp]
-	nodo87 -> nodo89
-	nodo90 [label="$a1"]
-	nodo89 -> nodo90
-	nodo91 [label=AsignaRegistro]
-	nodo1 -> nodo91
-	nodo92 [label="$ra"]
-	nodo91 -> nodo92
-	nodo93 [label=Exp]
-	nodo91 -> nodo93
-	nodo94 [label="$a2"]
-	nodo93 -> nodo94
-	nodo95 [label=AsignaRegistro]
-	nodo1 -> nodo95
-	nodo96 [label="$v2"]
-	nodo95 -> nodo96
-	nodo97 [label=Exp]
-	nodo95 -> nodo97
-	nodo98 [label="$ra"]
-	nodo97 -> nodo98
-	nodo99 [label=Print]
-	nodo1 -> nodo99
-	nodo100 [label=Exp]
-	nodo99 -> nodo100
-	nodo101 [label="$v2"]
-	nodo100 -> nodo101
-	nodo102 [label=Asignacion]
-	nodo1 -> nodo102
-	nodo103 [label="$t10"]
-	nodo102 -> nodo103
-	nodo104 [label=Exp]
-	nodo102 -> nodo104
-	nodo105 [label="Inicia Array"]
-	nodo104 -> nodo105
-	nodo106 [label=AsignaArreglo]
-	nodo1 -> nodo106
-	nodo107 [label="$t10"]
-	nodo106 -> nodo107
-	nodo107 [label="$t10"]
-	nodo108 [label=acceso]
-	nodo106 -> nodo108
-	nodo109 [label=Exp]
-	nodo108 -> nodo109
-	nodo110 [label=as]
-	nodo109 -> nodo110
-	nodo111 [label=Exp]
-	nodo108 -> nodo111
-	nodo112 [label=1]
-	nodo111 -> nodo112
-	nodo113 [label=Exp]
-	nodo108 -> nodo113
-	nodo114 [label=2]
-	nodo113 -> nodo114
-	nodo115 [label=Exp]
-	nodo108 -> nodo115
-	nodo116 [label=5]
-	nodo115 -> nodo116
-	nodo117 [label=Exp]
-	nodo106 -> nodo117
-	nodo118 [label="Hola mundo"]
-	nodo117 -> nodo118
-	nodo119 [label=Asignacion]
-	nodo1 -> nodo119
-	nodo120 [label="$t11"]
-	nodo119 -> nodo120
-	nodo121 [label=Exp]
-	nodo119 -> nodo121
-	nodo122 [label="$t10"]
-	nodo123 [label=acceso]
-	nodo121 -> nodo123
-	nodo124 [label=Exp]
-	nodo123 -> nodo124
-	nodo125 [label=as]
-	nodo124 -> nodo125
-	nodo126 [label=Exp]
-	nodo123 -> nodo126
-	nodo127 [label=1]
-	nodo126 -> nodo127
-	nodo128 [label=Exp]
-	nodo123 -> nodo128
-	nodo129 [label=2]
-	nodo128 -> nodo129
-	nodo121 -> nodo122
-	nodo130 [label=Print]
-	nodo1 -> nodo130
-	nodo131 [label=Exp]
-	nodo130 -> nodo131
-	nodo132 [label="$t11"]
-	nodo131 -> nodo132
-	nodo133 [label=Print]
-	nodo1 -> nodo133
-	nodo134 [label=Exp]
-	nodo133 -> nodo134
-	nodo135 [label="hola \n mundo"]
-	nodo134 -> nodo135
-	nodo136 [label=Etiqueta]
-	nodo1 -> nodo136
-	nodo137 [label=label4]
-	nodo136 -> nodo137
-	nodo138 [label=Exit]
-	nodo1 -> nodo138
+	nodo33 [label=Etiqueta]
+	nodo1 -> nodo33
+	nodo34 [label=label3]
+	nodo33 -> nodo34
 }
