@@ -1,4 +1,4 @@
 digraph Errores {
 	node [shape=plaintext]
-	"node" [label=<<table border='0' cellborder='1' color='blue' cellspacing='0'><tr><td colspan='2'>LISTADO DE ERRORES</td></tr><tr><td>No.</td><td>Error</td></tr><tr><td>0</td><td>('Error el valor ', '$s0', 'La pila ya existe', ' En la linea: ', 13, ' En la columna: ', 5, 'Tipo: SEMANTICO')</td></tr> </table>>]
+	"node" [label=<<table border='0' cellborder='1' color='blue' cellspacing='0'><tr><td colspan='2'>LISTADO DE ERRORES</td></tr><tr><td>No.</td><td>Error</td></tr> </table>>]
 }

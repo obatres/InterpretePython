@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
 
-
+import copy
 import os
 import sys
 import uuid
@@ -364,6 +364,7 @@ class MainWindow(QMainWindow):
 
         EjecutarDesc = QAction("Ejecutar Desc",self)  
         EjecutarDesc.setStatusTip("Ejecutar Desc")
+        EjecutarDesc.triggered.connect(self.EjecutarDesc)  
         Ejecutar_menu.addAction(EjecutarDesc)
         Ejec_toolbar.addAction(EjecutarDesc)
 
@@ -578,15 +579,32 @@ class MainWindow(QMainWindow):
         return self.editor.toPlainText()
 
     def EjecutarAsc(self):
-        import principal as p
-        f = p
-
+        import principal as f
+        self.consola.clear()
         f.ejecutar_asc(self.editor.toPlainText())
         f.errores_asc()
         f.ReporteErrores()
         f.ReporteTS()
+        f.DibujarAST()
         s = f.RecibirSalida()
         self.consola.setPlainText(s)
+        return 
+
+    def EjecutarDesc(self):
+        import principal as j
+        self.consola.clear()
+        j.ejecutar_desc(self.editor.toPlainText())
+        j.errores_desc()
+        j.ReporteErrores()
+        j.ReporteTS()
+        j.DibujarAST()
+        s = j.RecibirSalida()
+        self.consola.setPlainText(s)
+        return None
+
+    def ReporteGramatical(self):
+        import principal as l
+        l.ReporteGramatical()
 
 
 if __name__ == '__main__':

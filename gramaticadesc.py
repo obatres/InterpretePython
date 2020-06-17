@@ -538,7 +538,7 @@ def p_if_instr(t) :
 
 def p_asignacion_instr(t) :
     'asignacion_instr   : TEMPORAL IGUAL expresion PTCOMA'
-    t[0] =Asignacion(t[1], t[3]),t.lineno(1),get_clomuna(entry,t.slice[1])
+    t[0] =Asignacion(t[1], t[3],t.lineno(1),get_clomuna(entry,t.slice[1]))
     asc.append('asignacion_instr   - TEMPORAL IGUAL expresion PTCOMA')
 
 #Recibe expresiones logicas y relacionales

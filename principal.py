@@ -6,7 +6,7 @@ from instrucciones import *
 from graphviz import Digraph
 from ts import TIPO_DATO as td
 from _pydecimal import Decimal
-
+import copy
 from Interfaz import MainWindow as M 
 
 true = 1
@@ -1129,7 +1129,7 @@ def ReporteGramatical():
 
 
 #INICIALIZACION DE VARIABLES
-ts_global = ''
+ts_global = TS.TablaDeSimbolos()
 gram = []
 instrucciones=[]
 errores= []
@@ -1140,13 +1140,10 @@ def ejecutar_asc(input):
     import gramatica as g
     global gram
     global instrucciones
-    global ts_global
-    resultado = ''
-    ts_global = TS.TablaDeSimbolos()
     gram = g.verGramatica()
     instrucciones = g.parse(input) 
     procesar_instrucciones(instrucciones, ts_global)   
-    #return instrucciones
+
 
 def errores_asc():
     import gramatica as g
@@ -1161,6 +1158,7 @@ def ejecutar_desc(input):
     global instrucciones
     instrucciones = gdes.parse(input)
     gram = gdes.verGramatica()
+    procesar_instrucciones(instrucciones, ts_global)   
     return instrucciones
 
 def errores_desc():
@@ -1168,7 +1166,6 @@ def errores_desc():
     global errores
     errores = gdes.retornalista()
     return errores
-
 
 def GenerarAST():
     try:
@@ -1179,7 +1176,9 @@ def GenerarAST():
         pass
 
 def RecibirSalida():
-    return resultado
+    global resultado
+    nuevo = copy.copy(resultado)
+    return nuevo
    
 
 class objetopila():
