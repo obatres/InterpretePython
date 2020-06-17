@@ -1,6 +1,11 @@
 main:
+    $s0 = array();
+    $sp=0;
+    $s0[$sp]='sad';
     $t1 = 2;
+    $t2 ="saasd";
     print($t1);
+    print($t2);
     $a0= 0;
 label:
 label2:

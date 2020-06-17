@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
 
-import principal as p
+
 import os
 import sys
 import uuid
@@ -217,7 +217,6 @@ class PlainTextEdit(QPlainTextEdit):
             top = bottom
             bottom = top + self.blockBoundingRect(block).height()
             blockNumber += 1
-
 
 
 class MainWindow(QMainWindow):
@@ -579,11 +578,16 @@ class MainWindow(QMainWindow):
         return self.editor.toPlainText()
 
     def EjecutarAsc(self):
-        p.ejecutar_asc(self.editor.toPlainText())
-        p.errores_asc()
-        p.ReporteErrores()
-        p.ReporteTS()
-        #elf.consola.setPlainText(self.entrada)
+        import principal as p
+        f = p
+
+        f.ejecutar_asc(self.editor.toPlainText())
+        f.errores_asc()
+        f.ReporteErrores()
+        f.ReporteTS()
+        s = f.RecibirSalida()
+        self.consola.setPlainText(s)
+
 
 if __name__ == '__main__':
     

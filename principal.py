@@ -7,19 +7,24 @@ from graphviz import Digraph
 from ts import TIPO_DATO as td
 from _pydecimal import Decimal
 
+from Interfaz import MainWindow as M 
 
 true = 1
 false = 0
 Etiqueta = ''
+
 #-----------------------------------------------------------INICIA ANALISIS SEMANTICO
 def procesar_imprimir(instr, ts) :
 
     try:
             
-        if not ts.obtener(instr.exp.id).tipo == td.ARRAY:
+        if not ts.obtener(instr.exp.id).tipo == td.ARRAY or ts.obtener(instr.exp.id).tipo == td.PILA:
             #salida = resolver_registro(instr.exp,ts)
             salida = resolver_expresion_aritmetica(instr.exp,ts)
             print('>', salida)
+            global resultado
+            
+            resultado += '>'+str(salida)+'\n'
             return  str(salida) + '\n'
         else:
             #print('Error, no se puede imprimir un arreglo')
@@ -1121,20 +1126,23 @@ def ReporteGramatical():
 #-----------------------------------------------------------EJECUCION DEL ANALIZADOR
 
 
-f = open("./entrada.txt", "r")
-input = f.read()
 
-#INICIALIZACION DE LA TABLA DE SIMBOLOS
-ts_global = TS.TablaDeSimbolos()
+
+#INICIALIZACION DE VARIABLES
+ts_global = ''
 gram = []
 instrucciones=[]
 errores= []
 dot = Digraph('AST',filename='AST')
+resultado = ''
 #ANALIZADOR ASCENDENTE
 def ejecutar_asc(input):
     import gramatica as g
     global gram
     global instrucciones
+    global ts_global
+    resultado = ''
+    ts_global = TS.TablaDeSimbolos()
     gram = g.verGramatica()
     instrucciones = g.parse(input) 
     procesar_instrucciones(instrucciones, ts_global)   
@@ -1146,8 +1154,6 @@ def errores_asc():
     errores = g.retornalista()
     return errores 
 
-ejecutar_asc(input)
-ReporteTS()
 #ANALIZADOR DESCENDENTE
 def ejecutar_desc(input):
     import gramaticadesc as gdes
@@ -1163,8 +1169,6 @@ def errores_desc():
     errores = gdes.retornalista()
     return errores
 
-    
-
 
 def GenerarAST():
     try:
@@ -1174,7 +1178,8 @@ def GenerarAST():
         print('error al imprimir arbol')
         pass
 
-
+def RecibirSalida():
+    return resultado
    
 
 class objetopila():
@@ -1183,3 +1188,5 @@ class objetopila():
         self.valor = valor
         self.tipo = tipo
 
+
+        
