@@ -6,21 +6,31 @@ from instrucciones import *
 from graphviz import Digraph
 from ts import TIPO_DATO as td
 from _pydecimal import Decimal
+import copy
+from Interfaz import MainWindow as M
+import re
 
 true = 1
 false = 0
+Etiqueta = ''
+
 #-----------------------------------------------------------INICIA ANALISIS SEMANTICO
 def procesar_imprimir(instr, ts) :
 
     try:
             
-        #if not ts.obtener(instr.exp.id).tipo == td.ARRAY:
+        if not ts.obtener(instr.exp.id).tipo == td.ARRAY or ts.obtener(instr.exp.id).tipo == td.PILA:
             #salida = resolver_registro(instr.exp,ts)
             salida = resolver_expresion_aritmetica(instr.exp,ts)
             print('>', salida)
+            global resultado
+            
+            resultado += '>'+str(salida)+'\n'
             return  str(salida) + '\n'
-        #else:
+        else:
             #print('Error, no se puede imprimir un arreglo')
+            err = 'Error de tipo, no se puede imprimir el valor',instr.exp.id ,'En la linea: ',instr.linea,'En la columna: ',instr.columna, 'Tipo: SEMANTICO'
+            errores.append(err)
     except:
         print('error de impresion, valor o variabe no encontrados: ',instr.exp.id ) 
         print(instr.linea,instr.columna)
@@ -620,6 +630,23 @@ def resolver_expresion_aritmetica(expNum, ts) :
         elif isinstance (temporal,dict): expNum.tipo = td.ARRAY
         return temporal            
     
+    elif isinstance(expNum,Read):
+        val = M()
+        res = val.getInteger()
+        val.cerrar()
+        patronFloat = re.compile('([0-9]+(\.)[0-9]+){1}')
+        patronNum = re.compile('[0-9]+')
+        if patronFloat.match(res):
+            expNum.val = float(res)
+            expNum.tipo = td.FLOAT
+        elif patronNum.match(res):
+            expNum.val = int(res)
+            expNum.tipo = td.INT
+        else:
+            expNum.val = str(res)
+            expNum.tipo = td.CADENA
+        return expNum.val
+    
     else:
         print(expNum)
         err = 'Error, no existe un valor en el indice: ',ind,' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
@@ -703,7 +730,7 @@ def procesar_asignacion_arreglo (instr,ts):
                 diccionario=diccionario.get(indice)
 
 def procesa_Label(instr,ts):
-    print(instr.id)
+    Etiqueta=str(instr.id)
 
 def Llamada_goto(instr,ts,listasiguientes):  
     siguientes = []
@@ -742,6 +769,7 @@ def ejecutar_expresiones_label(listainstrucciones,ts,listaglobal):
                 err = 'Error: instrucción no válida', instr,' En la linea: ',instr.linea,' En la columna: ',instr.columna, 'Tipo: SEMANTICO'
                 errores.append(err) 
 
+
 def procesar_instrucciones(instrucciones, ts) :
     ## lista de instrucciones recolectadas
     if isinstance(instrucciones[0],Main):
@@ -757,7 +785,7 @@ def procesar_instrucciones(instrucciones, ts) :
             elif isinstance(instr,AsignaPunteroPila): procesar_asignacion_punteropila(instr,ts)
             elif isinstance(instr,AsignaValorPila): procesar_asignacion_pila(instr,ts)
             elif isinstance(instr, AsignacionExtra): procesar_asignacion_extra(instr,ts)
-            elif isinstance(instr, Main): print('')
+            elif isinstance(instr, Main): Etiqueta = 'Main'
             elif isinstance(instr,Asigna_arreglo): procesar_asignacion_arreglo(instr,ts)
             elif isinstance(instr,Label): procesa_Label(instr,ts)
             elif isinstance(instr,Exit): sys.exit()
@@ -1044,7 +1072,6 @@ def dibujar_expresion(instr,root,cont):
 
     return cont
 
-
 def DibujarAST(instrucciones):
     cont = 1
     root = 'nodo'+ str(cont)
@@ -1083,8 +1110,6 @@ def ReporteTS():
     dotTS.node('node',label=generado)
     dotTS.view()
 
-
-
 def ReporteErrores():
     generado = '<<table border=\'0\' cellborder=\'1\' color=\'blue\' cellspacing='+'\'0\''+'><tr><td colspan=\'2\'>LISTADO DE ERRORES</td></tr><tr><td>No.</td><td>Error</td></tr>'
     cont = 0
@@ -1111,86 +1136,75 @@ def ReporteGramatical():
     generado +=' </table>>'
 
     dotTS = Digraph('Reporte Gramatical',filename='ReporteGramatical')
-    print(generado)
+
     dotTS.attr('node',shape='plaintext')
     dotTS.node('node',label=generado)
     dotTS.view()
 #-----------------------------------------------------------TERMINA GRAFICACION DEL AST
 
 #-----------------------------------------------------------EJECUCION DEL ANALIZADOR
-f = open("./entrada.txt", "r")
-input = f.read()
 
+
+
+
+#INICIALIZACION DE VARIABLES
+ts_global = TS.TablaDeSimbolos()
 gram = []
-bandera = False
+instrucciones=[]
+errores= []
+dot = Digraph('AST',filename='AST')
+resultado = ''
 #ANALIZADOR ASCENDENTE
 def ejecutar_asc(input):
     import gramatica as g
     global gram
+    global instrucciones
     gram = g.verGramatica()
-    instrucciones = g.parse(input)    
-    return instrucciones
-
+    instrucciones = g.parse(input) 
+    procesar_instrucciones(instrucciones, ts_global)   
 
 
 def errores_asc():
     import gramatica as g
+    global errores
     errores = g.retornalista()
-    
     return errores 
-
 
 #ANALIZADOR DESCENDENTE
 def ejecutar_desc(input):
     import gramaticadesc as gdes
     global gram
+    global instrucciones
     instrucciones = gdes.parse(input)
     gram = gdes.verGramatica()
+    procesar_instrucciones(instrucciones, ts_global)   
     return instrucciones
-#instrucciones = ejecutar_desc(input)
 
 def errores_desc():
     import gramaticadesc as gdes
+    global errores
     errores = gdes.retornalista()
     return errores
-#errores = errores_desc()
 
-if bandera:
-    instrucciones = ejecutar_asc(input)
-    errores = errores_asc()
-    #print(list(reversed(gram)))
-    
-elif bandera==False:
-    instrucciones = ejecutar_desc(input)
-    errores = errores_desc()
-    print(gram)
+def GenerarAST():
+    try:
+        DibujarAST(instrucciones)
+        dot.view()
+    except :
+        print('error al imprimir arbol')
+        pass
 
+def RecibirSalida():
+    global resultado
+    nuevo = copy.copy(resultado)
+    return nuevo
+   
 
-#INICIALIZACION DE LA TABLA DE SIMBOLOS
-ts_global = TS.TablaDeSimbolos()
-
-
-dot = Digraph('AST',filename='AST')
-try:
-    DibujarAST(instrucciones)
-    #dot.view()
-
-except :
-    print('error al imprimir arbol')
-    pass
-
-try:
-    procesar_instrucciones(instrucciones, ts_global)
-except :
-    print('Error en parser')
-    pass
-
-ReporteGramatical()
-#rts =ReporteTS()
-#rer = ReporteErrores()
 class objetopila():
 
     def __init__(self, valor, tipo):
         self.valor = valor
         self.tipo = tipo
 
+
+        

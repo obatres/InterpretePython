@@ -1,8 +1,11 @@
-from graphviz import Digraph
-
-dotGR = Digraph('Reporte Gramatical',filename='Grmatical ASC')
-
-dotGR.node('init','init')
-dotGR.node('instrucciones','instrucciones')
-dotGR.edge('init','instrucciones')
-dotGR.view()
+import re
+t = 'asdasd654'
+patronFloat = re.compile('([0-9]+(\.)[0-9]+){1}')
+patronNum = re.compile('[0-9]+')
+if patronFloat.match(t):
+    print('float')
+elif patronNum.match(t):
+    print('entero')
+else:
+    print('cadena')
+    

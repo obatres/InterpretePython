@@ -179,3 +179,12 @@ class Exit():
     def __init__(self,  linea=0 , columna=0) :
         self.linea = linea
         self.columna = columna
+
+class Read():
+    '''
+        Nodo de tipo Read
+   
+    '''
+    def __init__(self,  linea=0 , columna=0) :
+        self.linea = linea
+        self.columna = columna
