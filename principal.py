@@ -7,20 +7,24 @@ from graphviz import Digraph
 from ts import TIPO_DATO as td
 from _pydecimal import Decimal
 
+
 true = 1
 false = 0
+Etiqueta = ''
 #-----------------------------------------------------------INICIA ANALISIS SEMANTICO
 def procesar_imprimir(instr, ts) :
 
     try:
             
-        #if not ts.obtener(instr.exp.id).tipo == td.ARRAY:
+        if not ts.obtener(instr.exp.id).tipo == td.ARRAY:
             #salida = resolver_registro(instr.exp,ts)
             salida = resolver_expresion_aritmetica(instr.exp,ts)
             print('>', salida)
             return  str(salida) + '\n'
-        #else:
+        else:
             #print('Error, no se puede imprimir un arreglo')
+            err = 'Error de tipo, no se puede imprimir el valor',instr.exp.id ,'En la linea: ',instr.linea,'En la columna: ',instr.columna, 'Tipo: SEMANTICO'
+            errores.append(err)
     except:
         print('error de impresion, valor o variabe no encontrados: ',instr.exp.id ) 
         print(instr.linea,instr.columna)
@@ -703,7 +707,7 @@ def procesar_asignacion_arreglo (instr,ts):
                 diccionario=diccionario.get(indice)
 
 def procesa_Label(instr,ts):
-    print(instr.id)
+    Etiqueta=str(instr.id)
 
 def Llamada_goto(instr,ts,listasiguientes):  
     siguientes = []
@@ -757,7 +761,7 @@ def procesar_instrucciones(instrucciones, ts) :
             elif isinstance(instr,AsignaPunteroPila): procesar_asignacion_punteropila(instr,ts)
             elif isinstance(instr,AsignaValorPila): procesar_asignacion_pila(instr,ts)
             elif isinstance(instr, AsignacionExtra): procesar_asignacion_extra(instr,ts)
-            elif isinstance(instr, Main): print('')
+            elif isinstance(instr, Main): Etiqueta = 'Main'
             elif isinstance(instr,Asigna_arreglo): procesar_asignacion_arreglo(instr,ts)
             elif isinstance(instr,Label): procesa_Label(instr,ts)
             elif isinstance(instr,Exit): sys.exit()
@@ -1044,7 +1048,6 @@ def dibujar_expresion(instr,root,cont):
 
     return cont
 
-
 def DibujarAST(instrucciones):
     cont = 1
     root = 'nodo'+ str(cont)
@@ -1083,8 +1086,6 @@ def ReporteTS():
     dotTS.node('node',label=generado)
     dotTS.view()
 
-
-
 def ReporteErrores():
     generado = '<<table border=\'0\' cellborder=\'1\' color=\'blue\' cellspacing='+'\'0\''+'><tr><td colspan=\'2\'>LISTADO DE ERRORES</td></tr><tr><td>No.</td><td>Error</td></tr>'
     cont = 0
@@ -1111,83 +1112,71 @@ def ReporteGramatical():
     generado +=' </table>>'
 
     dotTS = Digraph('Reporte Gramatical',filename='ReporteGramatical')
-    print(generado)
+
     dotTS.attr('node',shape='plaintext')
     dotTS.node('node',label=generado)
     dotTS.view()
 #-----------------------------------------------------------TERMINA GRAFICACION DEL AST
 
 #-----------------------------------------------------------EJECUCION DEL ANALIZADOR
+
+
 f = open("./entrada.txt", "r")
 input = f.read()
 
+#INICIALIZACION DE LA TABLA DE SIMBOLOS
+ts_global = TS.TablaDeSimbolos()
 gram = []
-bandera = False
+instrucciones=[]
+errores= []
+dot = Digraph('AST',filename='AST')
 #ANALIZADOR ASCENDENTE
 def ejecutar_asc(input):
     import gramatica as g
     global gram
+    global instrucciones
     gram = g.verGramatica()
-    instrucciones = g.parse(input)    
-    return instrucciones
-
-
+    instrucciones = g.parse(input) 
+    procesar_instrucciones(instrucciones, ts_global)   
+    #return instrucciones
 
 def errores_asc():
     import gramatica as g
+    global errores
     errores = g.retornalista()
-    
     return errores 
 
-
+ejecutar_asc(input)
+ReporteTS()
 #ANALIZADOR DESCENDENTE
 def ejecutar_desc(input):
     import gramaticadesc as gdes
     global gram
+    global instrucciones
     instrucciones = gdes.parse(input)
     gram = gdes.verGramatica()
     return instrucciones
-#instrucciones = ejecutar_desc(input)
 
 def errores_desc():
     import gramaticadesc as gdes
+    global errores
     errores = gdes.retornalista()
     return errores
-#errores = errores_desc()
 
-if bandera:
-    instrucciones = ejecutar_asc(input)
-    errores = errores_asc()
-    #print(list(reversed(gram)))
     
-elif bandera==False:
-    instrucciones = ejecutar_desc(input)
-    errores = errores_desc()
-    print(gram)
 
 
-#INICIALIZACION DE LA TABLA DE SIMBOLOS
-ts_global = TS.TablaDeSimbolos()
+def GenerarAST():
+    try:
+        DibujarAST(instrucciones)
+        dot.view()
+    except :
+        print('error al imprimir arbol')
+        pass
 
 
-dot = Digraph('AST',filename='AST')
-try:
-    DibujarAST(instrucciones)
-    #dot.view()
+   
 
-except :
-    print('error al imprimir arbol')
-    pass
-
-try:
-    procesar_instrucciones(instrucciones, ts_global)
-except :
-    print('Error en parser')
-    pass
-
-ReporteGramatical()
-#rts =ReporteTS()
-#rer = ReporteErrores()
 class objetopila():
 
     def __init__(self, valor, tipo):

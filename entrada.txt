@@ -1,7 +1,6 @@
 main:
-    $s0 = array();
-    $sp = 4;
-    $sp =$sp+1;
+    $t1 = 2;
+    print($t1);
     $a0= 0;
 label:
 label2:

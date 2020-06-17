@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
 
+import principal as p
 import os
 import sys
 import uuid
@@ -95,7 +96,6 @@ class Resaltado(QSyntaxHighlighter):
                 i = exp.indexIn(text, i + length)
 
         self.setCurrentBlockState(0)
-
 
 class TextEdit(QTextEdit):
 
@@ -227,7 +227,10 @@ class MainWindow(QMainWindow):
 
         layout = QVBoxLayout()
         self.editor = PlainTextEdit()
+        self.consola = QPlainTextEdit()
 
+        self.consola.setReadOnly(True)
+        self.entrada = ''
         # Setup the QTextEdit editor configuration
         
         #self.editor.setAutoFormatting(QTextEdit.AutoAll)
@@ -243,10 +246,9 @@ class MainWindow(QMainWindow):
         # If none, we haven't got a file open yet (or creating new).
         self.path = None
 
-        self.consola = TextEdit()
-        self.consola.setAutoFormatting(QTextEdit.AutoAll)
-        self.consola.setFont(font)
-        self.consola.setFontPointSize(12)
+        
+        
+        
         #self.consola.setTextBackgroundColor("grey")
 
         layout.addWidget(self.editor)
@@ -351,10 +353,15 @@ class MainWindow(QMainWindow):
         self.addToolBar(Ejec_toolbar)
         Ejecutar_menu = self.menuBar().addMenu("&Ejecutar")
         
+
         EjecutarPLY = QAction("Ejecutar Asc",self)  
         EjecutarPLY.setStatusTip("Ejecutar Asc")
+        EjecutarPLY.triggered.connect(self.EjecutarAsc)  
+        
         Ejecutar_menu.addAction(EjecutarPLY)
         Ejec_toolbar.addAction(EjecutarPLY)
+
+        #self.toolbar.addAction(EjecutarPLY)
 
         EjecutarDesc = QAction("Ejecutar Desc",self)  
         EjecutarDesc.setStatusTip("Ejecutar Desc")
@@ -496,13 +503,13 @@ class MainWindow(QMainWindow):
         dlg.setText(s)
         dlg.setIcon(QMessageBox.Critical)
         dlg.show()
-
+    
     def file_open(self):
         path, _ = QFileDialog.getOpenFileName(self, "Open file", "", "HTML documents (*.html);Text documents (*.txt);All files (*.*)")
-
         try:
             with open(path, 'rU') as f:
                 text = f.read()
+                self.entrada = text
                 highlight = Resaltado(self.editor.document())
                 highlight.highlightBlock(self.editor.toPlainText())
                 self.editor.setPlainText(text)  
@@ -561,12 +568,28 @@ class MainWindow(QMainWindow):
 
     def edit_toggle_wrap(self):
         self.editor.setLineWrapMode( 1 if self.editor.lineWrapMode() == 0 else 0 )
+    
+    def getInteger(self):
+        i, okPressed = QInputDialog.getInt(self, "Get integer","Percentage:", 28, 0, 100, 1)
+        if okPressed:
+            print(i)
 
+    
+    def getTexto(self):
+        return self.editor.toPlainText()
+
+    def EjecutarAsc(self):
+        p.ejecutar_asc(self.editor.toPlainText())
+        p.errores_asc()
+        p.ReporteErrores()
+        p.ReporteTS()
+        #elf.consola.setPlainText(self.entrada)
 
 if __name__ == '__main__':
-
+    
     app = QApplication(sys.argv)
     app.setApplicationName("AUGUS IDE")
 
     window = MainWindow()
+
     app.exec_()
