@@ -370,6 +370,7 @@ class MainWindow(QMainWindow):
 
         EjecutarDeb = QAction("Ejecutar Debug",self)  
         EjecutarDeb.setStatusTip("Ejecutar Debug")
+        EjecutarDeb.triggered.connect(self.getInteger)  
         Ejecutar_menu.addAction(EjecutarDeb)
         Ejec_toolbar.addAction(EjecutarDeb)
 
@@ -570,10 +571,14 @@ class MainWindow(QMainWindow):
         self.editor.setLineWrapMode( 1 if self.editor.lineWrapMode() == 0 else 0 )
     
     def getInteger(self):
-        i, okPressed = QInputDialog.getInt(self, "Get integer","Percentage:", 28, 0, 100, 1)
-        if okPressed:
-            print(i)
+        text, ok = QInputDialog().getText(self, "QInputDialog().getText()",
+                                     "User name:", QLineEdit.Normal,
+                                     "Valor de variable:")
+        if ok and text:
+            return text
 
+    def cerrar(self):
+        self.close()
     
     def getTexto(self):
         return self.editor.toPlainText()
@@ -585,7 +590,7 @@ class MainWindow(QMainWindow):
         f.errores_asc()
         f.ReporteErrores()
         f.ReporteTS()
-        f.DibujarAST()
+        #f.DibujarAST()
         s = f.RecibirSalida()
         self.consola.setPlainText(s)
         return 
@@ -597,7 +602,7 @@ class MainWindow(QMainWindow):
         j.errores_desc()
         j.ReporteErrores()
         j.ReporteTS()
-        j.DibujarAST()
+        #j.DibujarAST()
         s = j.RecibirSalida()
         self.consola.setPlainText(s)
         return None

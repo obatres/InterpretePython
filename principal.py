@@ -7,7 +7,8 @@ from graphviz import Digraph
 from ts import TIPO_DATO as td
 from _pydecimal import Decimal
 import copy
-from Interfaz import MainWindow as M 
+from Interfaz import MainWindow as M
+import re
 
 true = 1
 false = 0
@@ -629,6 +630,23 @@ def resolver_expresion_aritmetica(expNum, ts) :
         elif isinstance (temporal,dict): expNum.tipo = td.ARRAY
         return temporal            
     
+    elif isinstance(expNum,Read):
+        val = M()
+        res = val.getInteger()
+        val.cerrar()
+        patronFloat = re.compile('([0-9]+(\.)[0-9]+){1}')
+        patronNum = re.compile('[0-9]+')
+        if patronFloat.match(res):
+            expNum.val = float(res)
+            expNum.tipo = td.FLOAT
+        elif patronNum.match(res):
+            expNum.val = int(res)
+            expNum.tipo = td.INT
+        else:
+            expNum.val = str(res)
+            expNum.tipo = td.CADENA
+        return expNum.val
+    
     else:
         print(expNum)
         err = 'Error, no existe un valor en el indice: ',ind,' En la linea: ',expNum.linea,' En la columna: ',expNum.columna, 'Tipo: SEMANTICO'
@@ -750,6 +768,7 @@ def ejecutar_expresiones_label(listainstrucciones,ts,listaglobal):
                 print('Error: instrucción no válida', instr)
                 err = 'Error: instrucción no válida', instr,' En la linea: ',instr.linea,' En la columna: ',instr.columna, 'Tipo: SEMANTICO'
                 errores.append(err) 
+
 
 def procesar_instrucciones(instrucciones, ts) :
     ## lista de instrucciones recolectadas
