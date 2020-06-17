@@ -492,6 +492,7 @@ def p_expresion_cade(t) :
 #recibe: read()
 def p_expresion_read(t):
     'expresion_numerica : READ PARIZQ PARDER'
+    t[0] = Read (t.lineno(1),get_clomuna(entry,t.slice[1]))
     asc.append('expresion_numerica - READ PARIZQ PARDER ')
 
 def p_inicializacion_array(t):

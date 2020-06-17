@@ -1,8 +1,5 @@
-from graphviz import Digraph
-
-dotGR = Digraph('Reporte Gramatical',filename='Grmatical ASC')
-
-dotGR.node('init','init')
-dotGR.node('instrucciones','instrucciones')
-dotGR.edge('init','instrucciones')
-dotGR.view()
+from PyQt5.QtWidgets import  QInputDialog
+def getInteger(self):
+    i, okPressed = QInputDialog.getInt(self, "Get integer","Percentage:", 28, 0, 100, 1)
+    if okPressed:
+        print(i)
