@@ -586,52 +586,45 @@ class MainWindow(QMainWindow):
     def EjecutarAsc(self):
         import principal as f
         self.consola.clear()
-        try:
-            f.ejecutar_asc(self.editor.toPlainText())
-            f.errores_asc()
-            f.ReporteErrores()
-            f.ReporteTS()
-            f.ReporteGramatical()
-            f.GenerarAST()
-            s = f.RecibirSalida()
-            self.consola.setPlainText(s)
-        except:
-            btn = QMessageBox.information(self, 'FIN',
-                'no se puede realizar la ejecucion del ascendente',
-                QMessageBox.Yes)
+       
+        f.ejecutar_asc(self.editor.toPlainText())
+        f.errores_asc()
+        f.ReporteErrores()
+        f.ReporteTS()
+        f.ReporteGramatical()
+        f.GenerarAST()
+        s = f.RecibirSalida()
+        self.consola.setPlainText(s)
+
         return 
 
     def EjecutarDesc(self):
         import principal as j
         self.consola.clear()
-        try:
-            j.ejecutar_desc(self.editor.toPlainText())
-            j.errores_desc()
-            j.ReporteErrores()
-            j.ReporteTS()
-            j.ReporteGramatical()
-            j.GenerarAST()
-            s = j.RecibirSalida()
-            self.consola.setPlainText(s)
-        except:
-            btn = QMessageBox.information(self, 'FIN',
-                'no se puede realizar la ejecucion del descendente',
-                QMessageBox.Yes)
+        
+        j.ejecutar_desc(self.editor.toPlainText())
+        j.errores_desc()
+        j.ReporteErrores()
+        j.ReporteTS()
+        j.ReporteGramatical()
+        j.GenerarAST()
+        s = j.RecibirSalida()
+        self.consola.setPlainText(s)
+       
+
     
     def EjecutarDeb(self):
         import principal as de 
         self.consola.clear()
-        try:
-            de.ejecutar_debug(self.editor.toPlainText(),self.i)
-            de.ReporteTS()
-            de.ReporteErrores()
-            self.i =  self.i + 1
-            s = de.RecibirSalida()
-            self.consola.setPlainText(s)
-        except :
-            btn = QMessageBox.information(self, 'FIN',
-                'no se puede realizar la ejecucion del debug',
-                QMessageBox.Yes)
+    
+        de.ejecutar_debug(self.editor.toPlainText(),self.i)
+        de.ReporteTS()
+        de.ReporteErrores()
+        self.i =  self.i + 1
+        s = de.RecibirSalida()
+        self.consola.setPlainText(s)
+
+
         
     def ReporteGramatical(self):
         import principal as l

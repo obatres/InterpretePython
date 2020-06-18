@@ -199,12 +199,6 @@ def t_newline(t):
     r'\n+'
     t.lexer.lineno += t.value.count("\n")
     
-def t_error(t):
-    print("Error Lexico en el token: '%s'" % t.value[0])
-    err = "Error Lexico en el token: '%s'" % t.value[0]
-    lista_errores.append(err)
-    t.lexer.skip(1)
-
 #OBTENIENDO LA COLUMNA 
 def get_clomuna(input, token):
     #try:
@@ -212,6 +206,14 @@ def get_clomuna(input, token):
         return (token.lexpos - line_star)+1
     #except :
      #   return 0
+     #     
+def t_error(t):
+    print("Error Lexico en el token: '%s'" % t.value[0])
+    err = "Error Lexico en el token: '%s'" % t.value[0]
+    lista_errores.append(err)
+    t.lexer.skip(1)
+
+
 
 
 
