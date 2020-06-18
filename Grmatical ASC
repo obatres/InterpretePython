@@ -1,0 +1,15 @@
+digraph "Reporte Gramatical" {
+	nodo0 [label=instrucciones]
+	nodo1 [label=instruccion]
+	nodo2 [label=instrucciones]
+	nodo2 -> nodo1
+	nodo2 -> nodo0
+	nodo2 [label=instrucciones]
+	nodo3 [label=instruccion]
+	nodo4 [label=instrucciones]
+	nodo4 -> nodo3
+	nodo4 -> nodo2
+	nodo4 [label=instrucciones]
+	nodo5 [label=init]
+	nodo5 -> nodo4
+}
